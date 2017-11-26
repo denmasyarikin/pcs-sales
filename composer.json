@@ -1,0 +1,19 @@
+{
+    "name": "denmasyarikin/pcs-sales",
+    "description": "Sales Printing Company Sistem",
+    "license": "MIT",
+    "type": "package",
+    "author": {
+    	"name": "Denma Syarikin",
+    	"email": "denmasyarikin@gmail.com",
+    	"url": "http://denmasyarikin.com"
+	},
+    "require": {
+        "denmasyarikin/pcs" : "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Denmasyarikin\\Sales\\": "src/"
+        }
+    }
+}
