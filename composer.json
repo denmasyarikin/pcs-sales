@@ -15,5 +15,13 @@
         "psr-4": {
             "Denmasyarikin\\Sales\\": "src/"
         }
+    },
+    "scripts": {
+        "post-root-package-install": [
+            "php -r \"copy('.env.example', '.env');\""
+        ],
+        "fix": [
+            "php-cs-fixer fix --rules=@Symfony src"
+        ]
     }
 }

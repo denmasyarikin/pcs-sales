@@ -6,11 +6,10 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 use Denmasyarikin\Sales\Customer\Customer;
-use Denmasyarikin\Sales\Customer\Transformers\CustomerList;
 use Denmasyarikin\Sales\Customer\Requests\CreateCustomerRequest;
 use Denmasyarikin\Sales\Customer\Requests\UpdateCustomerRequest;
 use Denmasyarikin\Sales\Customer\Requests\DeleteCustomerRequest;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Denmasyarikin\Sales\Customer\Transformers\CustomerListTransformer;
 
 class CustomerController extends Controller
 {
@@ -25,11 +24,11 @@ class CustomerController extends Controller
     {
         $customers = $this->getCustomerList($request);
 
-        $response = new CustomerList($customers);
+        $transform = new CustomerListTransformer($customers);
 
         return new JsonResponse([
-            'data' => $response->toArray(),
-            'pagination' => $response->pagination(),
+            'data' => $transform->toArray(),
+            'pagination' => $transform->pagination(),
         ]);
     }
 
@@ -74,9 +73,12 @@ class CustomerController extends Controller
      */
     public function createCustomer(CreateCustomerRequest $request)
     {
-        Customer::create($request->only(['name', 'description', 'customer_type', 'markup', 'status']));
+        Customer::create($request->only([
+            'type', 'name', 'address', 'telephone', 'email',
+            'contact_person', 'user_id',
+        ]));
 
-        return new JsonResponse(['message' => 'Customer has been created']);
+        return new JsonResponse(['message' => 'Customer has been created'], 201);
     }
 
     /**
@@ -89,7 +91,11 @@ class CustomerController extends Controller
     public function updateCustomer(UpdateCustomerRequest $request)
     {
         $customer = $request->getCustomer();
-        $customer->update($request->only(['name', 'description', 'customer_type', 'markup', 'status']));
+
+        $customer->update($request->only([
+            'type', 'name', 'address', 'telephone', 'email',
+            'contact_person', 'user_id',
+        ]));
 
         return new JsonResponse(['message' => 'Customer has been updated']);
     }

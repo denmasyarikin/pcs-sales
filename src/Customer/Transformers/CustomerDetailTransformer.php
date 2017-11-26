@@ -5,7 +5,7 @@ namespace Denmasyarikin\Sales\Customer\Transformers;
 use App\Http\Transformers\Detail;
 use Illuminate\Database\Eloquent\Model;
 
-class CustomerDetail extends Detail
+class CustomerDetailTransformer extends Detail
 {
     /**
      * get data.

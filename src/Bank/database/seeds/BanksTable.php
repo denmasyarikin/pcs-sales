@@ -15,7 +15,7 @@ class BanksTable extends Seeder
         Bank::create([
             'name' => 'Mandiri',
             'account_name' => 'Deden Maulana',
-            'account_number' => '0292029202'
+            'account_number' => '0292029202',
         ]);
     }
 }

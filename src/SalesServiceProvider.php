@@ -9,11 +9,9 @@ class SalesServiceProvider extends ServiceProvider
 {
     /**
      * Register any application services.
-     *
-     * @return void
      */
     public function register()
     {
-    	Package::register('sales', __DIR__, 'Denmasyarikin\Sales');
+        Package::register('sales', __DIR__, 'Denmasyarikin\Sales');
     }
 }

@@ -8,8 +8,6 @@ class Customer extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
     public function up()
     {
@@ -21,16 +19,17 @@ class Customer extends Migration
             $table->string('telephone', 20)->nullable()->default(null);
             $table->string('email', 50)->nullable()->default(null);
             $table->string('contact_person', 50)->nullable()->default(null);
+            $table->integer('user_id')->unsigned()->nullable()->default(null);
             $table->date('last_order')->nullable()->default(null);
             $table->timestamps();
             $table->softDeletes();
+
+            $table->foreign('user_id')->references('id')->on('core_users');
         });
     }
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
     public function down()
     {

@@ -5,7 +5,7 @@ namespace Denmasyarikin\Sales\Customer\Transformers;
 use App\Http\Transformers\Pagination;
 use Illuminate\Database\Eloquent\Model;
 
-class CustomerList extends Pagination
+class CustomerListTransformer extends Pagination
 {
     /**
      * get data.
@@ -16,6 +16,6 @@ class CustomerList extends Pagination
      */
     protected function getData(Model $model)
     {
-        return (new CustomerDetail($model))->toArray();
+        return (new CustomerDetailTransformer($model))->toArray();
     }
 }
