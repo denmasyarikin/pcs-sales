@@ -25,10 +25,7 @@ class UpdateCustomerRequest extends CreateCustomerRequest
             return $this->customer;
         }
 
-        // this is better way but not working in lumen
-        // $id = $this->route('id');
-
-        $id = $this->segment(3);
+        $id = $this->route('id');
 
         if ($this->customer = Customer::find($id)) {
             return $this->customer;

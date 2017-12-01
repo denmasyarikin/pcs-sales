@@ -37,6 +37,7 @@ class ProductGroup extends Model
      */
     public function products()
     {
-        return $this->belongsToMany(Product::class, 'sales_product_group_products');
+        return $this->belongsToMany(Product::class, 'sales_product_group_products')
+                    ->withTimestamps();
     }
 }

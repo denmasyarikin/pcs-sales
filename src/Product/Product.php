@@ -29,6 +29,23 @@ class Product extends Model
      */
     public function groups()
     {
-        return $this->belongsToMany(ProductGroup::class, 'sales_product_group_products');
+        return $this->belongsToMany(ProductGroup::class, 'sales_product_group_products')
+                    ->withTimestamps();
+    }
+
+    /**
+     * Get the processes record associated with the Product.
+     */
+    public function processes()
+    {
+        return $this->hasMany(ProductProcess::class);
+    }
+
+    /**
+     * Get the medias record associated with the Product.
+     */
+    public function medias()
+    {
+        return $this->hasMany(ProductMedia::class);
     }
 }

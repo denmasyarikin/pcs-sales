@@ -3,36 +3,36 @@
 namespace Denmasyarikin\Sales\Product\Requests;
 
 use App\Http\Requests\FormRequest;
-use Denmasyarikin\Sales\Product\Product;
+use Denmasyarikin\Sales\Product\ProductGroup;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class DetailProductRequest extends FormRequest
+class DetailProductGroupRequest extends FormRequest
 {
     /**
-     * product.
+     * product.group
      *
-     * @var Product
+     * @var ProductGroup
      */
-    public $product;
+    public $productGroup;
 
     /**
      * get product.
      *
      * @return Product
      */
-    public function getProduct(): ?Product
+    public function getProductGroup(): ?ProductGroup
     {
-        if ($this->product) {
-            return $this->product;
+        if ($this->productGroup) {
+            return $this->productGroup;
         }
 
         $id = $this->route('id');
 
-        if ($this->product = Product::find($id)) {
-            return $this->product;
+        if ($this->productGroup = ProductGroup::find($id)) {
+            return $this->productGroup;
         }
 
-        throw new NotFoundHttpException('Product Not Found');
+        throw new NotFoundHttpException('Product Group Not Found');
     }
 
     /**

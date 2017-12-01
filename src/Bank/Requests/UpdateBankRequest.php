@@ -25,10 +25,7 @@ class UpdateBankRequest extends CreateBankRequest
             return $this->bank;
         }
 
-        // this is better way but not working in lumen
-        // $id = $this->route('id');
-
-        $id = $this->segment(3);
+        $id = $this->route('id');
 
         if ($this->bank = Bank::find($id)) {
             return $this->bank;
