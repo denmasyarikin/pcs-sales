@@ -9,7 +9,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class DetailProductGroupRequest extends FormRequest
 {
     /**
-     * product.group
+     * product.group.
      *
      * @var ProductGroup
      */

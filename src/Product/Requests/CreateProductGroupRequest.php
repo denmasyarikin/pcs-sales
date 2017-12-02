@@ -18,7 +18,7 @@ class CreateProductGroupRequest extends FormRequest
             'status' => 'in:active,inactive',
             'parent_id' => 'exists:sales_product_groups,id',
             'products' => 'array',
-            'products.*' => 'exists:sales_products,id'
+            'products.*' => 'exists:sales_products,id',
         ];
     }
 }

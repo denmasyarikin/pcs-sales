@@ -3,6 +3,8 @@
 namespace Denmasyarikin\Sales\Product;
 
 use App\Model;
+use App\Manager\Facades\Setting;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Product extends Model
@@ -47,5 +49,27 @@ class Product extends Model
     public function medias()
     {
         return $this->hasMany(ProductMedia::class);
+    }
+
+    /**
+     * Get Image.
+     *
+     * @return string
+     */
+    public function getImageAttribute()
+    {
+        $default = URL::to(Setting::get('system.sales.product.default_image'));
+
+        if (0 === count($medias = $this->medias)) {
+            return $default;
+        }
+
+        $primary = $medias->where('primary', true)->first();
+
+        if (is_null($primary)) {
+            $primary = $medias->first();
+        }
+
+        return URL::to($primary->content);
     }
 }

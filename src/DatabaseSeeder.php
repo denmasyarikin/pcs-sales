@@ -15,5 +15,6 @@ class DatabaseSeeder extends Seeder
         $this->call(Bank\database\seeds\BanksTable::class);
         $this->call(Product\database\seeds\ProductsTable::class);
         $this->call(Product\database\seeds\ProductGroupsTable::class);
+        $this->call(Product\database\seeds\ProductMediasTable::class);
     }
 }

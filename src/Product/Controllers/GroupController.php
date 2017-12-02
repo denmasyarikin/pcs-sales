@@ -2,9 +2,9 @@
 
 namespace Denmasyarikin\Sales\Product\Controllers;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use App\Http\Controllers\Controller;
 use Denmasyarikin\Sales\Product\Product;
 use Denmasyarikin\Sales\Product\ProductGroup;
 use Denmasyarikin\Sales\Product\Requests\CreateProductGroupRequest;
@@ -48,10 +48,11 @@ class GroupController extends Controller
     }
 
     /**
-     * send return data
+     * send return data.
      *
      * @param Collection $groups
      * @param Collection $products
+     *
      * @return json
      */
     public function sendReturn($groups, $products)
@@ -62,15 +63,15 @@ class GroupController extends Controller
         return new JsonResponse([
             'data' => [
                 'groups' => $groupList->toArray(),
-                'products' => $productList->toArray()
-            ]
+                'products' => $productList->toArray(),
+            ],
         ]);
     }
 
     /**
      * get product group list.
      *
-     * @param Request $request
+     * @param Request      $request
      * @param ProductGroup $productGroup
      *
      * @return paginator
@@ -79,7 +80,7 @@ class GroupController extends Controller
     {
         $productGroups = ProductGroup::whereStatus('active');
 
-        if (! is_null($productGroup)) {
+        if (!is_null($productGroup)) {
             $productGroups->whereParentId($productGroup->id);
         }
 
@@ -94,7 +95,7 @@ class GroupController extends Controller
     /**
      * get product list.
      *
-     * @param Request $request
+     * @param Request      $request
      * @param ProductGroup $productGroup
      *
      * @return paginator
@@ -106,7 +107,7 @@ class GroupController extends Controller
         if (is_null($productGroup)) {
             $products->has('groups', '=', 0);
         } else {
-            $products->whereHas('groups', function($query) use ($productGroup) {
+            $products->whereHas('groups', function ($query) use ($productGroup) {
                 return $query->whereProductGroupId($productGroup->id);
             });
         }
@@ -121,9 +122,10 @@ class GroupController extends Controller
     }
 
     /**
-     * create product group
+     * create product group.
      *
      * @param CreateProductGroupRequest $request
+     *
      * @return json
      */
     public function createGroup(CreateProductGroupRequest $request)
@@ -132,7 +134,7 @@ class GroupController extends Controller
             $request->only(['name', 'parent_id', 'status'])
         );
 
-        if ($request->has('products') AND count($request->products) > 0) {
+        if ($request->has('products') and count($request->products) > 0) {
             $productGroup->products()->attach($request->products);
         }
 
@@ -140,9 +142,10 @@ class GroupController extends Controller
     }
 
     /**
-     * update product group
+     * update product group.
      *
      * @param UpdateProductGroupRequest $request
+     *
      * @return json
      */
     public function updateGroup(UpdateProductGroupRequest $request)
@@ -152,11 +155,11 @@ class GroupController extends Controller
             $request->only(['name', 'parent_id', 'status'])
         );
 
-        if ($request->has('products.remove') AND count($request->products['remove']) > 0) {
+        if ($request->has('products.remove') and count($request->products['remove']) > 0) {
             $productGroup->products()->detach($request->products['remove']);
         }
 
-        if ($request->has('products.add') AND count($request->products['add']) > 0) {
+        if ($request->has('products.add') and count($request->products['add']) > 0) {
             $productGroup->products()->attach($request->products['add']);
         }
 
@@ -164,9 +167,10 @@ class GroupController extends Controller
     }
 
     /**
-     * update product group
+     * update product group.
      *
      * @param DeleteProductGroupRequest $request
+     *
      * @return json
      */
     public function deleteGroup(DetailProductGroupRequest $request)
