@@ -13,7 +13,22 @@ class CreateProductRequest extends FormRequest
      */
     public function rules()
     {
-        return array_merge([
+        return array_merge(
+            $this->productRules(),
+            $this->processRules(),
+            $this->mediaRules(),
+            $this->groupRules()
+        );
+    }
+
+    /**
+     * product rules
+     *
+     * @return array
+     */
+    protected function productRules()
+    {
+        return [
             'name' => 'required|min:3|max:20',
             'description' => 'required|min:20|max:150',
             'unit_id' => 'required|exists:core_units,id',
@@ -24,23 +39,24 @@ class CreateProductRequest extends FormRequest
             'process_service_count' => 'required|numeric',
             'process_good_count' => 'required|numeric',
             'process_manual_count' => 'required|numeric',
-            'status' => 'required|in:active,inactive',
-        ], $this->processRules(), $this->mediaRules());
+            'status' => 'required|in:active,inactive'
+        ];
     }
 
     /**
      * process rules
      *
      * @param string $field
-     * @param string $optionField   
+     * @param string $optionField
+     * @param bool $update
      * @return array
      */
-    protected function processRules($field = 'processes', $optionField = null)
+    protected function processRules($field = 'processes', $optionField = null, $update = false)
     {
         $field = $optionField ?: $field;
 
         $process = [
-            $field => 'array'.(is_null($optionField) ? '|required' : ''),
+            $field => 'array'.((is_null($optionField) AND !$update) ? '|required' : ''),
             "{$field}.*.process_type" => 'required|in:good,service,manual',
             "{$field}.*.process_type_as" => 'required|in:good,service',
             "{$field}.*.reference_id" => 'numeric',
@@ -55,7 +71,7 @@ class CreateProductRequest extends FormRequest
         ];
 
         if (is_null($optionField)) {
-            return array_merge($process, $this->processRules($field, $field.'.*.options'));
+            return array_merge($process, $this->processRules($field, $field.'.*.options', $update));
         }
 
         return $process;
@@ -75,6 +91,20 @@ class CreateProductRequest extends FormRequest
             "{$field}.*.content" => 'required',
             "{$field}.*.sequence" => 'required|numeric',
             "{$field}.*.primary" => 'required|boolean'
+        ];
+    }
+
+    /**
+     * groups rules
+     *
+     * @param string $field  
+     * @return array
+     */
+    protected function groupRules($field = 'groups')
+    {
+        return [
+            $field => 'array',
+            "{$field}.*" => 'numeric|exists:sales_product_groups,id'
         ];
     }
 }

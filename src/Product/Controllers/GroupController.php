@@ -110,6 +110,7 @@ class GroupController extends Controller
             $products->whereHas('groups', function ($query) use ($productGroup) {
                 return $query->whereProductGroupId($productGroup->id);
             });
+
         }
 
         if ($request->has('key')) {
