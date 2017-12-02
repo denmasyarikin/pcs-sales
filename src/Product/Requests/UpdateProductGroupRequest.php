@@ -2,9 +2,6 @@
 
 namespace Denmasyarikin\Sales\Product\Requests;
 
-use Denmasyarikin\Sales\Product\ProductGroup;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-
 class UpdateProductGroupRequest extends DetailProductGroupRequest
 {
     /**
@@ -22,7 +19,7 @@ class UpdateProductGroupRequest extends DetailProductGroupRequest
             'products.remove' => 'array',
             'products.add' => 'array',
             'products.remove.*' => 'exists:sales_products,id',
-            'products.add.*' => 'exists:sales_products,id'
+            'products.add.*' => 'exists:sales_products,id',
         ];
     }
 }

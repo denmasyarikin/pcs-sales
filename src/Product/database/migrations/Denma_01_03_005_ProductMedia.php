@@ -16,8 +16,9 @@ class ProductMedia extends Migration
             $table->integer('product_id')->unsigned()->nullable()->default(null);
             $table->enum('type', ['image', 'youtube'])->default('image');
             $table->text('content');
-            $table->integer('squance_id')->default(0);
+            $table->integer('sequence')->default(0);
             $table->boolean('primary')->default(false);
+            $table->timestamps();
             $table->softDeletes();
 
             $table->foreign('product_id')->references('id')->on('sales_products');

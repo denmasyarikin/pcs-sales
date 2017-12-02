@@ -6,7 +6,7 @@ use App\Http\Transformers\Detail;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Unit\Transformers\UnitDetailTransformer;
 
-class ProductListDetailTransformer extends Detail
+class ProductProcessDetailTransformer extends Detail
 {
     /**
      * get data.
@@ -19,17 +19,18 @@ class ProductListDetailTransformer extends Detail
     {
         return [
             'id' => $model->id,
+            'process_type' => $model->process_type,
+            'process_type_as' => $model->process_type_as,
+            'parent_id' => $model->parent_id,
+            'reference_id' => $model->reference_id,
             'name' => $model->name,
-            'description' => $model->description,
-            'image' => $model->image,
-            'unit' => (new UnitDetailTransformer($model->unit, ['id', 'name', 'specific']))->toArray(),
-            'min_order' => $model->min_order,
+            'type' => $model->type,
+            'quantity' => $model->quantity,
             'base_price' => $model->base_price,
-            'per_unit_price' => $model->per_unit_price,
-            'process_service_count' => $model->process_service_count,
-            'process_good_count' => $model->process_good_count,
-            'process_manual_count' => $model->process_manual_count,
-            'status' => $model->status,
+            'required' => (bool) $model->required,
+            'static_price' => (bool) $model->static_price,
+            'static_to_order_count' => $model->static_to_order_count,
+            'unit' => (new UnitDetailTransformer($model->unit, ['id', 'name', 'specific']))->toArray(),
             'created_at' => $model->created_at->format('Y-m-d H:i:s'),
             'updated_at' => $model->updated_at->format('Y-m-d H:i:s'),
         ];

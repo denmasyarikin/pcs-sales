@@ -61,7 +61,7 @@ class CustomerController extends Controller
             $customers->orWhere('address', 'like', "%{$request->key}%");
         }
 
-        return $customers->paginate(20);
+        return $customers->paginate($request->get('per_page') ?: 10);
     }
 
     /**
