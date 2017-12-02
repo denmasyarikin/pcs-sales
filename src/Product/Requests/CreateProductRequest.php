@@ -22,7 +22,7 @@ class CreateProductRequest extends FormRequest
     }
 
     /**
-     * product rules
+     * product rules.
      *
      * @return array
      */
@@ -39,16 +39,17 @@ class CreateProductRequest extends FormRequest
             'process_service_count' => 'required|numeric',
             'process_good_count' => 'required|numeric',
             'process_manual_count' => 'required|numeric',
-            'status' => 'required|in:active,inactive'
+            'status' => 'required|in:active,inactive',
         ];
     }
 
     /**
-     * process rules
+     * process rules.
      *
      * @param string $field
      * @param string $optionField
-     * @param bool $update
+     * @param bool   $update
+     *
      * @return array
      */
     protected function processRules($field = 'processes', $optionField = null, $update = false)
@@ -56,7 +57,7 @@ class CreateProductRequest extends FormRequest
         $field = $optionField ?: $field;
 
         $process = [
-            $field => 'array'.((is_null($optionField) AND !$update) ? '|required' : ''),
+            $field => 'array'.((is_null($optionField) and !$update) ? '|required' : ''),
             "{$field}.*.process_type" => 'required|in:good,service,manual',
             "{$field}.*.process_type_as" => 'required|in:good,service',
             "{$field}.*.reference_id" => 'numeric',
@@ -78,9 +79,10 @@ class CreateProductRequest extends FormRequest
     }
 
     /**
-     * media rules
+     * media rules.
      *
-     * @param string $field  
+     * @param string $field
+     *
      * @return array
      */
     protected function mediaRules($field = 'medias')
@@ -90,21 +92,22 @@ class CreateProductRequest extends FormRequest
             "{$field}.*.type" => 'required|in:image,youtube',
             "{$field}.*.content" => 'required',
             "{$field}.*.sequence" => 'required|numeric',
-            "{$field}.*.primary" => 'required|boolean'
+            "{$field}.*.primary" => 'required|boolean',
         ];
     }
 
     /**
-     * groups rules
+     * groups rules.
      *
-     * @param string $field  
+     * @param string $field
+     *
      * @return array
      */
     protected function groupRules($field = 'groups')
     {
         return [
             $field => 'array',
-            "{$field}.*" => 'numeric|exists:sales_product_groups,id'
+            "{$field}.*" => 'numeric|exists:sales_product_groups,id',
         ];
     }
 }

@@ -44,14 +44,14 @@ class UpdateProductRequest extends CreateProductRequest
         return array_merge($this->productRules(), [
             'processes' => 'array',
             'processes.remove' => 'array',
-            'processes.remove.*' => 'numeric|exists:sales_product_processes,id'
+            'processes.remove.*' => 'numeric|exists:sales_product_processes,id',
         ], $this->processRules('processes.add', null, true), [
             'medias' => 'array',
             'medias.remove' => 'array',
-            'medias.remove.*' => 'numeric|exists:sales_product_medias,id'
+            'medias.remove.*' => 'numeric|exists:sales_product_medias,id',
         ], $this->mediaRules('media.add'), [
             'groups' => 'array',
-            'groups.remove' => 'array', 
+            'groups.remove' => 'array',
             'groups.remove.*' => 'numeric|exists:sales_product_groups,id',
         ], $this->groupRules('groups.add'));
     }

@@ -12,27 +12,27 @@ class ProductMediasTable extends Seeder
      */
     public function run()
     {
-    	$product = Product::find(1);
+        $product = Product::find(1);
 
-    	$product->medias()->create([
-    		'type' => 'image',
-    		'content' => 'api/media/image/sales/product/image/mdia1.jpeg',
-    		'sequence' => 1,
-    		'primary' => true
-    	]);
+        $product->medias()->create([
+            'type' => 'image',
+            'content' => 'api/media/image/sales/product/image/mdia1.jpeg',
+            'sequence' => 1,
+            'primary' => true,
+        ]);
 
-    	$product->medias()->create([
-    		'type' => 'image',
-    		'content' => 'api/media/image/sales/product/image/mdia2.jpeg',
-    		'sequence' => 2,
-    		'primary' => false
-    	]);
+        $product->medias()->create([
+            'type' => 'image',
+            'content' => 'api/media/image/sales/product/image/mdia2.jpeg',
+            'sequence' => 2,
+            'primary' => false,
+        ]);
 
-    	$product->medias()->create([
-    		'type' => 'image',
-    		'content' => 'api/media/image/sales/product/image/mdia3.jpeg',
-    		'sequence' => 3,
-    		'primary' => false
-    	]);
+        $product->medias()->create([
+            'type' => 'image',
+            'content' => 'api/media/image/sales/product/image/mdia3.jpeg',
+            'sequence' => 3,
+            'primary' => false,
+        ]);
     }
 }

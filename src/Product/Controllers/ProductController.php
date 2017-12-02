@@ -50,7 +50,7 @@ class ProductController extends Controller
                 case 'active':
                     $products->whereStatus('active');
                     break;
-                
+
                 case 'inactive':
                     $products->whereStatus('inactive');
                     break;
@@ -81,9 +81,10 @@ class ProductController extends Controller
     }
 
     /**
-     * create product
+     * create product.
      *
      * @param CreateProductRequest $request
+     *
      * @return json
      */
     public function createProduct(CreateProductRequest $request)
@@ -94,7 +95,7 @@ class ProductController extends Controller
             $product = Product::create($request->only([
                 'name', 'description', 'unit_id', 'min_order', 'customizable',
                 'base_price', 'per_unit_price', 'process_service_count',
-                'process_good_count', 'process_manual_count', 'status'
+                'process_good_count', 'process_manual_count', 'status',
             ]));
 
             foreach ($request->processes as $process) {
@@ -108,7 +109,7 @@ class ProductController extends Controller
             }
 
             if ($request->has('groups')) {
-                $product->groups()->sync($request->groups);
+                $this->assignGroups($product, $request->groups);
             }
 
             DB::commit();
@@ -116,15 +117,17 @@ class ProductController extends Controller
             return new JsonResponse(['message' => 'Product has been created'], 201);
         } catch (\Exception $e) {
             DB::rollback();
+
             return new JsonResponse(['message' => $e->getMessage()], 500);
         }
     }
 
     /**
-     * create processes
+     * create processes.
      *
      * @param Product $product
-     * @param array $processInput
+     * @param array   $processInput
+     *
      * @return ProductProcess
      */
     protected function createProcess(Product $product, array $processInput)
@@ -133,7 +136,7 @@ class ProductController extends Controller
             $processInput, array_flip([
                 'process_type', 'process_type_as', 'reference_id',
                 'name', 'type', 'quantity', 'base_price', 'required',
-                'static_price', 'static_to_order_count', 'unit_id'
+                'static_price', 'static_to_order_count', 'unit_id',
             ])
         ));
 
@@ -143,7 +146,7 @@ class ProductController extends Controller
                     $option, array_flip([
                         'process_type', 'process_type_as', 'reference_id',
                         'name', 'type', 'quantity', 'base_price', 'required',
-                        'static_price', 'static_to_order_count', 'unit_id'
+                        'static_price', 'static_to_order_count', 'unit_id',
                     ])
                 ), ['product_id' => $product->id]));
             }
@@ -153,23 +156,37 @@ class ProductController extends Controller
     }
 
     /**
-     * create media
+     * create media.
      *
      * @param Product $product
-     * @param array $media
+     * @param array   $media
+     *
      * @return ProductMedia
      */
     protected function createMedia(Product $product, array $media)
     {
         return $product->medias()->create(array_intersect_key(
-            $media, array_flip(['type', 'content', 'sequence','primary'])
+            $media, array_flip(['type', 'content', 'sequence', 'primary'])
         ));
     }
 
     /**
-     * update product
+     * assign product to group.
+     *
+     * @param Product $product
+     *
+     * @return bool
+     */
+    protected function assignGroups(Product $product, array $groups)
+    {
+        return $product->groups()->sync($groups);
+    }
+
+    /**
+     * update product.
      *
      * @param UpdateProductRequest $request
+     *
      * @return json
      */
     public function updateProduct(UpdateProductRequest $request)
@@ -178,40 +195,19 @@ class ProductController extends Controller
 
         try {
             DB::beginTransaction();
-            
+
             $product->update($request->only([
                 'name', 'description', 'unit_id', 'min_order', 'customizable',
                 'base_price', 'per_unit_price', 'process_service_count',
-                'process_good_count', 'process_manual_count', 'status'
+                'process_good_count', 'process_manual_count', 'status',
             ]));
 
-
-            if ($request->has('processes.remove')) {
-                foreach ($request->input('processes.remove') as $id) {
-                    if ($process = $product->processes()->find($id)) {
-                        $process->delete();
-                    }
-                }
+            if ($request->has('processes')) {
+                $this->updateProcess($product, $request->processes);
             }
 
-            if ($request->has('processes.add')) {
-                foreach ($request->input('processes.add') as $process) {
-                    $this->createProcess($product, $process);
-                }
-            }
-
-            if ($request->has('medias.remove')) {
-                foreach ($request->input('medias.remove') as $id) {
-                    if ($media = $product->medias()->find($id)) {
-                        $media->delete();
-                    }
-                }
-            }
-
-            if ($request->has('medias.add')) {
-                foreach ($request->input('medias.add') as $media) {
-                    $this->createMedia($product, $media);
-                }
+            if ($request->has('medias')) {
+                $this->updateMedia($product, $request->medias);
             }
 
             if ($request->has('groups.remove')) {
@@ -223,17 +219,66 @@ class ProductController extends Controller
             }
 
             DB::commit();
+
             return new JsonResponse(['message' => 'Product has been updated']);
         } catch (\Exception $e) {
             DB::rollback();
+
             return new JsonResponse(['message' => $e->getMessage()], 500);
         }
     }
 
     /**
-     * delete product
+     * update process.
+     *
+     * @param Product $product
+     * @param array   $processes
+     */
+    protected function updateProcess(Product $product, array $processes)
+    {
+        if (isset($processes['remove'])) {
+            foreach ($processes['remove'] as $id) {
+                if ($process = $product->processes()->find($id)) {
+                    $process->delete();
+                }
+            }
+        }
+
+        if (isset($processes['add'])) {
+            foreach ($processes['add'] as $process) {
+                $this->createProcess($product, $process);
+            }
+        }
+    }
+
+    /**
+     * update media.
+     *
+     * @param Product $product
+     * @param array   $medias
+     */
+    protected function updateMedia(Product $product, array $medias)
+    {
+        if (isset($medias['remove'])) {
+            foreach ($medias['remove'] as $id) {
+                if ($media = $product->medias()->find($id)) {
+                    $media->delete();
+                }
+            }
+        }
+
+        if (isset($medias['add'])) {
+            foreach ($medias['add'] as $media) {
+                $this->createMedia($product, $media);
+            }
+        }
+    }
+
+    /**
+     * delete product.
      *
      * @param DetailProductRequest $request
+     *
      * @return json
      */
     public function deleteProduct(DetailProductRequest $request)

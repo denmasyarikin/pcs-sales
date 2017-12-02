@@ -8,8 +8,6 @@ class Order extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
     public function up()
     {
@@ -30,9 +28,9 @@ class Order extends Migration
             $table->integer('cs_user_id')->unsigned();
             $table->string('cs_name', 50);
             $table->timestamp('due_date');
-            $table->timestamp('start_process_date');
-            $table->timestamp('end_process_date');
-            $table->timestamp('close_date');
+            $table->timestamp('start_process_date')->nullable()->default(null);
+            $table->timestamp('end_process_date')->nullable()->default(null);
+            $table->timestamp('close_date')->nullable()->default(null);
             $table->timestamps();
             $table->softDeletes();
 
@@ -42,8 +40,6 @@ class Order extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
     public function down()
     {
