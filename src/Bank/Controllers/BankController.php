@@ -101,7 +101,7 @@ class BankController extends Controller
         ]));
 
         return new JsonResponse([
-            'message' => 'Bank has been updated'
+            'message' => 'Bank has been updated',
             'data' => (new BankDetailTransformer($bank))->toArray()
         ]);
     }

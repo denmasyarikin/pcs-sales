@@ -2,10 +2,11 @@
 
 namespace Denmasyarikin\Sales\Bank\Requests;
 
+use App\Http\Requests\FormRequest;
 use Denmasyarikin\Sales\Bank\Bank;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class UpdateBankRequest extends DetailBankRequest
+class DetailBankRequest extends FormRequest
 {
     /**
      * bank.
