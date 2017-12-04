@@ -23,7 +23,7 @@ class Product extends Migration
             $table->integer('process_service_count')->default(0);
             $table->integer('process_good_count')->default(0);
             $table->integer('process_manual_count')->default(0);
-            $table->enum('status', ['active', 'inactive'])->default('active');
+            $table->enum('status', ['draft', 'active', 'inactive'])->default('draft');
             $table->timestamps();
             $table->softDeletes();
 
