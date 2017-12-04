@@ -15,11 +15,11 @@ class ProductProcess extends Migration
             $table->increments('id');
             $table->integer('product_id')->unsigned();
             $table->integer('parent_id')->unsigned()->nullable()->default(null);
-            $table->enum('process_type', ['good', 'service', 'manual']);
-            $table->enum('process_type_as', ['good', 'service']);
+            $table->enum('type', ['good', 'service', 'manual']);
+            $table->enum('type_as', ['good', 'service']);
             $table->integer('reference_id')->nullable()->default(null);
             $table->string('name', 50);
-            $table->string('type', 50)->nullable()->default(null);
+            $table->string('specific', 50)->nullable()->default(null);
             $table->integer('quantity');
             $table->float('base_price')->nullable()->default(null);
             $table->boolean('required')->default(true);

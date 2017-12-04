@@ -58,11 +58,11 @@ class CreateProductRequest extends FormRequest
 
         $process = [
             $field => 'array'.((is_null($optionField) and !$update) ? '|required' : ''),
-            "{$field}.*.process_type" => 'required|in:good,service,manual',
-            "{$field}.*.process_type_as" => 'required|in:good,service',
+            "{$field}.*.type" => 'required|in:good,service,manual',
+            "{$field}.*.type_as" => 'required|in:good,service',
             "{$field}.*.reference_id" => 'numeric',
             "{$field}.*.name" => 'required|min:3|max:20',
-            "{$field}.*.type" => 'min:3|max:20',
+            "{$field}.*.specific" => 'min:3|max:20',
             "{$field}.*.quantity" => 'required|numeric|min:1',
             "{$field}.*.base_price" => 'required|numeric',
             "{$field}.*.required" => 'boolean',

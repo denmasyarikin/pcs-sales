@@ -3,6 +3,7 @@
 namespace Denmasyarikin\Sales\Customer;
 
 use App\Model;
+use Denmasyarikin\Sales\Order\Order;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Customer extends Model
@@ -15,4 +16,12 @@ class Customer extends Model
      * @var string
      */
     protected $table = 'sales_customers';
+
+    /**
+     * Get the orders record associated with the Customer.
+     */
+    public function orders()
+    {
+        return $this->belongsToMany(Order::class, 'sales_order_customers');
+    }
 }

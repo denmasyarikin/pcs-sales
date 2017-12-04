@@ -6,10 +6,12 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 use Denmasyarikin\Sales\Bank\Bank;
+use Denmasyarikin\Sales\Bank\Requests\DetailBankRequest;
 use Denmasyarikin\Sales\Bank\Requests\CreateBankRequest;
 use Denmasyarikin\Sales\Bank\Requests\UpdateBankRequest;
 use Denmasyarikin\Sales\Bank\Requests\DeleteBankRequest;
 use Denmasyarikin\Sales\Bank\Transformers\BankListTransformer;
+use Denmasyarikin\Sales\Bank\Transformers\BankDetailTransformer;
 
 class BankController extends Controller
 {
@@ -50,6 +52,21 @@ class BankController extends Controller
     }
 
     /**
+     * get detail
+     *
+     * @param DetailBankRequest $request
+     * @return json
+     */
+    public function getDetail(DetailBankRequest $request)
+    {
+        $bank = $request->getBank();
+
+        return new JsonResponse([
+            'data' => (new BankDetailTransformer($bank))->toArray()
+        ]);
+    }
+
+    /**
      * create bank.
      *
      * @param CreateBankRequest $request
@@ -58,11 +75,14 @@ class BankController extends Controller
      */
     public function createBank(CreateBankRequest $request)
     {
-        Bank::create($request->only([
+        $bank = Bank::create($request->only([
             'name', 'logo', 'account_name', 'account_number',
         ]));
 
-        return new JsonResponse(['message' => 'Bank has been created'], 201);
+        return new JsonResponse([
+            'message' => 'Bank has been created',
+            'data' => (new BankDetailTransformer($bank))->toArray()
+        ], 201);
     }
 
     /**
@@ -80,7 +100,10 @@ class BankController extends Controller
             'name', 'logo', 'account_name', 'account_number',
         ]));
 
-        return new JsonResponse(['message' => 'Bank has been updated']);
+        return new JsonResponse([
+            'message' => 'Bank has been updated'
+            'data' => (new BankDetailTransformer($bank))->toArray()
+        ]);
     }
 
     /**

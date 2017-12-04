@@ -19,12 +19,12 @@ class ProductProcessDetailTransformer extends Detail
     {
         return [
             'id' => $model->id,
-            'process_type' => $model->process_type,
-            'process_type_as' => $model->process_type_as,
+            'type' => $model->type,
+            'type_as' => $model->type_as,
             'parent_id' => $model->parent_id,
             'reference_id' => $model->reference_id,
             'name' => $model->name,
-            'type' => $model->type,
+            'specific' => $model->specific,
             'quantity' => $model->quantity,
             'base_price' => $model->base_price,
             'required' => (bool) $model->required,

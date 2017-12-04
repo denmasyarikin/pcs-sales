@@ -1,6 +1,7 @@
 <?php
 
 $router->get('/', 'CustomerController@getList');
+$router->get('/{id}', 'CustomerController@getDetail');
 $router->group(['middleware' => 'manage:sales,customer'], function ($router) {
     $router->post('/', 'CustomerController@createCustomer');
     $router->put('/{id}', 'CustomerController@updateCustomer');

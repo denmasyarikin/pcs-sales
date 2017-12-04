@@ -134,8 +134,8 @@ class ProductController extends Controller
     {
         $process = $product->processes()->create(array_intersect_key(
             $processInput, array_flip([
-                'process_type', 'process_type_as', 'reference_id',
-                'name', 'type', 'quantity', 'base_price', 'required',
+                'type', 'type_as', 'reference_id',
+                'name', 'specific', 'quantity', 'base_price', 'required',
                 'static_price', 'static_to_order_count', 'unit_id',
             ])
         ));
@@ -144,8 +144,8 @@ class ProductController extends Controller
             foreach ($processInput['options'] as $option) {
                 $process->children()->create(array_merge(array_intersect_key(
                     $option, array_flip([
-                        'process_type', 'process_type_as', 'reference_id',
-                        'name', 'type', 'quantity', 'base_price', 'required',
+                        'type', 'type_as', 'reference_id',
+                        'name', 'specific', 'quantity', 'base_price', 'required',
                         'static_price', 'static_to_order_count', 'unit_id',
                     ])
                 ), ['product_id' => $product->id]));

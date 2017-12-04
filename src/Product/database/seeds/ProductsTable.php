@@ -25,10 +25,10 @@ class ProductsTable extends Seeder
 
         ProductProcess::create([
             'product_id' => 1,
-            'process_type' => 'manual',
-            'process_type_as' => 'service',
+            'type' => 'manual',
+            'type_as' => 'service',
             'name' => 'Setting',
-            'type' => 'Kartu nama',
+            'specific' => 'Kartu nama',
             'quantity' => 1,
             'base_price' => 30000,
             'required' => false,
@@ -37,10 +37,10 @@ class ProductsTable extends Seeder
 
         ProductProcess::create([
             'product_id' => 1,
-            'process_type' => 'manual',
-            'process_type_as' => 'service',
+            'type' => 'manual',
+            'type_as' => 'service',
             'name' => 'Print Digital',
-            'type' => 'Art Carton',
+            'specific' => 'Art Carton',
             'quantity' => 4,
             'base_price' => 4000,
             'static_price' => false,
@@ -50,10 +50,10 @@ class ProductsTable extends Seeder
 
         ProductProcess::create([
             'product_id' => 1,
-            'process_type' => 'manual',
-            'process_type_as' => 'service',
+            'type' => 'manual',
+            'type_as' => 'service',
             'name' => 'Finishing Digital',
-            'type' => 'Laminating Gloys',
+            'specific' => 'Laminating Gloys',
             'quantity' => 4,
             'base_price' => 2000,
             'required' => false,
@@ -65,10 +65,10 @@ class ProductsTable extends Seeder
         ProductProcess::create([
             'product_id' => 1,
             'parent_id' => 3,
-            'process_type' => 'manual',
-            'process_type_as' => 'service',
+            'type' => 'manual',
+            'type_as' => 'service',
             'name' => 'Finishing Digital',
-            'type' => 'Laminating Doff',
+            'specific' => 'Laminating Doff',
             'quantity' => 4,
             'base_price' => 2000,
             'required' => false,

@@ -2,35 +2,23 @@
 
 namespace Denmasyarikin\Sales\Customer\Requests;
 
-use Denmasyarikin\Sales\Customer\Customer;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-
-class UpdateCustomerRequest extends CreateCustomerRequest
+class UpdateCustomerRequest extends DetailCustomerRequest
 {
     /**
-     * customer.
+     * Get the validation rules that apply to the request.
      *
-     * @var Customer
+     * @return array
      */
-    public $customer;
-
-    /**
-     * get customer.
-     *
-     * @return Customer
-     */
-    public function getCustomer(): ?Customer
+    public function rules()
     {
-        if ($this->customer) {
-            return $this->customer;
-        }
-
-        $id = $this->route('id');
-
-        if ($this->customer = Customer::find($id)) {
-            return $this->customer;
-        }
-
-        throw new NotFoundHttpException('Customer Not Found');
+        return [
+            'type' => 'required|in:public,agent,company',
+            'name' => 'required|max:50',
+            'address' => '',
+            'telephone' => 'min:4|max:20|numeric',
+            'email' => 'email',
+            'contact_person' => '',
+            'user_id' => 'numeric|exists:core_users,id',
+        ];
     }
 }

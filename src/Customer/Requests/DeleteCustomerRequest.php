@@ -2,16 +2,6 @@
 
 namespace Denmasyarikin\Sales\Customer\Requests;
 
-class DeleteCustomerRequest extends UpdateCustomerRequest
+class DeleteCustomerRequest extends DetailCustomerRequest
 {
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
-    public function rules()
-    {
-        return [
-        ];
-    }
 }

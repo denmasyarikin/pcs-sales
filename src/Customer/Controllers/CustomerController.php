@@ -6,10 +6,12 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 use Denmasyarikin\Sales\Customer\Customer;
+use Denmasyarikin\Sales\Customer\Requests\DetailCustomerRequest;
 use Denmasyarikin\Sales\Customer\Requests\CreateCustomerRequest;
 use Denmasyarikin\Sales\Customer\Requests\UpdateCustomerRequest;
 use Denmasyarikin\Sales\Customer\Requests\DeleteCustomerRequest;
 use Denmasyarikin\Sales\Customer\Transformers\CustomerListTransformer;
+use Denmasyarikin\Sales\Customer\Transformers\CustomerDetailTransformer;
 
 class CustomerController extends Controller
 {
@@ -65,6 +67,22 @@ class CustomerController extends Controller
     }
 
     /**
+     * get detail.
+     *
+     * @param DetailCustomerRequest $request
+     *
+     * @return json
+     */
+    public function getDetail(DetailCustomerRequest $request)
+    {
+        $customer = $request->getCustomer();
+
+        return new JsonResponse([
+            'data' => (new CustomerDetailTransformer($customer))->toArray(),
+        ]);
+    }
+
+    /**
      * create customer.
      *
      * @param CreateCustomerRequest $request
@@ -78,7 +96,10 @@ class CustomerController extends Controller
             'contact_person', 'user_id',
         ]));
 
-        return new JsonResponse(['message' => 'Customer has been created'], 201);
+        return new JsonResponse([
+            'message' => 'Customer has been created',
+            'data' => (new CustomerDetailTransformer($customer))->toArray(),
+        ], 201);
     }
 
     /**
@@ -97,7 +118,10 @@ class CustomerController extends Controller
             'contact_person', 'user_id',
         ]));
 
-        return new JsonResponse(['message' => 'Customer has been updated']);
+        return new JsonResponse([
+            'message' => 'Customer has been updated',
+            'data' => (new CustomerDetailTransformer($customer))->toArray(),
+        ]);
     }
 
     /**

@@ -15,15 +15,14 @@ class Order extends Migration
             $table->increments('id');
             $table->integer('item_count');
             $table->float('items_total');
-            $table->float('adjustment_total');
-            $table->float('discount');
-            $table->float('total');
-            $table->flaot('paid')->default(false);
-            $table->flaot('remaining');
-            $table->boolean('is_paid')->default(false);
-            $table->flaot('tax');
+            $table->float('adjustment_total')->default(0);
+            $table->float('discount')->default(0);
+            $table->float('tax')->default(0);
             $table->boolean('tax_in_price')->default(false);
-            $table->enum('status', ['created', 'process', 'finish', 'archived'])->default('created');
+            $table->float('total');
+            $table->float('paid')->default(false);
+            $table->float('remaining');
+            $table->boolean('is_paid')->default(false);
             $table->text('note')->nullable()->default(null);
             $table->integer('cs_user_id')->unsigned();
             $table->string('cs_name', 50);
@@ -31,10 +30,11 @@ class Order extends Migration
             $table->timestamp('start_process_date')->nullable()->default(null);
             $table->timestamp('end_process_date')->nullable()->default(null);
             $table->timestamp('close_date')->nullable()->default(null);
+            $table->enum('status', ['created', 'processing', 'finished', 'archived', 'canceled'])->default('created');
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('cs_user_id')->references('id')->on('core_users');
         });
     }
 

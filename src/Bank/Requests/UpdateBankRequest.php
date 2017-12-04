@@ -2,35 +2,20 @@
 
 namespace Denmasyarikin\Sales\Bank\Requests;
 
-use Denmasyarikin\Sales\Bank\Bank;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-
-class UpdateBankRequest extends CreateBankRequest
+class UpdateBankRequest extends DetailBankRequest
 {
     /**
-     * bank.
+     * Get the validation rules that apply to the request.
      *
-     * @var Bank
+     * @return array
      */
-    public $bank;
-
-    /**
-     * get bank.
-     *
-     * @return Bank
-     */
-    public function getBank(): ?Bank
+    public function rules()
     {
-        if ($this->bank) {
-            return $this->bank;
-        }
-
-        $id = $this->route('id');
-
-        if ($this->bank = Bank::find($id)) {
-            return $this->bank;
-        }
-
-        throw new NotFoundHttpException('Bank Not Found');
+        return [
+            'name' => 'required|max:50',
+            'logo' => '',
+            'account_number' => 'numeric',
+            'account_name' => 'min:4|max:20',
+        ];
     }
 }
