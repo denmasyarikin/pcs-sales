@@ -13,15 +13,15 @@ class OrdersTable extends Seeder
     public function run()
     {
         $order = Order::create([
-            'item_count' => 1,
-            'items_total' => 54000,
+            'item_total' => 54000,
             'total' => 54000,
-            'paid' => 0,
+            'paid_off' => 0,
             'remaining' => 54000,
-            'is_paid' => false,
+            'paid' => false,
             'note' => 'Cepet cepet ya...',
             'cs_user_id' => 1,
             'cs_name' => 'Deden Maulana',
+            'status' => 'created',
             'due_date' => date('Y-m-d H:i:s'),
         ]);
 

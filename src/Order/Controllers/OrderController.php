@@ -8,9 +8,22 @@ use App\Http\Controllers\Controller;
 use Denmasyarikin\Sales\Order\Order;
 use Denmasyarikin\Sales\Order\Requests\DetailOrderRequest;
 use Denmasyarikin\Sales\Order\Transformers\OrderListTransformer;
+use Denmasyarikin\Sales\Order\Transformers\OrderDetailTransformer;
 
 class OrderController extends Controller
 {
+    /**
+     * get list draft.
+     *
+     * @param Request $request
+     *
+     * @return json
+     */
+    public function getListDraft(Request $request)
+    {
+        return $this->getList($request, 'draft');
+    }
+
     /**
      * get list created.
      *
@@ -119,6 +132,9 @@ class OrderController extends Controller
      */
     public function getDetail(DetailOrderRequest $request)
     {
-        dd($request->getOrder());
+        $order = $request->getOrder();
+        $transform = new OrderDetailTransformer($order);
+
+        return new JsonResponse(['data' => $transform->toArray()]);
     }
 }

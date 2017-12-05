@@ -15,7 +15,7 @@ class OrderItem extends Migration
             $table->increments('id');
             $table->integer('order_id')->unsigned();
             $table->enum('type', ['product', 'good', 'service', 'manual']);
-            $table->enum('type_as', ['product', 'good', 'service']);
+            $table->enum('type_as', ['product', 'good', 'service', 'manual']);
             $table->integer('reference_id')->nullable()->default(null);
             $table->string('name', 50);
             $table->string('specific', 50)->nullable()->default(null);

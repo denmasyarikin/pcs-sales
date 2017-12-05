@@ -27,9 +27,12 @@ class ProductDetailTransformer extends Detail
             'min_order' => $model->min_order,
             'base_price' => $model->base_price,
             'per_unit_price' => $model->per_unit_price,
-            'process_service_count' => $model->process_service_count,
-            'process_good_count' => $model->process_good_count,
-            'process_manual_count' => $model->process_manual_count,
+            'processes_count' => [
+                'total' => $model->process_count,
+                'service' => $model->process_service_count,
+                'good' => $model->process_good_count,
+                'manual' => $model->process_manual_count
+            ],
             'processes' => (new ProductProcessListTransformer($model->processes))->toArray(),
             'medias' => (new ProductMediaListTransformer($model->medias))->toArray(),
             'status' => $model->status,

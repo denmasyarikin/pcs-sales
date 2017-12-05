@@ -20,9 +20,6 @@ class Product extends Migration
             $table->boolean('customizable')->default(true);
             $table->float('base_price')->default(0);
             $table->float('per_unit_price')->default(0);
-            $table->integer('process_service_count')->default(0);
-            $table->integer('process_good_count')->default(0);
-            $table->integer('process_manual_count')->default(0);
             $table->enum('status', ['draft', 'active', 'inactive'])->default('draft');
             $table->timestamps();
             $table->softDeletes();

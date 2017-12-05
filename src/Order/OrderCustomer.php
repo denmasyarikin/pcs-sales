@@ -4,12 +4,9 @@ namespace Denmasyarikin\Sales\Order;
 
 use App\Model;
 use Denmasyarikin\Sales\Customer\Customer;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class OrderCustomer extends Model
 {
-    use SoftDeletes;
-
     /**
      * The table associated with the model.
      *

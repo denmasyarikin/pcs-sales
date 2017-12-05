@@ -12,6 +12,7 @@ use Denmasyarikin\Sales\Product\Requests\CreateProductRequest;
 use Denmasyarikin\Sales\Product\Requests\UpdateProductRequest;
 use Denmasyarikin\Sales\Product\Requests\DeleteProductRequest;
 use Denmasyarikin\Sales\Product\Transformers\ProductListTransformer;
+use Denmasyarikin\Sales\Product\Transformers\ProductDetailTransformer;
 use Denmasyarikin\Sales\Product\Transformers\ProductListDetailTransformer;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 

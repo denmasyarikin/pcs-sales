@@ -26,9 +26,12 @@ class ProductListDetailTransformer extends Detail
             'min_order' => (int) $model->min_order,
             'base_price' => $model->base_price ?: 0,
             'per_unit_price' => $model->per_unit_price ?: 0,
-            'process_service_count' => $model->process_service_count ?: 0,
-            'process_good_count' => $model->process_good_count ?: 0,
-            'process_manual_count' => $model->process_manual_count ?: 0,
+            'processes_count' => [
+                'total' => $model->process_count,
+                'service' => $model->process_service_count,
+                'good' => $model->process_good_count,
+                'manual' => $model->process_manual_count
+            ],
             'customizable' => (bool) $model->customizable,
             'status' => $model->status ?: 'draft',
             'created_at' => $model->created_at->format('Y-m-d H:i:s'),
