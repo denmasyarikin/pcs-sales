@@ -11,6 +11,7 @@ $router->group(['middleware' => 'manage:sales,product'], function ($router) {
 $router->get('/', 'ProductController@getList');
 $router->get('/{id}', 'ProductController@getDetail');
 $router->get('/{id}/process', 'ProcessController@getList');
+$router->get('/{id}/media', 'MediaController@getList');
 $router->group(['middleware' => 'manage:sales,product'], function ($router) {
     $router->post('/', 'ProductController@createProduct');
     $router->put('/{id}', 'ProductController@updateProduct');
@@ -19,5 +20,10 @@ $router->group(['middleware' => 'manage:sales,product'], function ($router) {
         $router->post('/', 'ProcessController@createProcess');
         $router->put('/{process_id}', 'ProcessController@updateProcess');
         $router->delete('/{process_id}', 'ProcessController@deleteProcess');
+    });
+    $router->group(['prefix' => '/{id}/media'], function ($router) {
+        $router->post('/', 'MediaController@createMedia');
+        $router->put('/{media_id}', 'MediaController@updateMedia');
+        $router->delete('/{media_id}', 'MediaController@deleteMedia');
     });
 });
