@@ -85,14 +85,14 @@ class MarkupFactory
     protected function generateMarkup(float $percent, Markupable $markupable)
     {
         $field = $markupable->getTotalFieldName();
-        $markup = ceil(($percent * $markupable->{$field}) / 100);
+        $markup = ceil(($percent * $markupable->total) / 100);
 
         return [
             'type' => 'markup',
-            $field => $markupable->{$field},
+            $field => $markupable->total,
             'adjustment_value' => $percent,
             'adjustment_total' => $markup,
-            'total' => $markupable->{$field} + $markup
+            'total' => $markupable->total + $markup
         ];
     }
 }

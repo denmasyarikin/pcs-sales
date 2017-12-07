@@ -2,8 +2,9 @@
 
 namespace Denmasyarikin\Sales\Order\Factories;
 
-use Denmasyarikin\Sales\Order\Contracts\Adjustment;
+use App\Manager\Facades\Setting;
 use Denmasyarikin\Sales\Order\Contracts\Taxable;
+use Denmasyarikin\Sales\Order\Contracts\Adjustment;
 
 class TaxFactory
 {
@@ -42,12 +43,13 @@ class TaxFactory
     public function applyTax(bool $apply)
     {
         $tax = $this->taxable->getTax();
+        $percent = $apply ? (float) $this->taxRate : 0;
 
         if (is_null($tax)) {
-            $tax = $this->createTax($this->taxable, $apply);
+            $tax = $this->createTax($this->taxable, $percent);
         } else {
             $this->taxable->adjustment_total += $tax->adjustment_total;
-            $this->updateTax($tax, $apply);
+            $this->updateTax($tax, $percent);
         }
 
         $this->taxable->adjustment_total -= $tax->adjustment_total;
@@ -59,10 +61,10 @@ class TaxFactory
      * create tax
      *
      * @param Taxable $taxable
-     * @param bool $apply
+     * @param float $percent
      * @return OrderAdjustment
      */
-    protected function createTax(Taxable $taxable, bool $apply)
+    protected function createTax(Taxable $taxable, float $percent)
     {
         return $taxable->adjustments()->create(
             $this->generateTax($percent, $taxable)
@@ -73,10 +75,10 @@ class TaxFactory
      * update tax
      *
      * @param Adjustment $adjustment
-     * @param bool $apply
+     * @param float $percent
      * @return void
      */
-    protected function updateTax(Adjustment $adjustment, bool $apply)
+    protected function updateTax(Adjustment $adjustment, float $percent)
     {
         return $adjustment->update(
             $this->generateTax($percent, $adjustment->getAdjustmentable())
@@ -93,14 +95,14 @@ class TaxFactory
     protected function generateTax(float $percent, Taxable $taxable)
     {
         $field = $taxable->getTotalFieldName();
-        $tax = ceil(($percent * $taxable->{$field}) / 100);
+        $tax = ceil(($percent * $taxable->total) / 100);
 
         return [
             'type' => 'tax',
-            $field => $taxable->{$field},
+            $field => $taxable->total,
             'adjustment_value' => $percent,
             'adjustment_total' => $tax,
-            'total' => $taxable->{$field} + $tax
+            'total' => $taxable->total + $tax
         ];
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Denmasyarikin\Sales\Order\Requests;
 
-class AdjustmentTaxRequest extends DetailOrderRequest
+class AdjustmentVoucherRequest extends DetailOrderRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -12,7 +12,7 @@ class AdjustmentTaxRequest extends DetailOrderRequest
     public function rules()
     {
         return [
-            'voucher' => 'required|size:8'
+            'code' => 'required|size:8|voucher'
         ];
     }
 }

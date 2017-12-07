@@ -4,6 +4,8 @@ namespace Denmasyarikin\Sales\Order\Controllers;
 
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
+use Denmasyarikin\Sales\Order\Factories\TaxFactory;
+use Denmasyarikin\Sales\Order\Factories\VoucherFactory;
 use Denmasyarikin\Sales\Order\Factories\DiscountFactory;
 use Denmasyarikin\Sales\Order\Requests\AdjustmentTaxRequest;
 use Denmasyarikin\Sales\Order\Requests\AdjustmentVoucherRequest;
@@ -41,5 +43,21 @@ class AdjustmentController extends Controller
         $factory->applyTax((bool) $request->apply);
 
         return new JsonResponse(['message' => 'Discount has been applyed']);
+    }
+
+    /**
+     * apply discount
+     *
+     * @param AdjustmentVoucherRequest $request
+     * @return json
+     */
+    public function applyVoucher(AdjustmentVoucherRequest $request)
+    {
+        $order = $request->getOrder();
+
+        $factory = new VoucherFactory($order);
+        $factory->applyVoucher($request->code);
+
+        return new JsonResponse(['message' => 'Voucher has been applyed']);
     }
 }

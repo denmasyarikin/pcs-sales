@@ -28,10 +28,10 @@ class VoucherFactory
     /**
      * apply markup
      *
-     * @param string $voucher
+     * @param string $code
      * @return void
      */
-    public function applyMarkup($voucher)
+    public function applyVoucher($code)
     {
         // TODO implemnt voucher
     }

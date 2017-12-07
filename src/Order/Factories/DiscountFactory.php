@@ -85,14 +85,14 @@ class DiscountFactory
 	protected function generateDiscount(float $percent, Discountable $discountable)
 	{
 		$field = $discountable->getTotalFieldName();
-		$discount = ceil(($percent * $discountable->{$field}) / 100);
+		$discount = ceil(($percent * $discountable->total) / 100);
 
 		return [
             'type' => 'discount',
-			$field => $discountable->{$field},
+			$field => $discountable->total,
 			'adjustment_value' => $percent,
 			'adjustment_total' => $discount,
-			'total' => $discountable->{$field} - $discount
+			'total' => $discountable->total - $discount
 		];
 	}
 }
