@@ -3,9 +3,13 @@
 namespace Denmasyarikin\Sales\Order;
 
 use App\Model;
+use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Denmasyarikin\Sales\Order\Contracts\Taxable;
+use Denmasyarikin\Sales\Order\Contracts\Voucherable;
+use Denmasyarikin\Sales\Order\Contracts\Discountable;
 
-class Order extends Model
+class Order extends Model implements Taxable, Voucherable, Discountable
 {
     use SoftDeletes, ItemCounterTrait;
 
@@ -15,6 +19,13 @@ class Order extends Model
      * @var Collection
      */
     protected $cacheItems;
+
+    /**
+     * cacheAdjustments
+     *
+     * @var Collection
+     */
+    protected $cacheAdjustments;
 
     /**
      * The table associated with the model.
@@ -48,6 +59,14 @@ class Order extends Model
     }
 
     /**
+     * Get the adjustments record associated with the OrderItem.
+     */
+    public function adjustments()
+    {
+        return $this->hasMany(OrderAdjustment::class);
+    }
+
+    /**
      * get items
      *
      * @return Collection
@@ -59,5 +78,88 @@ class Order extends Model
         }
 
         return $this->cacheItems = $this->items;
+    }
+
+    /**
+     * get adjustments
+     *
+     * @return Collection
+     */
+    public function getAdjustments()
+    {
+        if ($this->cacheAdjustments) {
+            return $this->cacheAdjustments;
+        }
+
+        return $this->cacheAdjustments = $this->adjustments;
+    }
+
+    /**
+     * update order total
+     *
+     * @return void
+     */
+    public function updateTotal()
+    {
+        $this->update([
+            'total' => $this->item_total - $this->adjustment_total
+        ]);
+    }
+    
+    /**
+     * get total filed name
+     *
+     * @param  
+     * @return string
+     */
+    public function getTotalFieldName()
+    {
+        return 'item_total';
+    }
+
+    /**
+     * get primary item
+     *
+     * @return Collection
+     */
+    protected function getPrimaryItems()
+    {
+        $items = new Collection();
+        $items->merge($this->itemProduct);
+        $items->merge($this->itemGood);
+        $items->merge($this->itemService);
+        $items->merge($this->itemManual);
+
+        return $item;
+    }
+
+    /**
+     * get discount
+     *
+     * @return OrderAdjustment
+     */
+    public function getDiscount()
+    {
+        return $this->getAdjustments()->where('type', 'discount')->first();
+    }
+
+    /**
+     * get voucher
+     *
+     * @return OrderAdjustment
+     */
+    public function getVoucher()
+    {
+        return $this->getAdjustments()->where('type', 'voucher')->first();
+    }
+
+    /**
+     * get tax
+     *
+     * @return OrderAdjustment
+     */
+    public function getTax()
+    {
+        return $this->getAdjustments()->where('type', 'tax')->first();
     }
 }

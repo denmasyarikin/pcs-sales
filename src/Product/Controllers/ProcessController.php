@@ -50,8 +50,6 @@ class ProcessController extends Controller
             $product->update(['status' => 'active']);
         }
 
-        $product->updateProductPrice();
-
         return new JsonResponse([
             'message' => 'Product Process has been created',
             'data' => (new ProductProcessDetailTransformer($process))->toArray()
@@ -75,8 +73,6 @@ class ProcessController extends Controller
             'static_price', 'static_to_order_count', 'unit_id'
         ]));
 
-        $product->updateProductPrice();
-
         return new JsonResponse([
             'message' => 'Product Process has been updated',
             'data' => (new ProductProcessDetailTransformer($process))->toArray()
@@ -96,7 +92,6 @@ class ProcessController extends Controller
         $process = $request->getProductProcess();
 
         $process->delete();
-        $product->updateProductPrice();
 
         return new JsonResponse(['message' => 'Product process has been deleted']);
     }

@@ -19,7 +19,7 @@ class OrderItem extends Migration
             $table->integer('reference_id')->nullable()->default(null);
             $table->string('name', 50);
             $table->string('specific', 50)->nullable()->default(null);
-            $table->text('description')->nullable()->default(null);
+            $table->text('note')->nullable()->default(null);
             $table->integer('quantity');
             $table->float('unit_price');
             $table->float('unit_total');

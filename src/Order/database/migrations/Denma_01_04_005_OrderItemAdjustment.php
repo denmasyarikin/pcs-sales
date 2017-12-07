@@ -4,24 +4,24 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class OrderAdjustment extends Migration
+class OrderItemAdjustment extends Migration
 {
     /**
      * Run the migrations.
      */
     public function up()
     {
-        Schema::create('sales_order_adjustments', function (Blueprint $table) {
+        Schema::create('sales_order_item_adjustments', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('order_id')->unsigned();
-            $table->enum('type', ['discount', 'voucher', 'tax']);
-            $table->float('item_total');
+            $table->integer('order_item_id')->unsigned();
+            $table->enum('type', ['markup', 'discount', 'voucher']);
+            $table->float('unit_total');
             $table->string('adjustment_value');
             $table->float('adjustment_total');
             $table->float('total');
             $table->timestamps();
 
-            $table->foreign('order_id')->references('id')->on('sales_orders');
+            $table->foreign('order_item_id')->references('id')->on('sales_order_items');
         });
     }
 
@@ -30,6 +30,6 @@ class OrderAdjustment extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sales_order_adjustments');
+        Schema::dropIfExists('sales_order_item_adjustments');
     }
 }

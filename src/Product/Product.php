@@ -100,7 +100,7 @@ class Product extends Model
     {
         $this->base_price = 0;
 
-        foreach ($this->getProcesses()->whereNull('parent_id')->get() as $process) {
+        foreach ($this->getProcesses()->whereStrict('parent_id', null) as $process) {
             $this->base_price += $process->base_price * $process->quantity;
             $this->per_unit_price = ceil($this->base_price / $this->min_order);
         }
@@ -119,6 +119,6 @@ class Product extends Model
             return $this->cacheProcesses;
         }
 
-        return $this->cacheProcesses = $this->processes;
+        return $this->cacheProcesses  = $this->processes;
     }
 }

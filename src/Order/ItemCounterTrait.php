@@ -16,14 +16,31 @@ trait ItemCounterTrait
 	}
 
 	/**
+	 * Get ItemProduct.
+	 */
+	public function getItemProductAttribute()
+	{
+		return $this->getItems()
+					->where('type', 'product')
+					->where('type_as', 'product');
+	}
+
+	/**
 	 * Get ItemProductCount.
 	 */
 	public function getItemProductCountAttribute()
 	{
+		return $this->itemProduct->count();
+	}
+
+	/**
+	 * Get ItemProductProcess.
+	 */
+	public function getItemProductProcessAttribute()
+	{
 		return $this->getItems()
 					->where('type', 'product')
-					->where('type_as', 'product')
-					->count();
+					->where('type_as', '<>', 'product');
 	}
 
 	/**
@@ -31,10 +48,17 @@ trait ItemCounterTrait
 	 */
 	public function getItemProductProcessCountAttribute()
 	{
+		return $this->itemProductProcess->count();
+	}
+
+	/**
+	 * Get ItemService.
+	 */
+	public function getItemServiceAttribute()
+	{
 		return $this->getItems()
-					->where('type', 'product')
-					->where('type_as', '<>', 'product')
-					->count();
+					->where('type', 'service')
+					->where('type_as', 'service');
 	}
 
 	/**
@@ -42,10 +66,17 @@ trait ItemCounterTrait
 	 */
 	public function getItemServiceCountAttribute()
 	{
+		return $this->itemService->count();
+	}
+
+	/**
+	 * Get ItemGood.
+	 */
+	public function getItemGoodAttribute()
+	{
 		return $this->getItems()
-					->where('type', 'service')
-					->where('type_as', 'service')
-					->count();
+					->where('type', 'good')
+					->where('type_as', 'good');
 	}
 
 	/**
@@ -53,10 +84,17 @@ trait ItemCounterTrait
 	 */
 	public function getItemGoodCountAttribute()
 	{
+		return $this->itemGood->count();
+	}
+
+	/**
+	 * Get ItemManual.
+	 */
+	public function getItemManualAttribute()
+	{
 		return $this->getItems()
-					->where('type', 'good')
-					->where('type_as', 'good')
-					->count();
+					->where('type', 'manual')
+					->whereIn('type_as', ['good', 'service']);
 	}
 
 	/**
@@ -64,9 +102,6 @@ trait ItemCounterTrait
 	 */
 	public function getItemManualCountAttribute()
 	{
-		return $this->getItems()
-					->where('type', 'manual')
-					->whereIn('type_as', ['good', 'service'])
-					->count();
+		return $this->itemManual->count();
 	}
 }

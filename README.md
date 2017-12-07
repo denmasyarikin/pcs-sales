@@ -7,3 +7,4 @@ Sales Printing Company System
 - 03 Product Manager
 - 04 Order Manager
 - 05 Payment Manager
+- 06 Tax

@@ -14,7 +14,18 @@ class Setting implements SettingContract
     public function getSetting()
     {
         return [
-            'tax_rate' => 10
+            'enabled_adjusment' => true,
+            'enabled_tax' => true,
+            'enabled_voucher' => true,
+            'enabled_discount' => true,
+            'cancelation_reasons' => [
+                'replaced',
+                'customer_request',
+                'prdouction_error',
+                'rejected',
+                'unknown',
+                'other'
+            ]
         ];
     }
 }

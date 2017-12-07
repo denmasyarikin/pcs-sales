@@ -36,6 +36,7 @@ class OrdersTable extends Seeder
         $order->items()->create([
             'type' => 'product',
             'type_as' => 'product',
+            'reference_id' => 1,
             'name' => 'Kartu Nama',
             'quantity' => 1,
             'unit_price' => 54000,
@@ -60,7 +61,7 @@ class OrdersTable extends Seeder
         $order->items()->create([
             'type' => 'product',
             'type_as' => 'service',
-            'reference_id' => 2,
+            'reference_id' => 1,
             'name' => 'Print Digital',
             'specific' => 'Art Carton',
             'quantity' => 4,
@@ -73,7 +74,7 @@ class OrdersTable extends Seeder
         $order->items()->create([
             'type' => 'product',
             'type_as' => 'service',
-            'reference_id' => 3,
+            'reference_id' => 1,
             'name' => 'Finishing Digital',
             'specific' => 'Laminating Gloys',
             'quantity' => 4,

@@ -3,12 +3,9 @@
 namespace Denmasyarikin\Sales\Order;
 
 use App\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class OrderHistory extends Model
 {
-    use SoftDeletes;
-
     /**
      * The table associated with the model.
      *
