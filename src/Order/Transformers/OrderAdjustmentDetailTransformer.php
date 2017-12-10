@@ -19,7 +19,7 @@ class OrderAdjustmentDetailTransformer extends Detail
         return [
             'id' => $model->id,
             'type' => $model->type,
-            'item_total' => $model->item_total,
+            'adjustment_origin' => $model->adjustment_origin,
             'adjustment_value' => $model->adjustment_value,
             'adjustment_total' => $model->adjustment_total,
             'total' => $model->total,

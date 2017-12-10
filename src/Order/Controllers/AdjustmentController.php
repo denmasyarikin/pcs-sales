@@ -2,14 +2,17 @@
 
 namespace Denmasyarikin\Sales\Order\Controllers;
 
+use App\Manager\Facades\Setting;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
+use Denmasyarikin\Sales\Order\Order;
 use Denmasyarikin\Sales\Order\Factories\TaxFactory;
 use Denmasyarikin\Sales\Order\Factories\VoucherFactory;
 use Denmasyarikin\Sales\Order\Factories\DiscountFactory;
 use Denmasyarikin\Sales\Order\Requests\AdjustmentTaxRequest;
 use Denmasyarikin\Sales\Order\Requests\AdjustmentVoucherRequest;
 use Denmasyarikin\Sales\Order\Requests\AdjustmentDiscountRequest;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class AdjustmentController extends Controller
 {
@@ -22,9 +25,10 @@ class AdjustmentController extends Controller
     public function applyDiscount(AdjustmentDiscountRequest $request)
     {
         $order = $request->getOrder();
+        $this->hasItems($order);
 
         $factory = new DiscountFactory($order);
-        $factory->applyDiscount((float) $request->percent);
+        $factory->apply($request->percent);
 
         return new JsonResponse(['message' => 'Discount has been applyed']);
     }
@@ -38,11 +42,14 @@ class AdjustmentController extends Controller
     public function applyTax(AdjustmentTaxRequest $request)
     {
         $order = $request->getOrder();
+        $this->hasItems($order);
+
+        $taxRate = Setting::get('system.sales.order.tax.tax_rate', 10);
 
         $factory = new TaxFactory($order);
-        $factory->applyTax((bool) $request->apply);
+        $factory->apply((bool) $request->apply ? $taxRate : 0);
 
-        return new JsonResponse(['message' => 'Discount has been applyed']);
+        return new JsonResponse(['message' => 'Tax has been applyed']);
     }
 
     /**
@@ -54,10 +61,24 @@ class AdjustmentController extends Controller
     public function applyVoucher(AdjustmentVoucherRequest $request)
     {
         $order = $request->getOrder();
+        $this->hasItems($order);
 
         $factory = new VoucherFactory($order);
-        $factory->applyVoucher($request->code);
+        $factory->apply($request->code);
 
         return new JsonResponse(['message' => 'Voucher has been applyed']);
+    }
+
+    /**
+     * has item totals
+     *
+     * @param Order $order
+     * @return void
+     */
+    protected function hasItems(Order $order)
+    {
+        if (count($order->getItems()) === 0) {
+            throw new BadRequestHttpException('Order has no item yet');
+        }
     }
 }

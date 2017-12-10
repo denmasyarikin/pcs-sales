@@ -20,7 +20,7 @@ class VoucherFactory extends AdjustmentFactory
      *
      * @var string
      */
-    protected $adjustmentType = 'discount';
+    protected $adjustmentType = 'voucher';
 
     /**
      * get Adjustment

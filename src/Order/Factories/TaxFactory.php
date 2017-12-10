@@ -20,7 +20,7 @@ class TaxFactory extends AdjustmentFactory
      *
      * @var string
      */
-    protected $adjustmentType = 'markup';
+    protected $adjustmentType = 'tax';
 
     /**
      * get Adjustment

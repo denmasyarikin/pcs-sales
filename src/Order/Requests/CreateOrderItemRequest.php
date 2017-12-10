@@ -23,7 +23,7 @@ class CreateOrderItemRequest extends DetailOrderRequest
             'unit_id' => 'required|exists:core_units,id',
             'markup' => 'numeric|max:100',
             'discount' => 'numeric|max:100',
-            'voucher' => 'size:8'
+            'voucher' => 'size:8|voucher'
         ];
     }
 }
