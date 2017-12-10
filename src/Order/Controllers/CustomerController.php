@@ -11,6 +11,8 @@ use Denmasyarikin\Sales\Order\Transformers\OrderCustomerTransformer;
 
 class CustomerController extends Controller
 {
+    use OrderRestrictionTrait;
+
     /**
      * get detail
      *
@@ -35,6 +37,8 @@ class CustomerController extends Controller
     public function updateCustomer(UpdateCustomerRequest $request)
     {
         $order = $request->getOrder();
+        $this->updateableOrder($order);
+
         $customer = $request->only([
             'customer_id', 'type', 'name', 'address',
             'telephone', 'email', 'contact_person'

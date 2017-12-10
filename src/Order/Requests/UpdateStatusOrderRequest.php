@@ -2,7 +2,7 @@
 
 namespace Denmasyarikin\Sales\Order\Requests;
 
-class UpdateOrderRequest extends DetailOrderRequest
+class UpdateStatusOrderRequest extends DetailOrderRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -12,8 +12,7 @@ class UpdateOrderRequest extends DetailOrderRequest
     public function rules()
     {
         return [
-            'note' => '',
-            'due_date' => 'date_format:Y-m-d H:i:s'
+            'status' => 'required|in:created,processing,finished,archived'
         ];
     }
 }

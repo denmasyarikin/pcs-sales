@@ -12,10 +12,11 @@ use Denmasyarikin\Sales\Order\Factories\DiscountFactory;
 use Denmasyarikin\Sales\Order\Requests\AdjustmentTaxRequest;
 use Denmasyarikin\Sales\Order\Requests\AdjustmentVoucherRequest;
 use Denmasyarikin\Sales\Order\Requests\AdjustmentDiscountRequest;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class AdjustmentController extends Controller
 {
+    use OrderRestrictionTrait;
+
     /**
      * apply discount
      *
@@ -25,6 +26,7 @@ class AdjustmentController extends Controller
     public function applyDiscount(AdjustmentDiscountRequest $request)
     {
         $order = $request->getOrder();
+        $this->updateableOrder($order);
         $this->hasItems($order);
 
         $factory = new DiscountFactory($order);
@@ -42,6 +44,7 @@ class AdjustmentController extends Controller
     public function applyTax(AdjustmentTaxRequest $request)
     {
         $order = $request->getOrder();
+        $this->updateableOrder($order);
         $this->hasItems($order);
 
         $taxRate = Setting::get('system.sales.order.tax.tax_rate', 10);
@@ -61,24 +64,12 @@ class AdjustmentController extends Controller
     public function applyVoucher(AdjustmentVoucherRequest $request)
     {
         $order = $request->getOrder();
+        $this->updateableOrder($order);
         $this->hasItems($order);
 
         $factory = new VoucherFactory($order);
         $factory->apply($request->code);
 
         return new JsonResponse(['message' => 'Voucher has been applyed']);
-    }
-
-    /**
-     * has item totals
-     *
-     * @param Order $order
-     * @return void
-     */
-    protected function hasItems(Order $order)
-    {
-        if (count($order->getItems()) === 0) {
-            throw new BadRequestHttpException('Order has no item yet');
-        }
     }
 }

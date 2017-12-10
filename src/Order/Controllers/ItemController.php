@@ -12,10 +12,11 @@ use Denmasyarikin\Sales\Order\Requests\UpdateOrderItemRequest;
 use Denmasyarikin\Sales\Order\Requests\DeleteOrderItemRequest;
 use Denmasyarikin\Sales\Order\Transformers\OrderItemListTransformer;
 use Denmasyarikin\Sales\Order\Transformers\OrderItemDetailTransformer;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class ItemController extends Controller
 {
+    use OrderRestrictionTrait;
+
     /**
      * get list.
      *
@@ -56,9 +57,11 @@ class ItemController extends Controller
      */
     public function createOrderItem(CreateOrderItemRequest $request)
     {
-        $this->strictItemType($request->type, $request->type_as);
-        
         $order = $request->getOrder();
+        $this->updateableOrder($order);
+
+        $this->orderItemTypeRestriction($request->type, $request->type_as);
+        
         $factory = new OrderFactory($order);
 
         $orderItem = $factory->createOrderItem(
@@ -87,9 +90,11 @@ class ItemController extends Controller
      */
     public function updateOrderItem(UpdateOrderItemRequest $request)
     {
-        $this->strictItemType($request->type, $request->type_as);
-        
         $order = $request->getOrder();
+        $this->updateableOrder($order);
+
+        $this->orderItemTypeRestriction($request->type, $request->type_as);
+        
         $orderItem = $request->getOrderItem();
         $factory = new OrderFactory($order);
 
@@ -108,33 +113,6 @@ class ItemController extends Controller
     }
 
     /**
-     * strict order item type
-     *
-     * @param string $type
-     * @param string $typeAs
-     * @return void
-     */
-    protected function strictItemType($type, $typeAs)
-    {
-        switch ($type) {
-            case 'good':
-                if ($typeAs !== 'good') {
-                    throw new BadRequestHttpException('Type As of type good only allowed good');
-                }
-                break;
-            case 'service':
-                if ($typeAs !== 'service') {
-                    throw new BadRequestHttpException('Type As of type service only allowed service');
-                }
-            case 'manual':
-                if (! in_array($typeAs, ['good', 'service'])) {
-                    throw new BadRequestHttpException('Type As of type manual only allowed good or service');
-                }
-                break;
-        }
-    }
-
-    /**
      * delete order item
      *
      * @param DeleteOrderItemRequest $request
@@ -143,6 +121,8 @@ class ItemController extends Controller
     public function deleteOrderItem(DeleteOrderItemRequest $request)
     {
         $order = $request->getOrder();
+        $this->updateableOrder($order);
+
         $orderItem = $request->getOrderItem();
         $factory = new OrderFactory($order);
 

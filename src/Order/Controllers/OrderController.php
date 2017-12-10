@@ -10,12 +10,15 @@ use Denmasyarikin\Sales\Order\Requests\DetailOrderRequest;
 use Denmasyarikin\Sales\Order\Requests\CreateOrderRequest;
 use Denmasyarikin\Sales\Order\Requests\UpdateOrderRequest;
 use Denmasyarikin\Sales\Order\Requests\DeleteOrderRequest;
+use Denmasyarikin\Sales\Order\Requests\UpdateStatusOrderRequest;
 use Denmasyarikin\Sales\Order\Transformers\OrderListTransformer;
 use Denmasyarikin\Sales\Order\Transformers\OrderDetailTransformer;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class OrderController extends Controller
 {
+    use OrderRestrictionTrait;
+
     /**
      * get list draft.
      *
@@ -174,21 +177,53 @@ class OrderController extends Controller
     public function updateOrder(UpdateOrderRequest $request)
     {
         $order = $request->getOrder();
+        $this->updateableOrder($order);
 
-        if ($request->has('status')
-            AND $request->status !== 'draft'
-            AND count($order->items) === 0) {
-            throw new BadRequestHttpException(
-                "Can not update status to {$request->status} while item count is 0"
-            );
-        }
-
-        $order->update($request->only([
-            'note', 'due_date', 'start_process_date',
-            'end_process_date', 'close_date', 'status'
-        ]));
+        $order->update($request->only(['note', 'due_date']));
 
         return new JsonResponse(['message' => 'Order has been updated']);
+    }
+
+    /**
+     * update status order
+     *
+     * @param UpdateStatusOrderRequest $request
+     * @return json
+     */
+    public function updateStatusOrder(UpdateStatusOrderRequest $request)
+    {
+        $order = $request->getOrder();
+        $this->updateOrderStatusRetriction($order, $request->status);
+
+        switch ($request->status) {
+            case 'processing':
+                $order->update([
+                    'start_process_date' => date('Y-m-d H:i:s'),
+                    'status' => 'processing'
+                ]);
+                break;
+
+            case 'finished':
+                $order->update([
+                    'end_process_date' => date('Y-m-d H:i:s'),
+                    'status' => 'finished'
+                ]);
+                break;
+
+            case 'archived':
+                $order->update([
+                    'close_date' => date('Y-m-d H:i:s'),
+                    'status' => 'archived'
+                ]);
+                break;
+            default:
+                $order->update(['status' => $request->status]);
+                break;
+        }
+
+        return new JsonResponse([
+            'message' => 'Order status has been updated to '.$request->status
+        ]);
     }
 
     /**
@@ -200,10 +235,7 @@ class OrderController extends Controller
     public function deleteOrder(DeleteOrderRequest $request)
     {
         $order = $request->getOrder();
-
-        if (! in_array($order->status, ['draft', 'created'])) {
-            throw new BadRequestHttpException('Can not delete order while status ' . $order->status);
-        }
+        $this->updateableOrder($order);
 
         $order->delete();
 

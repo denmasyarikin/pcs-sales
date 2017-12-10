@@ -14,11 +14,12 @@ $router->get('/{id}/item/{item_id}', 'ItemController@getDetail');
 $router->group(['middleware' => 'manage:sales,order'], function ($router) {
     $router->post('/', 'OrderController@createOrder');
     $router->put('/{id}', 'OrderController@updateOrder');
+	$router->put('/{id}/status', 'OrderController@updateStatusOrder');
     $router->delete('/{id}', 'OrderController@deleteOrder');
     $router->post('/{id}/customer', 'CustomerController@updateCustomer');
     $router->post('/{id}/discount', 'AdjustmentController@applyDiscount');
     $router->post('/{id}/tax', 'AdjustmentController@applyTax');
-	$router->post('/{id}/voucher', 'AdjustmentController@applyVoucher');
+    $router->post('/{id}/voucher', 'AdjustmentController@applyVoucher');
 
     $router->group(['prefix' => '/{id}/item'], function ($router) {
         $router->post('/', 'ItemController@createOrderItem');
