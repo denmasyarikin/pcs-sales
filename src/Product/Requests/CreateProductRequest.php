@@ -18,7 +18,7 @@ class CreateProductRequest extends FormRequest
             'description' => 'required|min:20|max:150',
             'unit_id' => 'required|exists:core_units,id',
             'min_order' => 'required|numeric|min:1',
-            'customizable' => 'required|boolean'
+            'customizable' => 'required|boolean',
         ];
     }
 }

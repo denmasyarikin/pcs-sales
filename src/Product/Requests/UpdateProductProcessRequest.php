@@ -54,7 +54,7 @@ class UpdateProductProcessRequest extends DetailProductRequest
             'required' => 'boolean',
             'static_price' => 'boolean',
             'static_to_order_count' => 'numeric|min:1|required_if:static_price,false',
-            'unit_id' => 'required|exists:core_units,id'
+            'unit_id' => 'required|exists:core_units,id',
         ];
     }
 }

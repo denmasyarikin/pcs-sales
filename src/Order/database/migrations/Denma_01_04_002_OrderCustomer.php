@@ -22,7 +22,6 @@ class OrderCustomer extends Migration
             $table->string('email', 50)->nullable()->default(null);
             $table->string('contact_person', 50)->nullable()->default(null);
             $table->timestamps();
-            $table->softDeletes();
 
             $table->foreign('order_id')->references('id')->on('sales_orders');
             $table->foreign('customer_id')->references('id')->on('sales_customers');

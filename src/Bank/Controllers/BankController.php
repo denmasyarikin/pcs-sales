@@ -52,9 +52,10 @@ class BankController extends Controller
     }
 
     /**
-     * get detail
+     * get detail.
      *
      * @param DetailBankRequest $request
+     *
      * @return json
      */
     public function getDetail(DetailBankRequest $request)
@@ -62,7 +63,7 @@ class BankController extends Controller
         $bank = $request->getBank();
 
         return new JsonResponse([
-            'data' => (new BankDetailTransformer($bank))->toArray()
+            'data' => (new BankDetailTransformer($bank))->toArray(),
         ]);
     }
 
@@ -81,7 +82,7 @@ class BankController extends Controller
 
         return new JsonResponse([
             'message' => 'Bank has been created',
-            'data' => (new BankDetailTransformer($bank))->toArray()
+            'data' => (new BankDetailTransformer($bank))->toArray(),
         ], 201);
     }
 
@@ -102,7 +103,7 @@ class BankController extends Controller
 
         return new JsonResponse([
             'message' => 'Bank has been updated',
-            'data' => (new BankDetailTransformer($bank))->toArray()
+            'data' => (new BankDetailTransformer($bank))->toArray(),
         ]);
     }
 

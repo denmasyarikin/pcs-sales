@@ -7,10 +7,30 @@ use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 use Denmasyarikin\Sales\Order\Order;
 use Denmasyarikin\Sales\Order\Requests\DetailOrderRequest;
+use Denmasyarikin\Sales\Order\Requests\CreateOrderRequest;
+use Denmasyarikin\Sales\Order\Requests\UpdateOrderRequest;
+use Denmasyarikin\Sales\Order\Requests\DeleteOrderRequest;
+use Denmasyarikin\Sales\Order\Requests\CancelOrderRequest;
+use Denmasyarikin\Sales\Order\Requests\UpdateStatusOrderRequest;
 use Denmasyarikin\Sales\Order\Transformers\OrderListTransformer;
+use Denmasyarikin\Sales\Order\Transformers\OrderDetailTransformer;
 
 class OrderController extends Controller
 {
+    use OrderRestrictionTrait;
+
+    /**
+     * get list draft.
+     *
+     * @param Request $request
+     *
+     * @return json
+     */
+    public function getListDraft(Request $request)
+    {
+        return $this->getList($request, 'draft');
+    }
+
     /**
      * get list created.
      *
@@ -119,6 +139,130 @@ class OrderController extends Controller
      */
     public function getDetail(DetailOrderRequest $request)
     {
-        dd($request->getOrder());
+        $order = $request->getOrder();
+        $transform = new OrderDetailTransformer($order);
+
+        return new JsonResponse(['data' => $transform->toArray()]);
+    }
+
+    /**
+     * create order.
+     *
+     * @param CreateOrderRequest $request
+     *
+     * @return json
+     */
+    public function createOrder(CreateOrderRequest $request)
+    {
+        $user = $request->user();
+
+        $order = Order::create([
+            'cs_user_id' => $user->id,
+            'cs_name' => $user->name,
+        ]);
+
+        return new JsonResponse([
+            'message' => 'Order has been created',
+            'data' => ['id' => $order->id],
+        ], 201);
+    }
+
+    /**
+     * update order.
+     *
+     * @param UpdateOrderRequest $request
+     *
+     * @return json
+     */
+    public function updateOrder(UpdateOrderRequest $request)
+    {
+        $order = $request->getOrder();
+        $this->updateableOrder($order);
+
+        $order->update($request->only(['note', 'due_date']));
+
+        return new JsonResponse(['message' => 'Order has been updated']);
+    }
+
+    /**
+     * update status order.
+     *
+     * @param UpdateStatusOrderRequest $request
+     *
+     * @return json
+     */
+    public function updateStatusOrder(UpdateStatusOrderRequest $request)
+    {
+        $order = $request->getOrder();
+        $this->updateOrderStatusRetriction($order, $request->status);
+
+        switch ($request->status) {
+            case 'created':
+                $order->update(['status' => 'created']);
+                $order->histories()->create(['type' => 'order', 'label' => 'created']);
+                break;
+            case 'processing':
+                $order->update([
+                    'start_process_date' => date('Y-m-d H:i:s'),
+                    'status' => 'processing',
+                ]);
+                $order->histories()->create(['type' => 'order', 'label' => 'processing']);
+                break;
+
+            case 'finished':
+                $order->update([
+                    'end_process_date' => date('Y-m-d H:i:s'),
+                    'status' => 'finished',
+                ]);
+                $order->histories()->create(['type' => 'order', 'label' => 'finished']);
+                break;
+
+            case 'archived':
+                $order->update([
+                    'close_date' => date('Y-m-d H:i:s'),
+                    'status' => 'archived',
+                ]);
+                $order->histories()->create(['type' => 'order', 'label' => 'archived']);
+                break;
+        }
+
+        return new JsonResponse([
+            'message' => 'Order status has been updated to '.$request->status,
+        ]);
+    }
+
+    /**
+     * delete order.
+     *
+     * @param DeleteOrderRequest $request
+     *
+     * @return json
+     */
+    public function deleteOrder(DeleteOrderRequest $request)
+    {
+        $order = $request->getOrder();
+        $this->updateableOrder($order);
+
+        $order->delete();
+
+        return new JsonResponse(['message' => 'Order has been deleted']);
+    }
+
+    /**
+     * cancel order.
+     *
+     * @param CancelOrderRequest $request
+     *
+     * @return json
+     */
+    public function cancelOrder(CancelOrderRequest $request)
+    {
+        $order = $request->getOrder();
+        $this->cancelableOrder($order);
+
+        $order->cancelation()->create($request->only(['reason', 'description']));
+        $order->update(['status' => 'canceled']);
+
+        return new JsonResponse(['message' => 'Order has been canceled']);
     }
 }

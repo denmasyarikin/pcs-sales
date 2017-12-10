@@ -4,21 +4,22 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class OrderHistory extends Migration
+class OrderAdjustment extends Migration
 {
     /**
      * Run the migrations.
      */
     public function up()
     {
-        Schema::create('sales_order_histories', function (Blueprint $table) {
+        Schema::create('sales_order_adjustments', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('order_id')->unsigned();
-            $table->string('label', 50);
-            $table->text('description')->nullable()->default(null);
-            $table->string('actor_as', 50);
-            $table->string('actor_name', 50);
-            $table->enum('type', ['order', 'process', 'payment'])->default('order');
+            $table->integer('priority');
+            $table->enum('type', ['discount', 'voucher', 'tax']);
+            $table->float('adjustment_origin');
+            $table->string('adjustment_value');
+            $table->float('adjustment_total');
+            $table->float('total');
             $table->timestamps();
 
             $table->foreign('order_id')->references('id')->on('sales_orders');
@@ -30,6 +31,6 @@ class OrderHistory extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sales_order_histories');
+        Schema::dropIfExists('sales_order_adjustments');
     }
 }

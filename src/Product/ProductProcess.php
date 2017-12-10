@@ -47,4 +47,22 @@ class ProductProcess extends Model
     {
         return $this->belongsTo(static::class, 'parent_id');
     }
+
+    /**
+     * The "booting" method of the model.
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::saved(function ($process) {
+            $product = $process->product;
+            $product->updateProductPrice();
+        });
+
+        static::deleted(function ($process) {
+            $product = $process->product;
+            $product->updateProductPrice();
+        });
+    }
 }

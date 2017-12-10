@@ -13,15 +13,15 @@ class OrdersTable extends Seeder
     public function run()
     {
         $order = Order::create([
-            'item_count' => 1,
-            'items_total' => 54000,
+            'item_total' => 54000,
             'total' => 54000,
-            'paid' => 0,
+            'paid_off' => 0,
             'remaining' => 54000,
-            'is_paid' => false,
+            'paid' => false,
             'note' => 'Cepet cepet ya...',
             'cs_user_id' => 1,
             'cs_name' => 'Deden Maulana',
+            'status' => 'created',
             'due_date' => date('Y-m-d H:i:s'),
         ]);
 
@@ -36,6 +36,7 @@ class OrdersTable extends Seeder
         $order->items()->create([
             'type' => 'product',
             'type_as' => 'product',
+            'reference_id' => 1,
             'name' => 'Kartu Nama',
             'quantity' => 1,
             'unit_price' => 54000,
@@ -60,7 +61,7 @@ class OrdersTable extends Seeder
         $order->items()->create([
             'type' => 'product',
             'type_as' => 'service',
-            'reference_id' => 2,
+            'reference_id' => 1,
             'name' => 'Print Digital',
             'specific' => 'Art Carton',
             'quantity' => 4,
@@ -73,7 +74,7 @@ class OrdersTable extends Seeder
         $order->items()->create([
             'type' => 'product',
             'type_as' => 'service',
-            'reference_id' => 3,
+            'reference_id' => 1,
             'name' => 'Finishing Digital',
             'specific' => 'Laminating Gloys',
             'quantity' => 4,

@@ -20,8 +20,7 @@ class ProductsTable extends Seeder
             'min_order' => 1,
             'base_price' => 54000,
             'per_unit_price' => 54000,
-            'process_service_count' => 3,
-            'status' => 'active'
+            'status' => 'active',
         ]);
 
         ProductProcess::create([

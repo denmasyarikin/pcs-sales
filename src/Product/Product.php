@@ -9,7 +9,14 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Product extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, ProcessCounterTrait;
+
+    /**
+     * cache processes.
+     *
+     * @var Collection
+     */
+    protected $cacheProcesses;
 
     /**
      * The table associated with the model.
@@ -74,9 +81,10 @@ class Product extends Model
     }
 
     /**
-     * create process
+     * create process.
      *
      * @param array $process
+     *
      * @return ProductProcess
      */
     public function createProcess(array $process)
@@ -85,34 +93,31 @@ class Product extends Model
     }
 
     /**
-     * update product price
-     *
-     * @return void
+     * update product price.
      */
     public function updateProductPrice()
     {
-        $this->resetProcessCount();
+        $this->base_price = 0;
 
-        foreach ($this->processes()->whereNull('parent_id')->get() as $process) {
+        foreach ($this->getProcesses()->whereStrict('parent_id', null) as $process) {
             $this->base_price += $process->base_price * $process->quantity;
             $this->per_unit_price = ceil($this->base_price / $this->min_order);
-            $this->{'process_'.$process->type.'_count'} += 1;
         }
 
         $this->save();
     }
 
     /**
-     * reset process count
+     * get processes.
      *
-     * @return void
+     * @return Collection
      */
-    protected function resetProcessCount()
+    public function getProcesses()
     {
-        $this->base_price = 0;
-        $this->per_unit_price = 0;
-        $this->process_good_count = 0;
-        $this->process_service_count = 0;
-        $this->process_manual_count = 0;
+        if ($this->cacheProcesses) {
+            return $this->cacheProcesses;
+        }
+
+        return $this->cacheProcesses = $this->processes;
     }
 }
