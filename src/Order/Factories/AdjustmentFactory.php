@@ -12,7 +12,7 @@ abstract class AdjustmentFactory
      *
      * @var int
      */
-    protected $priority = 2;
+    protected $priority;
 
 	/**
 	 * adjustment type
@@ -109,7 +109,7 @@ abstract class AdjustmentFactory
 	 * @param mixed $value
 	 * @return void
 	 */
-	protected function resetAllAdjustments(Adjustment $updateAdjustment, $value)
+	protected function resetAllAdjustments(Adjustment $updateAdjustment = null, $value = null)
 	{
 		$this->resetAdjustmentable();
 		$adjustments = $this->adjustmentable->adjustments()->orderBy('priority', 'ASC')->get();
@@ -117,7 +117,7 @@ abstract class AdjustmentFactory
 		foreach ($adjustments as $adjustment) {
 			$factory = $this->createFactory($adjustment);
 
-			if ($adjustment->id === $updateAdjustment->id) {
+			if (! is_null($updateAdjustment) AND $updateAdjustment->id === $adjustment->id) {
 				$adjustment = $factory->updateAdjustment($adjustment, $value);
 			} else {
 				$adjustment = $factory->updateAdjustment($adjustment, $adjustment->adjustment_value);

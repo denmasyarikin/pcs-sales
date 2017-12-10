@@ -5,6 +5,7 @@ namespace Denmasyarikin\Sales\Order\Factories;
 use App\Manager\Facades\Setting;
 use Denmasyarikin\Sales\Order\Order;
 use Denmasyarikin\Sales\Order\OrderItem;
+use Denmasyarikin\Sales\Factories\AdjustmentReseter;
 
 class OrderFactory
 {
@@ -51,6 +52,7 @@ class OrderFactory
         $orderItem = $this->applyAdjustment($orderItem, $markup, $discount, $voucher);
 
         $this->updateOrderItemTotal($orderItem);
+        $this->resetOrderAdjustment();
 
         return $orderItem; 
     }
@@ -122,6 +124,23 @@ class OrderFactory
 
     	$this->order->save();
 		$this->order->updateTotal();
+    }
+
+    /**
+     * update order adjustment
+     *
+     * @param  
+     * @return void
+     */
+    protected function resetOrderAdjustment()
+    {
+    	// skip if no adjustments
+    	if (count($this->order->getAdjustments() === 0) {
+    		return;
+    	}
+
+    	$reseter = new AdjustmentReseter($this->order);
+    	$reseter->reset();
     }
 
     /**
