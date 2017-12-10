@@ -67,6 +67,14 @@ class Order extends Model implements Taxable, Voucherable, Discountable
     }
 
     /**
+     * Get the cancelation record associated with the Order.
+     */
+    public function cancelation()
+    {
+        return $this->hasOne(OrderCancelation::class);
+    }
+
+    /**
      * get items.
      *
      * @return Collection

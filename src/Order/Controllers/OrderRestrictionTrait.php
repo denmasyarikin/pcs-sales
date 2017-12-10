@@ -3,7 +3,6 @@
 namespace Denmasyarikin\Sales\Order\Controllers;
 
 use Denmasyarikin\Sales\Order\Order;
-use Symfony\Component\Process\Exception\InvalidArgumentException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 trait OrderRestrictionTrait
@@ -69,7 +68,9 @@ trait OrderRestrictionTrait
     {
         switch ($status) {
             case 'created':
-                $allow = ('draft' === $order->status and count($order->getItems()) > 0);
+                $allow = ('draft' === $order->status
+                    and !is_null($order->customer)
+                    and count($order->getItems()) > 0);
                 break;
 
             case 'processing':
@@ -85,7 +86,7 @@ trait OrderRestrictionTrait
                 break;
 
             default:
-                throw new InvalidArgumentException('Invalid status');
+                $allow = false;
                 break;
         }
 
@@ -93,6 +94,18 @@ trait OrderRestrictionTrait
             throw new BadRequestHttpException(
                 "Can not update status to {$status}"
             );
+        }
+    }
+
+    /**
+     * cancelable order.
+     *
+     * @param
+     */
+    protected function cancelableOrder(Order $order)
+    {
+        if (in_array($order->status, ['draft', 'archived'])) {
+            throw new BadRequestHttpException("Can not cancle order when status is {$order->status}");
         }
     }
 }

@@ -14,7 +14,8 @@ class OrderHistory extends Migration
         Schema::create('sales_order_histories', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('order_id')->unsigned();
-            $table->string('type');
+            $table->enum('type', ['order', 'process', 'payment', 'delivery']);
+            $table->string('label');
             $table->string('actor');
             $table->timestamps();
 

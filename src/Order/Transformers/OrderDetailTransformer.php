@@ -41,8 +41,10 @@ class OrderDetailTransformer extends Detail
             'close_date' => $model->close_date,
             'status' => $model->status,
             'customer' => $model->customer ? (new OrderCustomerTransformer($model->customer))->toArray() : null,
-            'adjustments' => (new OrderAdjustmentListTransformer($model->adjustments))->toArray(),
-            'items' => (new OrderItemListTransformer($model->items))->toArray(),
+            'adjustments' => (new OrderAdjustmentListTransformer($model->getAdjustments()))->toArray(),
+            'items' => (new OrderItemListTransformer($model->getItems()))->toArray(),
+            'histories' => (new OrderHistoryListTransformer($model->histories))->toArray(),
+            'cancelation' => $model->cancelation ? (new OrderCancelationDetailTransformer($model->cancelation))->toArray() : null,
             'created_at' => $model->created_at->format('Y-m-d H:i:s'),
             'updated_at' => $model->updated_at->format('Y-m-d H:i:s'),
         ];

@@ -11,10 +11,10 @@ class OrderCancelation extends Migration
      */
     public function up()
     {
-        Schema::create('sales_order_cancelation', function (Blueprint $table) {
+        Schema::create('sales_order_cancelations', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('order_id')->unsigned();
-            $table->string('type');
+            $table->string('reason');
             $table->text('description');
             $table->timestamps();
 
@@ -27,6 +27,6 @@ class OrderCancelation extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sales_order_cancelation');
+        Schema::dropIfExists('sales_order_cancelations');
     }
 }

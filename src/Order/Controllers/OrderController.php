@@ -10,6 +10,7 @@ use Denmasyarikin\Sales\Order\Requests\DetailOrderRequest;
 use Denmasyarikin\Sales\Order\Requests\CreateOrderRequest;
 use Denmasyarikin\Sales\Order\Requests\UpdateOrderRequest;
 use Denmasyarikin\Sales\Order\Requests\DeleteOrderRequest;
+use Denmasyarikin\Sales\Order\Requests\CancelOrderRequest;
 use Denmasyarikin\Sales\Order\Requests\UpdateStatusOrderRequest;
 use Denmasyarikin\Sales\Order\Transformers\OrderListTransformer;
 use Denmasyarikin\Sales\Order\Transformers\OrderDetailTransformer;
@@ -162,9 +163,7 @@ class OrderController extends Controller
 
         return new JsonResponse([
             'message' => 'Order has been created',
-            'data' => [
-                'id' => $order->id,
-            ],
+            'data' => ['id' => $order->id],
         ], 201);
     }
 
@@ -198,11 +197,16 @@ class OrderController extends Controller
         $this->updateOrderStatusRetriction($order, $request->status);
 
         switch ($request->status) {
+            case 'created':
+                $order->update(['status' => 'created']);
+                $order->histories()->create(['type' => 'order', 'label' => 'created']);
+                break;
             case 'processing':
                 $order->update([
                     'start_process_date' => date('Y-m-d H:i:s'),
                     'status' => 'processing',
                 ]);
+                $order->histories()->create(['type' => 'order', 'label' => 'processing']);
                 break;
 
             case 'finished':
@@ -210,6 +214,7 @@ class OrderController extends Controller
                     'end_process_date' => date('Y-m-d H:i:s'),
                     'status' => 'finished',
                 ]);
+                $order->histories()->create(['type' => 'order', 'label' => 'finished']);
                 break;
 
             case 'archived':
@@ -217,9 +222,7 @@ class OrderController extends Controller
                     'close_date' => date('Y-m-d H:i:s'),
                     'status' => 'archived',
                 ]);
-                break;
-            default:
-                $order->update(['status' => $request->status]);
+                $order->histories()->create(['type' => 'order', 'label' => 'archived']);
                 break;
         }
 
@@ -243,5 +246,23 @@ class OrderController extends Controller
         $order->delete();
 
         return new JsonResponse(['message' => 'Order has been deleted']);
+    }
+
+    /**
+     * cancel order.
+     *
+     * @param CancelOrderRequest $request
+     *
+     * @return json
+     */
+    public function cancelOrder(CancelOrderRequest $request)
+    {
+        $order = $request->getOrder();
+        $this->cancelableOrder($order);
+
+        $order->cancelation()->create($request->only(['reason', 'description']));
+        $order->update(['status' => 'canceled']);
+
+        return new JsonResponse(['message' => 'Order has been canceled']);
     }
 }
