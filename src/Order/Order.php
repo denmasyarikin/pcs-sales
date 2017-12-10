@@ -102,19 +102,8 @@ class Order extends Model implements Taxable, Voucherable, Discountable
     public function updateTotal()
     {
         $this->update([
-            'total' => $this->item_total - $this->adjustment_total
+            'total' => $this->item_total + $this->adjustment_total
         ]);
-    }
-    
-    /**
-     * get total filed name
-     *
-     * @param  
-     * @return string
-     */
-    public function getTotalFieldName()
-    {
-        return 'item_total';
     }
 
     /**
@@ -140,7 +129,7 @@ class Order extends Model implements Taxable, Voucherable, Discountable
      */
     public function getDiscount()
     {
-        return $this->getAdjustments()->where('type', 'discount')->first();
+        return $this->adjustments()->whereType('discount')->first();
     }
 
     /**
@@ -150,7 +139,7 @@ class Order extends Model implements Taxable, Voucherable, Discountable
      */
     public function getVoucher()
     {
-        return $this->getAdjustments()->where('type', 'voucher')->first();
+        return $this->adjustments()->whereType('voucher')->first();
     }
 
     /**
@@ -160,6 +149,6 @@ class Order extends Model implements Taxable, Voucherable, Discountable
      */
     public function getTax()
     {
-        return $this->getAdjustments()->where('type', 'tax')->first();
+        return $this->adjustments()->whereType('tax')->first();
     }
 }

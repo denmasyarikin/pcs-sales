@@ -72,19 +72,8 @@ class OrderItem extends Model implements Markupable, Discountable, Voucherable
     public function updateTotal()
     {
         $this->update([
-            'total' => $this->unit_total - $this->adjustment_total
+            'total' => $this->unit_total + $this->adjustment_total
         ]);
-    }
-
-    /**
-     * get total filed name
-     *
-     * @param  
-     * @return string
-     */
-    public function getTotalFieldName()
-    {
-        return 'unit_total';
     }
 
     /**
@@ -94,7 +83,7 @@ class OrderItem extends Model implements Markupable, Discountable, Voucherable
      */
     public function getDiscount()
     {
-        return $this->getAdjustments()->where('type', 'discount')->first();
+        return $this->adjustments()->whereType('discount')->first();
     }
 
     /**
@@ -104,7 +93,7 @@ class OrderItem extends Model implements Markupable, Discountable, Voucherable
      */
     public function getMarkup()
     {
-        return $this->getAdjustments()->where('type', 'markup')->first();
+        return $this->adjustments()->whereType('markup')->first();
     }
 
     /**
@@ -114,6 +103,37 @@ class OrderItem extends Model implements Markupable, Discountable, Voucherable
      */
     public function getVoucher()
     {
-        return $this->getAdjustments()->where('type', 'voucher')->first();
+        return $this->adjustments()->whereType('voucher')->first();
+    }
+
+    /**
+     * Get Markup.
+     *
+     * @return string
+     */
+    public function getMarkupAttribute()
+    {
+        return ($markup = $this->getMarkup()) ? $markup->adjustment_value : 0;
+    }
+
+    /**
+     * Get Discount.
+     *
+     * @return string
+     */
+    public function getDiscountAttribute()
+    {
+        return ($discount = $this->getDiscount()) ? $discount->adjustment_value : 0;
+    }
+
+    /**
+     * Get Voucher.
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function getVoucherAttribute($value)
+    {
+        return ($voucher = $this->getVoucher()) ? $voucher->adjustment_value : 0;
     }
 }

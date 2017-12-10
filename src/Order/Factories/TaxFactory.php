@@ -2,107 +2,50 @@
 
 namespace Denmasyarikin\Sales\Order\Factories;
 
-use App\Manager\Facades\Setting;
 use Denmasyarikin\Sales\Order\Contracts\Taxable;
-use Denmasyarikin\Sales\Order\Contracts\Adjustment;
+use Denmasyarikin\Sales\Order\Contracts\Adjustmentable;
+use Symfony\Component\Process\Exception\InvalidArgumentException;
 
-class TaxFactory
+class TaxFactory extends AdjustmentFactory
 {
     /**
-     * tax rate
+     * priority
      *
      * @var int
      */
-    protected $taxRate;
+    protected $priority = 4;
 
     /**
-     * taxable
+     * adjustment type
      *
-     * @var Taxable
+     * @var string
      */
-    protected $taxable;
+    protected $adjustmentType = 'markup';
 
     /**
-     * Create a new Constructor instance.
+     * get Adjustment
      *
-     * @param Taxable $taxable
-     * @return void
+     * @param Adjustmentable $adjustmentable
+     * @return string
      */
-    public function __construct(Taxable $taxable)
+    protected function getAdjustment(Adjustmentable $adjustmentable)
     {
-        $this->taxable = $taxable;
-        $this->taxRate = Setting::get('system.sales.tax.tax_rate', 10);
-    }
-
-    /**
-     * apply tax
-     *
-     * @param bool $apply
-     * @return void
-     */
-    public function applyTax(bool $apply)
-    {
-        $tax = $this->taxable->getTax();
-        $percent = $apply ? (float) $this->taxRate : 0;
-
-        if (is_null($tax)) {
-            $tax = $this->createTax($this->taxable, $percent);
-        } else {
-            $this->taxable->adjustment_total += $tax->adjustment_total;
-            $this->updateTax($tax, $percent);
+        if ($adjustmentable instanceof Taxable) {
+            return $adjustmentable->getTax();
         }
 
-        $this->taxable->adjustment_total -= $tax->adjustment_total;
-        $this->taxable->save();
-        $this->taxable->updateTotal();
+        throw new InvalidArgumentException('Invalid adjustment type');
     }
 
     /**
-     * create tax
+     * get Adjustment total
      *
-     * @param Taxable $taxable
-     * @param float $percent
-     * @return OrderAdjustment
+     * @param Adjustmentable $adjustmentable
+     * @param mixed $value
+     * @return string
      */
-    protected function createTax(Taxable $taxable, float $percent)
+    protected function getAdjustmentTotal(Adjustmentable $adjustmentable, $value)
     {
-        return $taxable->adjustments()->create(
-            $this->generateTax($percent, $taxable)
-        );
-    }
-
-    /**
-     * update tax
-     *
-     * @param Adjustment $adjustment
-     * @param float $percent
-     * @return void
-     */
-    protected function updateTax(Adjustment $adjustment, float $percent)
-    {
-        return $adjustment->update(
-            $this->generateTax($percent, $adjustment->getAdjustmentable())
-        );
-    }
-
-    /**
-     * generate tax
-     *
-     * @param float $percent
-     * @param Taxable $taxable
-     * @return array
-     */
-    protected function generateTax(float $percent, Taxable $taxable)
-    {
-        $field = $taxable->getTotalFieldName();
-        $tax = ceil(($percent * $taxable->total) / 100);
-
-        return [
-            'type' => 'tax',
-            $field => $taxable->total,
-            'adjustment_value' => $percent,
-            'adjustment_total' => $tax,
-            'total' => $taxable->total + $tax
-        ];
+        return ceil(($value * $adjustmentable->total) / 100);
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Denmasyarikin\Sales\Order\Requests;
 
-class CreateOrderItemRequest extends DetailOrderItemRequest
+class UpdateOrderItemRequest extends DetailOrderItemRequest
 {
     /**
      * Get the validation rules that apply to the request.

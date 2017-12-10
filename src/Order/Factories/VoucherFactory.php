@@ -2,37 +2,50 @@
 
 namespace Denmasyarikin\Sales\Order\Factories;
 
-use Denmasyarikin\Sales\Order\Contracts\Adjustment;
 use Denmasyarikin\Sales\Order\Contracts\Voucherable;
+use Denmasyarikin\Sales\Order\Contracts\Adjustmentable;
+use Symfony\Component\Process\Exception\InvalidArgumentException;
 
-class VoucherFactory
+class VoucherFactory extends AdjustmentFactory
 {
     /**
-     * voucherable
+     * priority
      *
-     * @var Voucherable
+     * @var int
      */
-    protected $voucherable;
+    protected $priority = 3;
 
     /**
-     * Create a new Constructor instance.
+     * adjustment type
      *
-     * @param Voucherable $voucherable
-     * @return void
+     * @var string
      */
-    public function __construct(Voucherable $voucherable)
+    protected $adjustmentType = 'discount';
+
+    /**
+     * get Adjustment
+     *
+     * @param Adjustmentable $adjustmentable
+     * @return string
+     */
+    protected function getAdjustment(Adjustmentable $adjustmentable)
     {
-        $this->voucherable = $voucherable;
+        if ($adjustmentable instanceof Voucherable) {
+            return $adjustmentable->getVoucher();
+        }
+
+        throw new InvalidArgumentException('Invalid adjustment type');
     }
 
     /**
-     * apply markup
+     * get Adjustment total
      *
-     * @param string $code
-     * @return void
+     * @param Adjustmentable $adjustmentable
+     * @param mixed $value
+     * @return string
      */
-    public function applyVoucher($code)
+    protected function getAdjustmentTotal(Adjustmentable $adjustmentable, $value)
     {
-        // TODO implemnt voucher
+        dd('TODO Apply voucher');
     }
 }

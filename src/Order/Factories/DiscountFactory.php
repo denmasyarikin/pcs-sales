@@ -2,97 +2,50 @@
 
 namespace Denmasyarikin\Sales\Order\Factories;
 
-use Denmasyarikin\Sales\Order\Contracts\Adjustment;
 use Denmasyarikin\Sales\Order\Contracts\Discountable;
+use Denmasyarikin\Sales\Order\Contracts\Adjustmentable;
+use Symfony\Component\Process\Exception\InvalidArgumentException;
 
-class DiscountFactory
+class DiscountFactory extends AdjustmentFactory
 {
-	/**
-	 * discountable
-	 *
-	 * @var Discountable
-	 */
-	protected $discountable;
+    /**
+     * priority
+     *
+     * @var int
+     */
+    protected $priority = 2;
 
 	/**
-	 * Create a new Constructor instance.
+	 * adjustment type
 	 *
-	 * @param Discountable $discountable
-	 * @return void
+	 * @var string
 	 */
-	public function __construct(Discountable $discountable)
+	protected $adjustmentType = 'discount';
+
+	/**
+	 * get Adjustment
+	 *
+     * @param Adjustmentable $adjustmentable
+	 * @return string
+	 */
+	protected function getAdjustment(Adjustmentable $adjustmentable)
 	{
-		$this->discountable = $discountable;
+		if ($adjustmentable instanceof Discountable) {
+			return $adjustmentable->getDiscount();
+		}
+
+		throw new InvalidArgumentException('Invalid adjustment type');
 	}
 
 	/**
-	 * apply discount
+	 * get Adjustment total
 	 *
-	 * @param float $percent
-	 * @return void
+     * @param Adjustmentable $adjustmentable
+	 * @param mixed $value
+	 * @return string
 	 */
-	public function applyDiscount(float $percent)
+	protected function getAdjustmentTotal(Adjustmentable $adjustmentable, $value)
 	{
-        $discount = $this->discountable->getDiscount();
-
-        if (is_null($discount)) {
-            $discount = $this->createDiscount($this->discountable, $percent);
-        } else {
-            $this->discountable->adjustment_total -= $discount->adjustment_total;
-            $this->updateDiscount($discount, $percent);
-        }
-
-		$this->discountable->adjustment_total += $discount->adjustment_total;
-		$this->discountable->save();
-		$this->discountable->updateTotal();
-	}
-
-	/**
-	 * create discount
-	 *
-     * @param Discountable $discountable
-	 * @param float $percent
-	 * @return OrderAdjustment
-	 */
-	protected function createDiscount(Discountable $discountable, float $percent)
-	{
-		return $discountable->adjustments()->create(
-			$this->generateDiscount($percent, $discountable)
-		);
-	}
-
-	/**
-	 * update discount
-	 *
-	 * @param Adjustment $adjustment
-	 * @param float $percent
-	 * @return void
-	 */
-	protected function updateDiscount(Adjustment $adjustment, float $percent)
-	{
-		return $adjustment->update(
-			$this->generateDiscount($percent, $adjustment->getAdjustmentable())
-		);
-	}
-
-	/**
-	 * generate discount
-	 *
-	 * @param float $percent
-     * @param Discountable $discountable
-	 * @return array
-	 */
-	protected function generateDiscount(float $percent, Discountable $discountable)
-	{
-		$field = $discountable->getTotalFieldName();
-		$discount = ceil(($percent * $discountable->total) / 100);
-
-		return [
-            'type' => 'discount',
-			$field => $discountable->total,
-			'adjustment_value' => $percent,
-			'adjustment_total' => $discount,
-			'total' => $discountable->total - $discount
-		];
+		return ceil(($value * $adjustmentable->total) / 100) * -1;
 	}
 }

@@ -71,6 +71,8 @@ class ItemController extends Controller
             $request->input('voucher')
         );
 
+        $orderItem->load('adjustments');
+
         return new JsonResponse([
             'message' => 'Order Item has been created',
             'data' => (new OrderItemDetailTransformer($orderItem))->toArray()            
@@ -95,6 +97,14 @@ class ItemController extends Controller
             'type', 'type_as', 'reference_id', 'name', 'specific',
             'note', 'quantity', 'unit_price', 'unit_id'
         ]), $request->input('markup'), $request->input('discount'), $request->input('voucher'));
+
+        $orderItem->load('adjustments');
+
+        return new JsonResponse([
+            'message' => 'Order Item has been updated',
+            'data' => (new OrderItemDetailTransformer($orderItem))->toArray()
+        ]);
+
     }
 
     /**

@@ -40,7 +40,7 @@ class OrderDetailTransformer extends Detail
             'end_process_date' => $model->end_process_date,
             'close_date' => $model->close_date,
             'status' => $model->status,
-            'customer' => (new OrderCustomerTransformer($model->customer))->toArray(),
+            'customer' => $model->customer ? (new OrderCustomerTransformer($model->customer))->toArray() : null,
             'adjustments' => (new OrderAdjustmentListTransformer($model->adjustments))->toArray(),
             'items' => (new OrderItemListTransformer($model->items))->toArray(),
             'created_at' => $model->created_at->format('Y-m-d H:i:s'),

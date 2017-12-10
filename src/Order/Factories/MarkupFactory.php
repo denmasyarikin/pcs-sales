@@ -2,97 +2,50 @@
 
 namespace Denmasyarikin\Sales\Order\Factories;
 
-use Denmasyarikin\Sales\Order\Contracts\Adjustment;
 use Denmasyarikin\Sales\Order\Contracts\Markupable;
+use Denmasyarikin\Sales\Order\Contracts\Adjustmentable;
+use Symfony\Component\Process\Exception\InvalidArgumentException;
 
-class MarkupFactory
+class MarkupFactory extends AdjustmentFactory
 {
     /**
-     * markupable
+     * priority
      *
-     * @var Markupable
+     * @var int
      */
-    protected $markupable;
+    protected $priority = 1;
 
     /**
-     * Create a new Constructor instance.
+     * adjustment type
      *
-     * @param Markupable $markupable
-     * @return void
+     * @var string
      */
-    public function __construct(Markupable $markupable)
-    {
-        $this->markupable = $markupable;
-    }
+    protected $adjustmentType = 'markup';
 
     /**
-     * apply markup
+     * get Adjustment
      *
-     * @param float $percent
-     * @return void
+     * @param Adjustmentable $adjustmentable
+     * @return string
      */
-    public function applyMarkup(float $percent)
+    protected function getAdjustment(Adjustmentable $adjustmentable)
     {
-        $markup = $this->markupable->getMarkup();
-
-        if (is_null($markup)) {
-            $markup = $this->createMarkup($this->markupable, $percent);
-        } else {
-            $this->markupable->adjustment_total += $markup->adjustment_total;
-            $this->updateMarkup($markup, $percent);
+        if ($adjustmentable instanceof Markupable) {
+            return $adjustmentable->getMarkup();
         }
 
-        $this->markupable->adjustment_total -= $markup->adjustment_total;
-        $this->markupable->save();
-        $this->markupable->updateTotal();
+        throw new InvalidArgumentException('Invalid adjustment type');
     }
 
     /**
-     * create markup
+     * get Adjustment total
      *
-     * @param Markupable $markupable
-     * @param float $percent
-     * @return OrderAdjustment
+     * @param Adjustmentable $adjustmentable
+     * @param mixed $value
+     * @return string
      */
-    protected function createMarkup(Markupable $markupable, float $percent)
+    protected function getAdjustmentTotal(Adjustmentable $adjustmentable, $value)
     {
-        return $markupable->adjustments()->create(
-            $this->generateMarkup($percent, $markupable)
-        );
-    }
-
-    /**
-     * update markup
-     *
-     * @param Adjustment $adjustment
-     * @param float $percent
-     * @return void
-     */
-    protected function updateMarkup(Adjustment $adjustment, float $percent)
-    {
-        return $adjustment->update(
-            $this->generateMarkup($percent, $adjustment->getAdjustmentable())
-        );
-    }
-
-    /**
-     * generate markup
-     *
-     * @param float $percent
-     * @param Markupable $markupable
-     * @return array
-     */
-    protected function generateMarkup(float $percent, Markupable $markupable)
-    {
-        $field = $markupable->getTotalFieldName();
-        $markup = ceil(($percent * $markupable->total) / 100);
-
-        return [
-            'type' => 'markup',
-            $field => $markupable->total,
-            'adjustment_value' => $percent,
-            'adjustment_total' => $markup,
-            'total' => $markupable->total + $markup
-        ];
+        return ceil(($value * $adjustmentable->total) / 100);
     }
 }
