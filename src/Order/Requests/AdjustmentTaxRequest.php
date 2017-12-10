@@ -12,7 +12,7 @@ class AdjustmentTaxRequest extends DetailOrderRequest
     public function rules()
     {
         return [
-            'apply' => 'required|boolean'
+            'apply' => 'required|boolean',
         ];
     }
 }

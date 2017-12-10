@@ -29,7 +29,7 @@ class ItemController extends Controller
         $orderItems = $request->getOrder()->getItems();
 
         return new JsonResponse([
-            'data' => (new OrderItemListTransformer($orderItems))->toArray()
+            'data' => (new OrderItemListTransformer($orderItems))->toArray(),
         ]);
     }
 
@@ -45,14 +45,15 @@ class ItemController extends Controller
         $orderItem = $request->getOrderItem();
 
         return new JsonResponse([
-            'data' => (new OrderItemDetailTransformer($orderItem))->toArray()
+            'data' => (new OrderItemDetailTransformer($orderItem))->toArray(),
         ]);
     }
 
     /**
-     * create order item
+     * create order item.
      *
      * @param CreateOrderItemRequest $request
+     *
      * @return json
      */
     public function createOrderItem(CreateOrderItemRequest $request)
@@ -61,31 +62,30 @@ class ItemController extends Controller
         $this->updateableOrder($order);
 
         $this->orderItemTypeRestriction($request->type, $request->type_as);
-        
+
         $factory = new OrderFactory($order);
 
         $orderItem = $factory->createOrderItem(
             $request->only([
                 'type', 'type_as', 'reference_id', 'name', 'specific',
-                'note', 'quantity', 'unit_price', 'unit_id'
+                'note', 'quantity', 'unit_price', 'unit_id',
             ]),
             $request->input('markup'),
             $request->input('discount'),
             $request->input('voucher')
         );
 
-        $orderItem->load('adjustments');
-
         return new JsonResponse([
             'message' => 'Order Item has been created',
-            'data' => (new OrderItemDetailTransformer($orderItem))->toArray()            
+            'data' => (new OrderItemDetailTransformer($orderItem))->toArray(),
         ], 201);
     }
 
     /**
-     * update order item
+     * update order item.
      *
      * @param UpdateOrderItemRequest $request
+     *
      * @return json
      */
     public function updateOrderItem(UpdateOrderItemRequest $request)
@@ -94,28 +94,26 @@ class ItemController extends Controller
         $this->updateableOrder($order);
 
         $this->orderItemTypeRestriction($request->type, $request->type_as);
-        
+
         $orderItem = $request->getOrderItem();
         $factory = new OrderFactory($order);
 
         $orderItem = $factory->updateOrderItem($orderItem, $request->only([
             'type', 'type_as', 'reference_id', 'name', 'specific',
-            'note', 'quantity', 'unit_price', 'unit_id'
+            'note', 'quantity', 'unit_price', 'unit_id',
         ]), $request->input('markup'), $request->input('discount'), $request->input('voucher'));
-
-        $orderItem->load('adjustments');
 
         return new JsonResponse([
             'message' => 'Order Item has been updated',
-            'data' => (new OrderItemDetailTransformer($orderItem))->toArray()
+            'data' => (new OrderItemDetailTransformer($orderItem))->toArray(),
         ]);
-
     }
 
     /**
-     * delete order item
+     * delete order item.
      *
      * @param DeleteOrderItemRequest $request
+     *
      * @return json
      */
     public function deleteOrderItem(DeleteOrderItemRequest $request)

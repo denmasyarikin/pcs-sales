@@ -24,7 +24,7 @@ class OrderListDetailTransformer extends Detail
                 'product_process' => $model->item_product_process_count,
                 'service' => $model->item_service_count,
                 'good' => $model->item_good_count,
-                'manual' => $model->item_manual_count
+                'manual' => $model->item_manual_count,
             ],
             'total' => $model->total,
             'cs_user_id' => $model->cs_user_id,

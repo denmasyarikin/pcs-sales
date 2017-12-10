@@ -13,7 +13,7 @@ class OrderItem extends Model implements Markupable, Discountable, Voucherable
     use SoftDeletes;
 
     /**
-     * cacheAdjustments
+     * cacheAdjustments.
      *
      * @var Collection
      */
@@ -51,7 +51,7 @@ class OrderItem extends Model implements Markupable, Discountable, Voucherable
     }
 
     /**
-     * get adjustments
+     * get adjustments.
      *
      * @return Collection
      */
@@ -65,19 +65,17 @@ class OrderItem extends Model implements Markupable, Discountable, Voucherable
     }
 
     /**
-     * update order total
-     *
-     * @return void
+     * update order total.
      */
     public function updateTotal()
     {
         $this->update([
-            'total' => $this->unit_total + $this->adjustment_total
+            'total' => $this->unit_total + $this->adjustment_total,
         ]);
     }
 
     /**
-     * get discount
+     * get discount.
      *
      * @return OrderItemAdjustment
      */
@@ -87,7 +85,7 @@ class OrderItem extends Model implements Markupable, Discountable, Voucherable
     }
 
     /**
-     * get markup
+     * get markup.
      *
      * @return OrderItemAdjustment
      */
@@ -97,7 +95,7 @@ class OrderItem extends Model implements Markupable, Discountable, Voucherable
     }
 
     /**
-     * get voucher
+     * get voucher.
      *
      * @return OrderItemAdjustment
      */
@@ -129,11 +127,28 @@ class OrderItem extends Model implements Markupable, Discountable, Voucherable
     /**
      * Get Voucher.
      *
-     * @param  string  $value
+     * @param string $value
+     *
      * @return string
      */
     public function getVoucherAttribute($value)
     {
         return ($voucher = $this->getVoucher()) ? $voucher->adjustment_value : 0;
+    }
+
+    /**
+     * check is product process.
+     *
+     * @param
+     *
+     * @return bool
+     */
+    public function isProductProcess()
+    {
+        if ('product' === $this->type) {
+            return 'product' !== $this->typeAs;
+        }
+
+        return false;
     }
 }

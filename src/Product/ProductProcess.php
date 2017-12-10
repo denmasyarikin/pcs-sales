@@ -50,19 +50,17 @@ class ProductProcess extends Model
 
     /**
      * The "booting" method of the model.
-     *
-     * @return void
      */
     protected static function boot()
     {
         parent::boot();
-        
-        static::saved(function($process){
+
+        static::saved(function ($process) {
             $product = $process->product;
             $product->updateProductPrice();
         });
 
-        static::deleted(function($process){
+        static::deleted(function ($process) {
             $product = $process->product;
             $product->updateProductPrice();
         });

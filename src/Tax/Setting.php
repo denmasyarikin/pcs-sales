@@ -14,7 +14,7 @@ class Setting implements SettingContract
     public function getSetting()
     {
         return [
-            'tax_rate' => 10
+            'tax_rate' => 10,
         ];
     }
 }

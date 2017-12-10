@@ -18,7 +18,7 @@ class UpdateCustomerRequest extends DetailOrderRequest
             'address' => '',
             'telephone' => 'numeric',
             'email' => 'email',
-            'contact_person' => 'min:2|max:20'
+            'contact_person' => 'min:2|max:20',
         ];
     }
 }

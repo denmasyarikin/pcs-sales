@@ -13,7 +13,7 @@ class UpdateOrderRequest extends DetailOrderRequest
     {
         return [
             'note' => '',
-            'due_date' => 'date_format:Y-m-d H:i:s'
+            'due_date' => 'date_format:Y-m-d H:i:s',
         ];
     }
 }

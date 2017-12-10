@@ -24,8 +24,8 @@ class Setting implements SettingContract
                 'prdouction_error',
                 'rejected',
                 'unknown',
-                'other'
-            ]
+                'other',
+            ],
         ];
     }
 }

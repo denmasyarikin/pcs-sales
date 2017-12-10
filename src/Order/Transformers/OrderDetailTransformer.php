@@ -24,7 +24,7 @@ class OrderDetailTransformer extends Detail
                 'product_process' => $model->item_product_process_count,
                 'service' => $model->item_service_count,
                 'good' => $model->item_good_count,
-                'manual' => $model->item_manual_count
+                'manual' => $model->item_manual_count,
             ],
             'item_total' => $model->item_total,
             'adjustment_total' => $model->adjustment_total,

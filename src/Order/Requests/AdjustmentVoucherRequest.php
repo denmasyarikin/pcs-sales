@@ -12,7 +12,7 @@ class AdjustmentVoucherRequest extends DetailOrderRequest
     public function rules()
     {
         return [
-            'code' => 'required|size:8|voucher'
+            'code' => 'required|size:8|voucher',
         ];
     }
 }

@@ -14,9 +14,10 @@ class CustomerController extends Controller
     use OrderRestrictionTrait;
 
     /**
-     * get detail
+     * get detail.
      *
      * @param DetailOrderRequest $request
+     *
      * @return json
      */
     public function getDetail(DetailOrderRequest $request)
@@ -24,14 +25,15 @@ class CustomerController extends Controller
         $order = $request->getOrder();
 
         return new JsonResponse([
-            'data' => (new OrderCustomerTransformer($order->customer))->toArray()
+            'data' => (new OrderCustomerTransformer($order->customer))->toArray(),
         ]);
     }
 
     /**
-     * update or add customer
+     * update or add customer.
      *
      * @param UpdateCustomerRequest $request
+     *
      * @return json
      */
     public function updateCustomer(UpdateCustomerRequest $request)
@@ -41,7 +43,7 @@ class CustomerController extends Controller
 
         $customer = $request->only([
             'customer_id', 'type', 'name', 'address',
-            'telephone', 'email', 'contact_person'
+            'telephone', 'email', 'contact_person',
         ]);
 
         if (is_null($order->customer)) {
@@ -53,15 +55,16 @@ class CustomerController extends Controller
 
         return new JsonResponse([
             'message' => 'Order Customer has been updated',
-            'data' => (new OrderCustomerTransformer($orderCustomer))->toArray()
+            'data' => (new OrderCustomerTransformer($orderCustomer))->toArray(),
         ]);
     }
 
     /**
-     * create order customer
+     * create order customer.
      *
      * @param Order $order
      * @param array $customer
+     *
      * @return OrderCustomer
      */
     protected function createOrderCustomer(Order $order, array $customer)

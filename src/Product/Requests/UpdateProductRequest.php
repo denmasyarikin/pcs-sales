@@ -17,7 +17,7 @@ class UpdateProductRequest extends DetailProductRequest
             'unit_id' => 'required|exists:core_units,id',
             'min_order' => 'required|numeric|min:1',
             'customizable' => 'required|boolean',
-            'status' => 'in:active,inactive'
+            'status' => 'in:active,inactive',
         ];
     }
 }

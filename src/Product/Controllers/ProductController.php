@@ -4,7 +4,6 @@ namespace Denmasyarikin\Sales\Product\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Denmasyarikin\Sales\Product\Product;
 use Denmasyarikin\Sales\Product\Requests\DetailProductRequest;
@@ -49,7 +48,7 @@ class ProductController extends Controller
         $products = Product::orderBy('created_at', 'DESC');
 
         if ($request->has('status')) {
-            if ($request->status !== 'all') {
+            if ('all' !== $request->status) {
                 switch ($request->status) {
                     case 'draft':
                         $products->whereStatus('draft');
@@ -102,19 +101,20 @@ class ProductController extends Controller
     {
         $product = Product::create($request->only([
             'name', 'description', 'unit_id',
-            'min_order', 'customizable'
+            'min_order', 'customizable',
         ]));
 
         return new JsonResponse([
             'message' => 'Product has been created',
-            'data' => (new ProductListDetailTransformer($product))->toArray()
+            'data' => (new ProductListDetailTransformer($product))->toArray(),
         ], 201);
     }
 
     /**
-     * update product
+     * update product.
      *
      * @param UpdateProductRequest $request
+     *
      * @return json
      */
     public function updateProduct(UpdateProductRequest $request)
@@ -122,8 +122,8 @@ class ProductController extends Controller
         $product = $request->getProduct();
 
         if ($request->has('status')
-            AND $request->status !== 'draft'
-            AND count($product->processes) === 0) {
+            and 'draft' !== $request->status
+            and 0 === count($product->processes)) {
             throw new BadRequestHttpException(
                 "Can not update status to {$request->status} while processes count is 0"
             );
@@ -131,12 +131,12 @@ class ProductController extends Controller
 
         $product->update($request->only([
             'name', 'description', 'unit_id',
-            'min_order', 'customizable', 'status'
+            'min_order', 'customizable', 'status',
         ]));
 
         return new JsonResponse([
             'message' => 'Product has been updated',
-            'data' => (new ProductListDetailTransformer($product))->toArray()
+            'data' => (new ProductListDetailTransformer($product))->toArray(),
         ]);
     }
 

@@ -18,9 +18,10 @@ class AdjustmentController extends Controller
     use OrderRestrictionTrait;
 
     /**
-     * apply discount
+     * apply discount.
      *
      * @param AdjustmentDiscountRequest $request
+     *
      * @return json
      */
     public function applyDiscount(AdjustmentDiscountRequest $request)
@@ -36,9 +37,10 @@ class AdjustmentController extends Controller
     }
 
     /**
-     * apply tax
+     * apply tax.
      *
      * @param AdjustmentTaxRequest $request
+     *
      * @return json
      */
     public function applyTax(AdjustmentTaxRequest $request)
@@ -56,9 +58,10 @@ class AdjustmentController extends Controller
     }
 
     /**
-     * apply discount
+     * apply discount.
      *
      * @param AdjustmentVoucherRequest $request
+     *
      * @return json
      */
     public function applyVoucher(AdjustmentVoucherRequest $request)

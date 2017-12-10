@@ -46,7 +46,7 @@ class UpdateProductMediaRequest extends DetailProductRequest
             'type' => 'required|in:image,youtube',
             'content' => 'required',
             'sequence' => 'required|numeric',
-            'primary' => 'required|boolean'
+            'primary' => 'required|boolean',
         ];
     }
 }

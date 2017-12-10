@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace Denmasyarikin\Sales\Order\Factories;
 
@@ -9,43 +9,45 @@ use Symfony\Component\Process\Exception\InvalidArgumentException;
 class DiscountFactory extends AdjustmentFactory
 {
     /**
-     * priority
+     * priority.
      *
      * @var int
      */
     protected $priority = 2;
 
-	/**
-	 * adjustment type
-	 *
-	 * @var string
-	 */
-	protected $adjustmentType = 'discount';
+    /**
+     * adjustment type.
+     *
+     * @var string
+     */
+    protected $adjustmentType = 'discount';
 
-	/**
-	 * get Adjustment
-	 *
+    /**
+     * get Adjustment.
+     *
      * @param Adjustmentable $adjustmentable
-	 * @return string
-	 */
-	protected function getAdjustment(Adjustmentable $adjustmentable)
-	{
-		if ($adjustmentable instanceof Discountable) {
-			return $adjustmentable->getDiscount();
-		}
+     *
+     * @return string
+     */
+    protected function getAdjustment(Adjustmentable $adjustmentable)
+    {
+        if ($adjustmentable instanceof Discountable) {
+            return $adjustmentable->getDiscount();
+        }
 
-		throw new InvalidArgumentException('Invalid adjustment type');
-	}
+        throw new InvalidArgumentException('Invalid adjustment type');
+    }
 
-	/**
-	 * get Adjustment total
-	 *
+    /**
+     * get Adjustment total.
+     *
      * @param Adjustmentable $adjustmentable
-	 * @param mixed $value
-	 * @return string
-	 */
-	protected function getAdjustmentTotal(Adjustmentable $adjustmentable, $value)
-	{
-		return ceil(($value * $adjustmentable->total) / 100) * -1;
-	}
+     * @param mixed          $value
+     *
+     * @return string
+     */
+    protected function getAdjustmentTotal(Adjustmentable $adjustmentable, $value)
+    {
+        return ceil(($value * $adjustmentable->total) / 100) * -1;
+    }
 }

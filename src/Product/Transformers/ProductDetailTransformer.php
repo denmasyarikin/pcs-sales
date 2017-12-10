@@ -31,7 +31,7 @@ class ProductDetailTransformer extends Detail
                 'total' => $model->process_count,
                 'service' => $model->process_service_count,
                 'good' => $model->process_good_count,
-                'manual' => $model->process_manual_count
+                'manual' => $model->process_manual_count,
             ],
             'processes' => (new ProductProcessListTransformer($model->processes))->toArray(),
             'medias' => (new ProductMediaListTransformer($model->medias))->toArray(),

@@ -11,7 +11,6 @@ use Denmasyarikin\Sales\Product\Requests\UpdateProductProcessRequest;
 use Denmasyarikin\Sales\Product\Requests\DeleteProductProcessRequest;
 use Denmasyarikin\Sales\Product\Transformers\ProductProcessListTransformer;
 use Denmasyarikin\Sales\Product\Transformers\ProductProcessDetailTransformer;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class ProcessController extends Controller
 {
@@ -32,9 +31,10 @@ class ProcessController extends Controller
     }
 
     /**
-     * create process
+     * create process.
      *
      * @param CreateProductProcessRequest $request
+     *
      * @return json
      */
     public function createProcess(CreateProductProcessRequest $request)
@@ -43,39 +43,40 @@ class ProcessController extends Controller
         $process = $product->createProcess($request->only([
             'parent_id', 'type', 'type_as', 'reference_id',
             'name', 'specific', 'quantity', 'base_price', 'required',
-            'static_price', 'static_to_order_count', 'unit_id'
+            'static_price', 'static_to_order_count', 'unit_id',
         ]));
 
-        if ($product->status === 'draft') {
+        if ('draft' === $product->status) {
             $product->update(['status' => 'active']);
         }
 
         return new JsonResponse([
             'message' => 'Product Process has been created',
-            'data' => (new ProductProcessDetailTransformer($process))->toArray()
+            'data' => (new ProductProcessDetailTransformer($process))->toArray(),
         ], 201);
     }
-    
+
     /**
-     * update process
+     * update process.
      *
      * @param CreateProductProcessRequest $request
+     *
      * @return json
      */
     public function updateProcess(UpdateProductProcessRequest $request)
     {
         $product = $request->getProduct();
         $process = $request->getProductProcess();
- 
+
         $process->update($request->only([
             'parent_id', 'type', 'type_as', 'reference_id',
             'name', 'specific', 'quantity', 'base_price', 'required',
-            'static_price', 'static_to_order_count', 'unit_id'
+            'static_price', 'static_to_order_count', 'unit_id',
         ]));
 
         return new JsonResponse([
             'message' => 'Product Process has been updated',
-            'data' => (new ProductProcessDetailTransformer($process))->toArray()
+            'data' => (new ProductProcessDetailTransformer($process))->toArray(),
         ]);
     }
 

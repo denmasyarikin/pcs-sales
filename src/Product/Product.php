@@ -12,7 +12,7 @@ class Product extends Model
     use SoftDeletes, ProcessCounterTrait;
 
     /**
-     * cache processes
+     * cache processes.
      *
      * @var Collection
      */
@@ -81,9 +81,10 @@ class Product extends Model
     }
 
     /**
-     * create process
+     * create process.
      *
      * @param array $process
+     *
      * @return ProductProcess
      */
     public function createProcess(array $process)
@@ -92,9 +93,7 @@ class Product extends Model
     }
 
     /**
-     * update product price
-     *
-     * @return void
+     * update product price.
      */
     public function updateProductPrice()
     {
@@ -109,7 +108,7 @@ class Product extends Model
     }
 
     /**
-     * get processes
+     * get processes.
      *
      * @return Collection
      */
@@ -119,6 +118,6 @@ class Product extends Model
             return $this->cacheProcesses;
         }
 
-        return $this->cacheProcesses  = $this->processes;
+        return $this->cacheProcesses = $this->processes;
     }
 }

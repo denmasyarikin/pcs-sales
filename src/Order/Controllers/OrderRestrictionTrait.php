@@ -8,53 +8,51 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 trait OrderRestrictionTrait
 {
-	/**
-	 * updateable order
-	 *
-	 * @param  
-	 * @return void
-	 */
-	protected function updateableOrder(Order $order)
-	{
-		if (! in_array($order->status, ['draft', 'created'])) {
+    /**
+     * updateable order.
+     *
+     * @param
+     */
+    protected function updateableOrder(Order $order)
+    {
+        if (!in_array($order->status, ['draft', 'created'])) {
             throw new BadRequestHttpException("Can not update order on status {$order->status}");
         }
-	}
+    }
 
-	/**
-     * has item totals
+    /**
+     * has item totals.
      *
      * @param Order $order
-     * @return void
      */
     protected function hasItems(Order $order)
     {
-        if (count($order->getItems()) === 0) {
+        if (0 === count($order->getItems())) {
             throw new BadRequestHttpException('Order has no item yet');
         }
     }
 
     /**
-     * strict order item type
+     * strict order item type.
      *
      * @param string $type
      * @param string $typeAs
-     * @return void
      */
     protected function orderItemTypeRestriction($type, $typeAs)
     {
         switch ($type) {
             case 'good':
-                if ($typeAs !== 'good') {
+                if ('good' !== $typeAs) {
                     throw new BadRequestHttpException('Type As of type good only allowed good');
                 }
                 break;
             case 'service':
-                if ($typeAs !== 'service') {
+                if ('service' !== $typeAs) {
                     throw new BadRequestHttpException('Type As of type service only allowed service');
                 }
+                break;
             case 'manual':
-                if (! in_array($typeAs, ['good', 'service'])) {
+                if (!in_array($typeAs, ['good', 'service'])) {
                     throw new BadRequestHttpException('Type As of type manual only allowed good or service');
                 }
                 break;
@@ -62,37 +60,36 @@ trait OrderRestrictionTrait
     }
 
     /**
-     * update status order restriction
+     * update status order restriction.
      *
-     * @param Order $order
+     * @param Order  $order
      * @param string $status
-     * @return void
      */
     protected function updateOrderStatusRetriction(Order $order, $status)
     {
         switch ($status) {
             case 'created':
-                $allow = ($order->status === 'draft' AND count($order->getItems()) > 0);
+                $allow = ('draft' === $order->status and count($order->getItems()) > 0);
                 break;
 
             case 'processing':
-                $allow = $order->status === 'created';
+                $allow = 'created' === $order->status;
                 break;
 
             case 'finished':
-                $allow = $order->status === 'processing';
+                $allow = 'processing' === $order->status;
                 break;
 
             case 'archived':
-                $allow = $order->status === 'finished';
+                $allow = 'finished' === $order->status;
                 break;
 
             default:
-                throw new InvalidArgumentException("Invalid status");
+                throw new InvalidArgumentException('Invalid status');
                 break;
         }
 
-        if (! $allow) {
+        if (!$allow) {
             throw new BadRequestHttpException(
                 "Can not update status to {$status}"
             );

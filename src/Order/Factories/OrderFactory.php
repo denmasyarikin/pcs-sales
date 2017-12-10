@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace Denmasyarikin\Sales\Order\Factories;
 
@@ -9,148 +9,145 @@ use Denmasyarikin\Sales\Factories\AdjustmentReseter;
 
 class OrderFactory
 {
-	/**
-	 * order
-	 *
-	 * @var Order
-	 */
-	protected $order;
+    /**
+     * order.
+     *
+     * @var Order
+     */
+    protected $order;
 
-	/**
-	 * settings
-	 *
-	 * @var array
-	 */
-	protected $settings;
+    /**
+     * settings.
+     *
+     * @var array
+     */
+    protected $settings;
 
-	/**
-	 * Constructor
-	 *
-	 * @param Order $order
-	 * @return void
-	 */
-	public function __construct(Order $order)
-	{
-		$this->order = $order;
-		$this->settings = Setting::get('system.sales.order');
-	}
+    /**
+     * Constructor.
+     *
+     * @param Order $order
+     */
+    public function __construct(Order $order)
+    {
+        $this->order = $order;
+        $this->settings = Setting::get('system.sales.order');
+    }
 
-	/**
-	 * create Order Item
-	 *
-	 * @param array $item
-	 * @param string $markup
-	 * @param string $discount
-	 * @param string $voucher
-	 * @return OrderItem
-	 */
-	public function createOrderItem(array $item, $markup = null, $discount = null, $voucher = null)
-	{
-		$item['unit_total'] = $item['total'] = $item['quantity'] * $item['unit_price'];
+    /**
+     * create Order Item.
+     *
+     * @param array  $item
+     * @param string $markup
+     * @param string $discount
+     * @param string $voucher
+     *
+     * @return OrderItem
+     */
+    public function createOrderItem(array $item, $markup = null, $discount = null, $voucher = null)
+    {
+        $item['unit_total'] = $item['total'] = $item['quantity'] * $item['unit_price'];
 
-		$orderItem = $this->order->items()->create($item);
+        $orderItem = $this->order->items()->create($item);
         $orderItem = $this->applyAdjustment($orderItem, $markup, $discount, $voucher);
 
         $this->updateOrderItemTotal();
         $this->resetOrderAdjustment();
 
-        return $orderItem; 
+        return $orderItem;
     }
 
     /**
-     * update order item
+     * update order item.
      *
      * @param OrderItem $orderItem
-     * @param array $item
-     * @param string $markup
-     * @param string $discount
-     * @param string $voucher
+     * @param array     $item
+     * @param string    $markup
+     * @param string    $discount
+     * @param string    $voucher
+     *
      * @return OrderItem
      */
     public function updateOrderItem(OrderItem $orderItem, array $item, $markup = null, $discount = null, $voucher = null)
     {
-		$item['unit_total'] = $item['quantity'] * $item['unit_price'];
+        $item['unit_total'] = $item['quantity'] * $item['unit_price'];
 
         $orderItem->update($item);
-		$orderItem = $this->applyAdjustment($orderItem, $markup, $discount, $voucher);
+        $orderItem = $this->applyAdjustment($orderItem, $markup, $discount, $voucher);
 
         $this->updateOrderItemTotal();
         $this->resetOrderAdjustment();
 
-		return $orderItem;
+        return $orderItem;
     }
 
     /**
-     * apply adjustment
+     * apply adjustment.
      *
      * @param OrderItem $orderItem
-	 * @param string $markup
-	 * @param string $discount
-	 * @param string $voucher
+     * @param string    $markup
+     * @param string    $discount
+     * @param string    $voucher
+     *
      * @return OrderItem
      */
     protected function applyAdjustment(OrderItem $orderItem, $markup = null, $discount = null, $voucher = null)
     {
-    	if (! is_null($markup)) {
+        if (!is_null($markup)) {
             $factory = new MarkupFactory($orderItem);
             $orderItem = $factory->apply($markup);
         }
 
-        if (! is_null($discount)) {
+        if (!is_null($discount)) {
             $factory = new DiscountFactory($orderItem);
             $orderItem = $factory->apply($discount);
         }
 
-        if (! is_null($voucher)) {
+        if (!is_null($voucher)) {
             $factory = new VoucherFactory($orderItem);
             $orderItem = $factory->apply($voucher);
         }
 
-		return $orderItem;
+        return $orderItem;
     }
 
     /**
-     * update order item total
-     *
-     * @return void
+     * update order item total.
      */
     protected function updateOrderItemTotal()
     {
-    	$this->order->item_total = 0;
+        $this->order->item_total = 0;
 
-    	foreach ($this->order->items as $item) {
-    		$this->order->item_total += $item->total;
-    	}
+        foreach ($this->order->items as $item) {
+            $this->order->item_total += $item->total;
+        }
 
-    	$this->order->save();
-		$this->order->updateTotal();
+        $this->order->save();
+        $this->order->updateTotal();
     }
 
     /**
-     * update order adjustment
-     *
-     * @return void
+     * update order adjustment.
      */
     protected function resetOrderAdjustment()
     {
-    	// skip if no adjustments
-    	if (count($this->order->getAdjustments() === 0)) {
-    		return;
-    	}
+        // skip if no adjustments
+        if (0 === count($this->order->getAdjustments())) {
+            return;
+        }
 
-    	$reseter = new AdjustmentReseter($this->order);
-    	$reseter->reset();
+        $reseter = new AdjustmentReseter($this->order);
+        $reseter->reset();
     }
 
     /**
-     * delete order item
+     * delete order item.
      *
      * @param OrderItem $orderItem
-     * @return void
      */
     public function deleteOrderItem(OrderItem $orderItem)
     {
-    	$orderItem->delete();
+        $orderItem->delete();
 
         $this->updateOrderItemTotal();
         $this->resetOrderAdjustment();

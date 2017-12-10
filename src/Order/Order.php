@@ -14,14 +14,14 @@ class Order extends Model implements Taxable, Voucherable, Discountable
     use SoftDeletes, ItemCounterTrait;
 
     /**
-     * cacheItems
+     * cacheItems.
      *
      * @var Collection
      */
     protected $cacheItems;
 
     /**
-     * cacheAdjustments
+     * cacheAdjustments.
      *
      * @var Collection
      */
@@ -67,7 +67,7 @@ class Order extends Model implements Taxable, Voucherable, Discountable
     }
 
     /**
-     * get items
+     * get items.
      *
      * @return Collection
      */
@@ -81,7 +81,7 @@ class Order extends Model implements Taxable, Voucherable, Discountable
     }
 
     /**
-     * get adjustments
+     * get adjustments.
      *
      * @return Collection
      */
@@ -95,19 +95,17 @@ class Order extends Model implements Taxable, Voucherable, Discountable
     }
 
     /**
-     * update order total
-     *
-     * @return void
+     * update order total.
      */
     public function updateTotal()
     {
         $this->update([
-            'total' => $this->item_total + $this->adjustment_total
+            'total' => $this->item_total + $this->adjustment_total,
         ]);
     }
 
     /**
-     * get primary item
+     * get primary item.
      *
      * @return Collection
      */
@@ -123,7 +121,7 @@ class Order extends Model implements Taxable, Voucherable, Discountable
     }
 
     /**
-     * get discount
+     * get discount.
      *
      * @return OrderAdjustment
      */
@@ -133,7 +131,7 @@ class Order extends Model implements Taxable, Voucherable, Discountable
     }
 
     /**
-     * get voucher
+     * get voucher.
      *
      * @return OrderAdjustment
      */
@@ -143,7 +141,7 @@ class Order extends Model implements Taxable, Voucherable, Discountable
     }
 
     /**
-     * get tax
+     * get tax.
      *
      * @return OrderAdjustment
      */

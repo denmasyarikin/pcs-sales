@@ -13,7 +13,6 @@ use Denmasyarikin\Sales\Order\Requests\DeleteOrderRequest;
 use Denmasyarikin\Sales\Order\Requests\UpdateStatusOrderRequest;
 use Denmasyarikin\Sales\Order\Transformers\OrderListTransformer;
 use Denmasyarikin\Sales\Order\Transformers\OrderDetailTransformer;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class OrderController extends Controller
 {
@@ -146,32 +145,34 @@ class OrderController extends Controller
     }
 
     /**
-     * create order
+     * create order.
      *
      * @param CreateOrderRequest $request
+     *
      * @return json
      */
     public function createOrder(CreateOrderRequest $request)
     {
         $user = $request->user();
-        
+
         $order = Order::create([
             'cs_user_id' => $user->id,
-            'cs_name' => $user->name
+            'cs_name' => $user->name,
         ]);
 
         return new JsonResponse([
             'message' => 'Order has been created',
             'data' => [
-                'id' => $order->id
-            ]
+                'id' => $order->id,
+            ],
         ], 201);
     }
 
     /**
-     * update order
+     * update order.
      *
      * @param UpdateOrderRequest $request
+     *
      * @return json
      */
     public function updateOrder(UpdateOrderRequest $request)
@@ -185,9 +186,10 @@ class OrderController extends Controller
     }
 
     /**
-     * update status order
+     * update status order.
      *
      * @param UpdateStatusOrderRequest $request
+     *
      * @return json
      */
     public function updateStatusOrder(UpdateStatusOrderRequest $request)
@@ -199,21 +201,21 @@ class OrderController extends Controller
             case 'processing':
                 $order->update([
                     'start_process_date' => date('Y-m-d H:i:s'),
-                    'status' => 'processing'
+                    'status' => 'processing',
                 ]);
                 break;
 
             case 'finished':
                 $order->update([
                     'end_process_date' => date('Y-m-d H:i:s'),
-                    'status' => 'finished'
+                    'status' => 'finished',
                 ]);
                 break;
 
             case 'archived':
                 $order->update([
                     'close_date' => date('Y-m-d H:i:s'),
-                    'status' => 'archived'
+                    'status' => 'archived',
                 ]);
                 break;
             default:
@@ -222,14 +224,15 @@ class OrderController extends Controller
         }
 
         return new JsonResponse([
-            'message' => 'Order status has been updated to '.$request->status
+            'message' => 'Order status has been updated to '.$request->status,
         ]);
     }
 
     /**
-     * delete order
+     * delete order.
      *
      * @param DeleteOrderRequest $request
+     *
      * @return json
      */
     public function deleteOrder(DeleteOrderRequest $request)

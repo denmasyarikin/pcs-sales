@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace Denmasyarikin\Sales\Order\Contracts;
 

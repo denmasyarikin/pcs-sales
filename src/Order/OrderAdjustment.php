@@ -23,7 +23,7 @@ class OrderAdjustment extends Model implements Adjustment
     }
 
     /**
-     * get adjustmentable
+     * get adjustmentable.
      *
      * @return Adjustmentable
      */

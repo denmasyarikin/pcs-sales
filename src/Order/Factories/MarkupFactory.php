@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace Denmasyarikin\Sales\Order\Factories;
 
@@ -9,23 +9,24 @@ use Symfony\Component\Process\Exception\InvalidArgumentException;
 class MarkupFactory extends AdjustmentFactory
 {
     /**
-     * priority
+     * priority.
      *
      * @var int
      */
     protected $priority = 1;
 
     /**
-     * adjustment type
+     * adjustment type.
      *
      * @var string
      */
     protected $adjustmentType = 'markup';
 
     /**
-     * get Adjustment
+     * get Adjustment.
      *
      * @param Adjustmentable $adjustmentable
+     *
      * @return string
      */
     protected function getAdjustment(Adjustmentable $adjustmentable)
@@ -38,10 +39,11 @@ class MarkupFactory extends AdjustmentFactory
     }
 
     /**
-     * get Adjustment total
+     * get Adjustment total.
      *
      * @param Adjustmentable $adjustmentable
-     * @param mixed $value
+     * @param mixed          $value
+     *
      * @return string
      */
     protected function getAdjustmentTotal(Adjustmentable $adjustmentable, $value)
