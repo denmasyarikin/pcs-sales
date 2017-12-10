@@ -133,4 +133,21 @@ class ItemController extends Controller
                 break;
         }
     }
+
+    /**
+     * delete order item
+     *
+     * @param DeleteOrderItemRequest $request
+     * @return json
+     */
+    public function deleteOrderItem(DeleteOrderItemRequest $request)
+    {
+        $order = $request->getOrder();
+        $orderItem = $request->getOrderItem();
+        $factory = new OrderFactory($order);
+
+        $factory->deleteOrderItem($orderItem);
+
+        return new JsonResponse(['message' => 'Order Item has been deleted']);
+    }
 }

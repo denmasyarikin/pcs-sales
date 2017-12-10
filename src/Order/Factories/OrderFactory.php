@@ -51,7 +51,7 @@ class OrderFactory
 		$orderItem = $this->order->items()->create($item);
         $orderItem = $this->applyAdjustment($orderItem, $markup, $discount, $voucher);
 
-        $this->updateOrderItemTotal($orderItem);
+        $this->updateOrderItemTotal();
         $this->resetOrderAdjustment();
 
         return $orderItem; 
@@ -74,7 +74,8 @@ class OrderFactory
         $orderItem->update($item);
 		$orderItem = $this->applyAdjustment($orderItem, $markup, $discount, $voucher);
 
-        $this->updateOrderItemTotal($orderItem);
+        $this->updateOrderItemTotal();
+        $this->resetOrderAdjustment();
 
 		return $orderItem;
     }
@@ -111,10 +112,9 @@ class OrderFactory
     /**
      * update order item total
      *
-     * @param OrderItem $orderItem
      * @return void
      */
-    protected function updateOrderItemTotal($orderItem)
+    protected function updateOrderItemTotal()
     {
     	$this->order->item_total = 0;
 
@@ -129,13 +129,12 @@ class OrderFactory
     /**
      * update order adjustment
      *
-     * @param  
      * @return void
      */
     protected function resetOrderAdjustment()
     {
     	// skip if no adjustments
-    	if (count($this->order->getAdjustments() === 0) {
+    	if (count($this->order->getAdjustments() === 0)) {
     		return;
     	}
 
@@ -151,6 +150,9 @@ class OrderFactory
      */
     public function deleteOrderItem(OrderItem $orderItem)
     {
-    	//
+    	$orderItem->delete();
+
+        $this->updateOrderItemTotal();
+        $this->resetOrderAdjustment();
     }
 }
