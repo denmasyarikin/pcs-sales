@@ -5,7 +5,7 @@ namespace Denmasyarikin\Sales\Order\Factories;
 use App\Manager\Facades\Setting;
 use Denmasyarikin\Sales\Order\Order;
 use Denmasyarikin\Sales\Order\OrderItem;
-use Denmasyarikin\Sales\Factories\AdjustmentReseter;
+use Denmasyarikin\Sales\Payment\Factory as PaymentFactory;
 
 class OrderFactory
 {
@@ -53,6 +53,7 @@ class OrderFactory
 
         $this->updateOrderItemTotal();
         $this->resetOrderAdjustment();
+        $this->resetOrderPayment();
 
         return $orderItem;
     }
@@ -77,6 +78,7 @@ class OrderFactory
 
         $this->updateOrderItemTotal();
         $this->resetOrderAdjustment();
+        $this->resetOrderPayment();
 
         return $orderItem;
     }
@@ -141,6 +143,20 @@ class OrderFactory
     }
 
     /**
+     * update order payment.
+     */
+    protected function resetOrderPayment()
+    {
+        // skip if no payments
+        if (0 === count($this->order->getPayments())) {
+            return;
+        }
+
+        $factory = new PaymentFactory($this->order);
+        $factory->resetAllPayment();
+    }
+
+    /**
      * delete order item.
      *
      * @param OrderItem $orderItem
@@ -151,5 +167,6 @@ class OrderFactory
 
         $this->updateOrderItemTotal();
         $this->resetOrderAdjustment();
+        $this->resetOrderPayment();
     }
 }

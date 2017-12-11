@@ -126,7 +126,7 @@ abstract class AdjustmentFactory
     }
 
     /**
-     * reset adjusment.
+     * reset adjustment.
      */
     protected function resetAdjustmentable()
     {

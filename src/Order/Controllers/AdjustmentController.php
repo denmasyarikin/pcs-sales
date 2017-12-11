@@ -26,6 +26,8 @@ class AdjustmentController extends Controller
      */
     public function applyDiscount(AdjustmentDiscountRequest $request)
     {
+        $this->orderAdjustmentRestriction('discount');
+
         $order = $request->getOrder();
         $this->updateableOrder($order);
         $this->hasItems($order);
@@ -45,6 +47,8 @@ class AdjustmentController extends Controller
      */
     public function applyTax(AdjustmentTaxRequest $request)
     {
+        $this->orderAdjustmentRestriction('tax');
+
         $order = $request->getOrder();
         $this->updateableOrder($order);
         $this->hasItems($order);
@@ -66,6 +70,8 @@ class AdjustmentController extends Controller
      */
     public function applyVoucher(AdjustmentVoucherRequest $request)
     {
+        $this->orderAdjustmentRestriction('voucher');
+
         $order = $request->getOrder();
         $this->updateableOrder($order);
         $this->hasItems($order);

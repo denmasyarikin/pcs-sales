@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use Denmasyarikin\Sales\Order\Requests\DetailOrderRequest;
 use Denmasyarikin\Sales\Order\Requests\UpdateCustomerRequest;
 use Denmasyarikin\Sales\Order\Transformers\OrderCustomerTransformer;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class CustomerController extends Controller
 {
@@ -24,8 +25,12 @@ class CustomerController extends Controller
     {
         $order = $request->getOrder();
 
+        if (is_null($customer = $order->customer)) {
+            throw new BadRequestHttpException('Order not assign to any customer');
+        }
+
         return new JsonResponse([
-            'data' => (new OrderCustomerTransformer($order->customer))->toArray(),
+            'data' => (new OrderCustomerTransformer($customer))->toArray(),
         ]);
     }
 

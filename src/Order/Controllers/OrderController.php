@@ -198,7 +198,15 @@ class OrderController extends Controller
 
         switch ($request->status) {
             case 'created':
-                $order->update(['status' => 'created']);
+                $order->update([
+                    'remaining' => $order->total,
+                    'status' => 'created'
+                ]);
+
+                if ($customer = $order->customer->customer) {
+                    $customer->update(['last_order' => date('Y-m-d H:i:s')]);
+                }
+
                 $order->histories()->create(['type' => 'order', 'label' => 'created']);
                 break;
             case 'processing':

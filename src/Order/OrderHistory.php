@@ -19,8 +19,8 @@ class OrderHistory extends Model
         'archived' => 'Order Close',
         'canceled' => 'Order Dibatalkan',
         'down_payment' => 'Bayar Uang Muka',
-        'payment_rest' => 'Pembayaran Sisa',
-        'payment_settlement' => 'Pelunasan',
+        'rest_payment' => 'Pembayaran Sisa',
+        'settlement' => 'Pembayaran Lunas'
     ];
 
     /**

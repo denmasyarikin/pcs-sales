@@ -4,6 +4,7 @@ namespace Denmasyarikin\Sales\Order;
 
 use App\Model;
 use Illuminate\Support\Collection;
+use Denmasyarikin\Sales\Payment\Payment;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Denmasyarikin\Sales\Order\Contracts\Taxable;
 use Denmasyarikin\Sales\Order\Contracts\Voucherable;
@@ -26,6 +27,13 @@ class Order extends Model implements Taxable, Voucherable, Discountable
      * @var Collection
      */
     protected $cacheAdjustments;
+
+    /**
+     * cachePayments.
+     *
+     * @var Collection
+     */
+    protected $cachePayments;
 
     /**
      * The table associated with the model.
@@ -75,6 +83,14 @@ class Order extends Model implements Taxable, Voucherable, Discountable
     }
 
     /**
+     * Get the payments record associated with the Order.
+     */
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
+
+    /**
      * get items.
      *
      * @return Collection
@@ -100,6 +116,20 @@ class Order extends Model implements Taxable, Voucherable, Discountable
         }
 
         return $this->cacheAdjustments = $this->adjustments;
+    }
+
+    /**
+     * get payments.
+     *
+     * @return Collection
+     */
+    public function getPayments()
+    {
+        if ($this->cachePayments) {
+            return $this->cachePayments;
+        }
+
+        return $this->cachePayments = $this->payments;
     }
 
     /**

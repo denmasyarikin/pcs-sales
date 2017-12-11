@@ -17,7 +17,6 @@ class OrderCustomerTransformer extends Detail
     protected function getData(Model $model)
     {
         return [
-            'id' => $model->id,
             'customer_id' => $model->customer_id,
             'type' => $model->type,
             'name' => $model->name,

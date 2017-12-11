@@ -18,6 +18,7 @@ class OrderListDetailTransformer extends Detail
     {
         return [
             'id' => $model->id,
+            'customer' => $model->customer ? (new OrderCustomerTransformer($model->customer))->toArray() : null,
             'item_count' => [
                 'total' => $model->item_count,
                 'product' => $model->item_product_count,

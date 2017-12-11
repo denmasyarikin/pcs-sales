@@ -2,6 +2,7 @@
 
 namespace Denmasyarikin\Sales\Order\Controllers;
 
+use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 use Denmasyarikin\Sales\Order\Factories\OrderFactory;
@@ -60,6 +61,7 @@ class ItemController extends Controller
     {
         $order = $request->getOrder();
         $this->updateableOrder($order);
+        $this->restrictAdjustment($request);
 
         $this->orderItemTypeRestriction($request->type, $request->type_as);
 
@@ -92,16 +94,22 @@ class ItemController extends Controller
     {
         $order = $request->getOrder();
         $this->updateableOrder($order);
+        $this->restrictAdjustment($request);
 
         $this->orderItemTypeRestriction($request->type, $request->type_as);
 
         $orderItem = $request->getOrderItem();
         $factory = new OrderFactory($order);
 
-        $orderItem = $factory->updateOrderItem($orderItem, $request->only([
-            'type', 'type_as', 'reference_id', 'name', 'specific',
-            'note', 'quantity', 'unit_price', 'unit_id',
-        ]), $request->input('markup'), $request->input('discount'), $request->input('voucher'));
+        $orderItem = $factory->updateOrderItem(
+            $orderItem, $request->only([
+                'type', 'type_as', 'reference_id', 'name', 'specific',
+                'note', 'quantity', 'unit_price', 'unit_id',
+            ]),
+            $request->input('markup'),
+            $request->input('discount'),
+            $request->input('voucher')
+        );
 
         return new JsonResponse([
             'message' => 'Order Item has been updated',
@@ -127,5 +135,21 @@ class ItemController extends Controller
         $factory->deleteOrderItem($orderItem);
 
         return new JsonResponse(['message' => 'Order Item has been deleted']);
+    }
+
+    /**
+     * restrict adjustment.
+     *
+     * @param Request $request
+     */
+    protected function restrictAdjustment(Request $request)
+    {
+        if ($request->has('discount')) {
+            $this->orderAdjustmentRestriction('discount');
+        }
+
+        if ($request->has('voucher')) {
+            $this->orderAdjustmentRestriction('voucher');
+        }
     }
 }

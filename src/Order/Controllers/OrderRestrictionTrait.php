@@ -2,7 +2,9 @@
 
 namespace Denmasyarikin\Sales\Order\Controllers;
 
+use App\Manager\Facades\Setting;
 use Denmasyarikin\Sales\Order\Order;
+use Symfony\Component\Process\Exception\InvalidArgumentException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 trait OrderRestrictionTrait
@@ -106,6 +108,40 @@ trait OrderRestrictionTrait
     {
         if (in_array($order->status, ['draft', 'archived'])) {
             throw new BadRequestHttpException("Can not cancle order when status is {$order->status}");
+        }
+    }
+
+    /**
+     * order adjustment restriction.
+     *
+     * @param string $type
+     */
+    protected function orderAdjustmentRestriction($type)
+    {
+        if (!Setting::get('system.sales.order.enabled_adjustment')) {
+            throw new BadRequestHttpException('No adjustments enabled');
+        }
+
+        switch ($type) {
+            case 'voucher':
+                $enabled = Setting::get('system.sales.order.enabled_voucher');
+                break;
+
+            case 'discount':
+                $enabled = Setting::get('system.sales.order.enabled_discount');
+                break;
+
+            case 'tax':
+                $enabled = Setting::get('system.sales.order.enabled_tax');
+                break;
+
+            default:
+                throw new InvalidArgumentException('Invalid adjustment type');
+                break;
+        }
+
+        if (!$enabled) {
+            throw new BadRequestHttpException("{$type} adjustment is disabled");
         }
     }
 }

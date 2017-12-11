@@ -14,7 +14,7 @@ class Setting implements SettingContract
     public function getSetting()
     {
         return [
-            'enabled_adjusment' => true,
+            'enabled_adjustment' => true,
             'enabled_tax' => true,
             'enabled_voucher' => true,
             'enabled_discount' => true,
@@ -26,6 +26,7 @@ class Setting implements SettingContract
                 'unknown',
                 'other',
             ],
+            'required_down_payment' => true
         ];
     }
 }
