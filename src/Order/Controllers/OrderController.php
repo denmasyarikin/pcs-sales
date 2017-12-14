@@ -112,7 +112,7 @@ class OrderController extends Controller
     }
 
     /**
-     * get product list.
+     * get order list.
      *
      * @param Request $request
      * @param string  $status
@@ -121,13 +121,15 @@ class OrderController extends Controller
      */
     protected function getOrderList(Request $request, $status)
     {
-        $products = Order::whereStatus($status);
+        $orders = Order::whereStatus($status);
 
         if ($request->has('key')) {
-            $products->where('id', $request->key);
+            $orders->where('id', $request->key);
         }
 
-        return $products->paginate($request->get('per_page') ?: 10);
+        $this->dateRange($orders, $request);
+
+        return $orders->paginate($request->get('per_page') ?: 10);
     }
 
     /**
@@ -200,7 +202,7 @@ class OrderController extends Controller
             case 'created':
                 $order->update([
                     'remaining' => $order->total,
-                    'status' => 'created'
+                    'status' => 'created',
                 ]);
 
                 if ($customer = $order->customer->customer) {
@@ -225,12 +227,12 @@ class OrderController extends Controller
                 $order->histories()->create(['type' => 'order', 'label' => 'finished']);
                 break;
 
-            case 'archived':
+            case 'closed':
                 $order->update([
                     'close_date' => date('Y-m-d H:i:s'),
-                    'status' => 'archived',
+                    'status' => 'closed',
                 ]);
-                $order->histories()->create(['type' => 'order', 'label' => 'archived']);
+                $order->histories()->create(['type' => 'order', 'label' => 'closed']);
                 break;
         }
 

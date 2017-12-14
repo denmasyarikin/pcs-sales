@@ -2,17 +2,11 @@
 
 namespace Denmasyarikin\Sales\Tax;
 
-use App\Model;
+use Illuminate\Database\Eloquent\Builder;
+use Denmasyarikin\Sales\Order\OrderAdjustment;
 
-class Tax extends Model
+class Tax extends OrderAdjustment
 {
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
-    protected $table = 'sales_adjustment';
-
     /**
      * The "booting" method of the model.
      */
@@ -21,7 +15,9 @@ class Tax extends Model
         parent::boot();
 
         static::addGlobalScope('tax', function (Builder $builder) {
-            $builder->whereType('tax');
+            $builder->whereHas('order', function ($query) {
+                return $query->whereStatus('closed');
+            })->whereType('tax');
         });
     }
 }

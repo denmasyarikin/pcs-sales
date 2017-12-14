@@ -16,11 +16,11 @@ class OrderHistory extends Model
         'created' => 'Order Dibuat',
         'processing' => 'Order Mulai Diproses',
         'finished' => 'Order Selesai Proses',
-        'archived' => 'Order Close',
+        'closed' => 'Order Close',
         'canceled' => 'Order Dibatalkan',
         'down_payment' => 'Bayar Uang Muka',
         'rest_payment' => 'Pembayaran Sisa',
-        'settlement' => 'Pembayaran Lunas'
+        'settlement' => 'Pembayaran Lunas',
     ];
 
     /**

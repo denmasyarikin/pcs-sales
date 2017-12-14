@@ -23,7 +23,7 @@ class PaymentsTable extends Seeder
             'pay' => 30000,
             'remaining' => 40000,
             'cs_user_id' => 1,
-            'cs_name' => 'Denma Syarikin'
+            'cs_name' => 'Denma Syarikin',
         ]);
 
         Payment::create([
@@ -37,7 +37,7 @@ class PaymentsTable extends Seeder
             'pay' => 20000,
             'remaining' => 20000,
             'cs_user_id' => 1,
-            'cs_name' => 'Denma Syarikin'
+            'cs_name' => 'Denma Syarikin',
         ]);
 
         Payment::create([
@@ -51,7 +51,7 @@ class PaymentsTable extends Seeder
             'bank_id' => 1,
             'payment_slip' => 'api/media/image/sales/payment/payment_slip/bukti.jpeg',
             'cs_user_id' => 1,
-            'cs_name' => 'Denma Syarikin'
+            'cs_name' => 'Denma Syarikin',
         ]);
     }
 }

@@ -19,11 +19,12 @@ class DetailPaymentRequest extends FormRequest
      * get payment.
      *
      * @param bool $refresh
+     *
      * @return Payment
      */
     public function getPayment($refresh = true): ?Payment
     {
-        if ($this->payment AND ! $refresh) {
+        if ($this->payment and !$refresh) {
             return $this->payment;
         }
 

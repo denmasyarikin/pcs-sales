@@ -14,7 +14,7 @@ class Setting implements SettingContract
     public function getSetting()
     {
         return [
-            'required_payment_ship' => true
+            'required_payment_slip' => true,
         ];
     }
 }

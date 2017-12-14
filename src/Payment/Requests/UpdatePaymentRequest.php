@@ -17,7 +17,7 @@ class UpdatePaymentRequest extends DetailPaymentRequest
             'cash_back' => 'required_if:payment_method,cash|numeric',
             'bank_id' => 'required_if:payment_method,transfer|exists:sales_banks,id',
             'payment_slip' => 'required_if:payment_method,transfer',
-            'pay' => 'required|numeric'
+            'pay' => 'required|numeric',
         ];
     }
 }

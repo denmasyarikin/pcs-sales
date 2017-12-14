@@ -6,11 +6,9 @@ use App\Model;
 use Denmasyarikin\Sales\Bank\Bank;
 use Denmasyarikin\Sales\Order\Order;
 use Denmasyarikin\Sales\Order\OrderCustomer;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Payment extends Model
 {
-
     /**
      * The table associated with the model.
      *
@@ -31,7 +29,7 @@ class Payment extends Model
      */
     public function customer()
     {
-    	return $this->belongsTo(OrderCustomer::class, 'order_customer_id');
+        return $this->belongsTo(OrderCustomer::class, 'order_customer_id');
     }
 
     /**

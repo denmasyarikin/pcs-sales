@@ -26,7 +26,7 @@ class Setting implements SettingContract
                 'unknown',
                 'other',
             ],
-            'required_down_payment' => true
+            'required_down_payment' => true,
         ];
     }
 }

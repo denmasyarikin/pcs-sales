@@ -49,7 +49,7 @@ class PaymentController extends Controller
         $payments = Payment::with('customer')->orderBy('created_at', 'DESC');
 
         if ($request->has('key')) {
-            $payments->whereHas('customer', function($query) use ($request) {
+            $payments->whereHas('customer', function ($query) use ($request) {
                 return $query->where('name', 'like', "%{$request->key}%");
             });
             $payments->orWhere('id', $request->key);
@@ -89,11 +89,11 @@ class PaymentController extends Controller
 
         if ($factory->isOverpayment($request->pay)) {
             throw new BadRequestHttpException('Over payment');
-        } 
+        }
 
         $payment = $factory->pay($request->only([
             'payment_method', 'cash_total', 'cash_back',
-            'bank_id', 'payment_slip', 'pay'
+            'bank_id', 'payment_slip', 'pay',
         ]));
 
         return new JsonResponse([
@@ -103,9 +103,10 @@ class PaymentController extends Controller
     }
 
     /**
-     * get order
+     * get order.
      *
      * @param int $orderId
+     *
      * @return Order
      */
     protected function getOrder(int $orderId)
@@ -114,7 +115,9 @@ class PaymentController extends Controller
                     ->whereIn('status', ['created', 'processing', 'finihsed'])
                     ->first();
 
-        if ($order) return $order;
+        if ($order) {
+            return $order;
+        }
 
         throw new BadRequestHttpException('Order not found or status not allowed');
     }
@@ -131,7 +134,7 @@ class PaymentController extends Controller
         $payment = $request->getPayment();
         $order = $payment->order;
 
-        if (! in_array($order->status, ['created', 'processing', 'finsihed'])) {
+        if (!in_array($order->status, ['created', 'processing', 'finsihed'])) {
             throw new BadRequestHttpException('Order status not allowed');
         }
 
@@ -143,7 +146,7 @@ class PaymentController extends Controller
 
         $payment->update($request->only([
             'payment_method', 'cash_total', 'cash_back',
-            'bank_id', 'payment_slip', 'pay'
+            'bank_id', 'payment_slip', 'pay',
         ]));
 
         $factory->resetAllPayment();
@@ -167,7 +170,7 @@ class PaymentController extends Controller
         $payment = $request->getPayment();
         $order = $payment->order;
 
-        if (! in_array($order->status, ['created', 'processing', 'finsihed'])) {
+        if (!in_array($order->status, ['created', 'processing', 'finsihed'])) {
             throw new BadRequestHttpException('Order status not allowed');
         }
 
