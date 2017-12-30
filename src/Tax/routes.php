@@ -1,4 +1,4 @@
 <?php
 
 
-$router->get('/', 'TaxController@getList');
+$router->get('/', ['as' => 'sales.tax.list', 'uses' => 'TaxController@getList']);

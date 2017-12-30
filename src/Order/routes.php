@@ -1,30 +1,30 @@
 <?php
 
-$router->get('/draft', 'OrderController@getListDraft');
-$router->get('/created', 'OrderController@getListCreated');
-$router->get('/processing', 'OrderController@getListProcessing');
-$router->get('/finished', 'OrderController@getListFinished');
-$router->get('/closed', 'OrderController@getListArchived');
-$router->get('/canceled', 'OrderController@getListCanceled');
-$router->get('/{id}', 'OrderController@getDetail');
-$router->get('/{id}/customer', 'CustomerController@getDetail');
-$router->get('/{id}/item', 'ItemController@getList');
-$router->get('/{id}/item/{item_id}', 'ItemController@getDetail');
+$router->get('/draft', ['as' => 'sales.order.draft', 'uses' => 'OrderController@getListDraft']);
+$router->get('/created', ['as' => 'sales.order.created', 'uses' => 'OrderController@getListCreated']);
+$router->get('/processing', ['as' => 'sales.order.processing', 'uses' => 'OrderController@getListProcessing']);
+$router->get('/finished', ['as' => 'sales.order.finished', 'uses' => 'OrderController@getListFinished']);
+$router->get('/closed', ['as' => 'sales.order.closed', 'uses' => 'OrderController@getListArchived']);
+$router->get('/canceled', ['as' => 'sales.order.canceled', 'uses' => 'OrderController@getListCanceled']);
+$router->get('/{id}', ['as' => 'sales.order.detail', 'uses' => 'OrderController@getDetail']);
+$router->get('/{id}/customer', ['as' => 'sales.order.customer.detail', 'uses' => 'CustomerController@getDetail']);
+$router->get('/{id}/item', ['as' => 'sales.order.item.list', 'uses' => 'ItemController@getList']);
+$router->get('/{id}/item/{item_id}', ['as' => 'sales.order.item.detail', 'uses' => 'ItemController@getDetail']);
 
 $router->group(['middleware' => 'manage:sales,order'], function ($router) {
-    $router->post('/', 'OrderController@createOrder');
-    $router->put('/{id}', 'OrderController@updateOrder');
-    $router->put('/{id}/status', 'OrderController@updateStatusOrder');
-    $router->put('/{id}/cancel', 'OrderController@cancelOrder');
-    $router->delete('/{id}', 'OrderController@deleteOrder');
-    $router->post('/{id}/customer', 'CustomerController@updateCustomer');
-    $router->post('/{id}/discount', 'AdjustmentController@applyDiscount');
-    $router->post('/{id}/tax', 'AdjustmentController@applyTax');
-    $router->post('/{id}/voucher', 'AdjustmentController@applyVoucher');
+    $router->post('/', ['as' => 'sales.order.create', 'uses' => 'OrderController@createOrder']);
+    $router->put('/{id}', ['as' => 'sales.order.update', 'uses' => 'OrderController@updateOrder']);
+    $router->put('/{id}/status', ['as' => 'sales.order.update_status', 'uses' => 'OrderController@updateStatusOrder']);
+    $router->put('/{id}/cancel', ['as' => 'sales.order.cancel', 'uses' => 'OrderController@cancelOrder']);
+    $router->delete('/{id}', ['as' => 'sales.order.delete', 'uses' => 'OrderController@deleteOrder']);
+    $router->post('/{id}/customer', ['as' => 'sales.order.customer.create', 'uses' => 'CustomerController@updateCustomer']);
+    $router->post('/{id}/discount', ['as' => 'sales.order.discount', 'uses' => 'AdjustmentController@applyDiscount']);
+    $router->post('/{id}/tax', ['as' => 'sales.order.tax', 'uses' => 'AdjustmentController@applyTax']);
+    $router->post('/{id}/voucher', ['as' => 'sales.order.voucher', 'uses' => 'AdjustmentController@applyVoucher']);
 
     $router->group(['prefix' => '/{id}/item'], function ($router) {
-        $router->post('/', 'ItemController@createOrderItem');
-        $router->put('/{item_id}', 'ItemController@updateOrderItem');
-        $router->delete('/{item_id}', 'ItemController@deleteOrderItem');
+        $router->post('/', ['as' => 'sales.order.item.create', 'uses' => 'ItemController@createOrderItem']);
+        $router->put('/{item_id}', ['as' => 'sales.order.item.update', 'uses' => 'ItemController@updateOrderItem']);
+        $router->delete('/{item_id}', ['as' => 'sales.order.item.delete', 'uses' => 'ItemController@deleteOrderItem']);
     });
 });
