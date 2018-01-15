@@ -15,6 +15,7 @@ class Setting implements SettingContract
     {
         return [
             'material_icon' => 'receipt',
+            'tagline' => 'Sistem Penjualan',
         ];
     }
 }

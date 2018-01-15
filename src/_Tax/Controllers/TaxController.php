@@ -1,12 +1,12 @@
 <?php
 
-namespace Denmasyarikin\Sales\Tax\Controllers;
+namespace Denmasyarikin\Sales\_Tax\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
-use Denmasyarikin\Sales\Tax\Tax;
-use Denmasyarikin\Sales\Tax\Transformers\TaxListTransformer;
+use Denmasyarikin\Sales\_Tax\Tax;
+use Denmasyarikin\Sales\_Tax\Transformers\TaxListTransformer;
 
 class TaxController extends Controller
 {

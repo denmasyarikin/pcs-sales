@@ -1,6 +1,6 @@
 <?php
 
-namespace Denmasyarikin\Sales\Tax;
+namespace Denmasyarikin\Sales\_Tax;
 
 use Illuminate\Database\Eloquent\Builder;
 use Denmasyarikin\Sales\Order\OrderAdjustment;

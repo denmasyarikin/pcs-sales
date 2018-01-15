@@ -1,6 +1,6 @@
 <?php
 
-namespace Denmasyarikin\Sales\Tax\Transformers;
+namespace Denmasyarikin\Sales\_Tax\Transformers;
 
 use App\Http\Transformers\Pagination;
 use Illuminate\Database\Eloquent\Model;

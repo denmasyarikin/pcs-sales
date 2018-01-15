@@ -1,6 +1,6 @@
 <?php
 
-namespace Denmasyarikin\Sales\Tax;
+namespace Denmasyarikin\Sales\_Tax;
 
 use App\Manager\Contracts\Setting as SettingContract;
 

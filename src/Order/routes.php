@@ -11,7 +11,7 @@ $router->get('/{id}/customer', ['as' => 'sales.order.customer.detail', 'uses' =>
 $router->get('/{id}/item', ['as' => 'sales.order.item.list', 'uses' => 'ItemController@getList']);
 $router->get('/{id}/item/{item_id}', ['as' => 'sales.order.item.detail', 'uses' => 'ItemController@getDetail']);
 
-$router->group(['middleware' => 'manage:sales,order'], function ($router) {
+$router->group(['middleware' => 'manage:sales,order,write'], function ($router) {
     $router->post('/', ['as' => 'sales.order.create', 'uses' => 'OrderController@createOrder']);
     $router->put('/{id}', ['as' => 'sales.order.update', 'uses' => 'OrderController@updateOrder']);
     $router->put('/{id}/status', ['as' => 'sales.order.update_status', 'uses' => 'OrderController@updateStatusOrder']);
