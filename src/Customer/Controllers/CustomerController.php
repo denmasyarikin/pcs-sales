@@ -46,6 +46,9 @@ class CustomerController extends Controller
         $customers = Customer::orderBy('created_at', 'DESC');
 
         switch ($request->get('type')) {
+            case 'internal':
+                $customers->whereType('internal');
+                break;
             case 'public':
                 $customers->whereType('public');
                 break;
@@ -91,7 +94,7 @@ class CustomerController extends Controller
      */
     public function createCustomer(CreateCustomerRequest $request)
     {
-        Customer::create($request->only([
+        $customer = Customer::create($request->only([
             'type', 'name', 'address', 'telephone', 'email',
             'contact_person', 'user_id',
         ]));

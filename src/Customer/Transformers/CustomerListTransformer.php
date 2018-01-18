@@ -16,6 +16,6 @@ class CustomerListTransformer extends Pagination
      */
     protected function getData(Model $model)
     {
-        return (new CustomerDetailTransformer($model))->toArray();
+        return (new CustomerListDetailTransformer($model))->toArray();
     }
 }

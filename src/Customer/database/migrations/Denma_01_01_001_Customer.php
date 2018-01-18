@@ -13,7 +13,7 @@ class Customer extends Migration
     {
         Schema::create('sales_customers', function (Blueprint $table) {
             $table->increments('id');
-            $table->enum('type', ['public', 'agent', 'company'])->default('public');
+            $table->enum('type', ['internal', 'public', 'agent', 'company'])->default('public');
             $table->string('name', 50);
             $table->text('address')->nullable()->default(null);
             $table->string('telephone', 20)->nullable()->default(null);

@@ -12,13 +12,13 @@ class UpdateCustomerRequest extends DetailCustomerRequest
     public function rules()
     {
         return [
-            'type' => 'required|in:public,agent,company',
+            'type' => 'required|in:public,agent,company,internal',
             'name' => 'required|max:50',
-            'address' => '',
-            'telephone' => 'min:4|max:20|numeric',
-            'email' => 'email',
-            'contact_person' => '',
-            'user_id' => 'numeric|exists:core_users,id',
+            'address' => 'required',
+            'telephone' => 'nullable|digits_between:4,20|numeric',
+            'email' => 'nullable|email',
+            'contact_person' => 'nullable|required_if:type,company|min:3|max:50',
+            'user_id' => 'nullable|numeric|exists:core_users,id',
         ];
     }
 }

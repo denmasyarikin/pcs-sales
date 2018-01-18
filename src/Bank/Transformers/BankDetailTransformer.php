@@ -19,7 +19,7 @@ class BankDetailTransformer extends Detail
         return [
             'id' => $model->id,
             'name' => $model->name,
-            'logo' => $model->address,
+            'logo' => $model->logo,
             'account_name' => $model->account_name,
             'account_number' => $model->account_number,
             'created_at' => $model->created_at->format('Y-m-d H:i:s'),

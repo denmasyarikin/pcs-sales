@@ -24,7 +24,7 @@ class CustomerDetailTransformer extends Detail
             'telephone' => $model->telephone,
             'email' => $model->email,
             'contact_person' => $model->contact_person,
-            'las_order' => $model->las_order,
+            'last_order' => $model->last_order,
             'created_at' => $model->created_at->format('Y-m-d H:i:s'),
             'updated_at' => $model->updated_at->format('Y-m-d H:i:s'),
         ];
