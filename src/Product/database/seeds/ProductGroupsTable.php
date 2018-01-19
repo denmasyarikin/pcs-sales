@@ -13,6 +13,5 @@ class ProductGroupsTable extends Seeder
     public function run()
     {
         $groups = ProductGroup::create(['name' => 'Office']);
-        $groups->products()->attach(1);
     }
 }

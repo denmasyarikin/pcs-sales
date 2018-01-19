@@ -16,6 +16,7 @@ class Product extends Migration
             $table->string('name', 50);
             $table->text('description')->nullable()->default(null);
             $table->integer('unit_id')->unsigned();
+            $table->integer('product_group_id')->unsigned()->nullable()->default(null);
             $table->integer('min_order');
             $table->boolean('customizable')->default(true);
             $table->float('base_price')->default(0);
@@ -25,6 +26,7 @@ class Product extends Migration
             $table->softDeletes();
 
             $table->foreign('unit_id')->references('id')->on('core_units');
+            $table->foreign('product_group_id')->references('id')->on('sales_product_groups');
         });
     }
 

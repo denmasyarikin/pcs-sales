@@ -11,12 +11,13 @@ use Denmasyarikin\Sales\Product\Requests\CreateProductGroupRequest;
 use Denmasyarikin\Sales\Product\Requests\UpdateProductGroupRequest;
 use Denmasyarikin\Sales\Product\Requests\DetailProductGroupRequest;
 use Denmasyarikin\Sales\Product\Transformers\ProductGroupListTransformer;
+use Denmasyarikin\Sales\Product\Transformers\ProductGroupDetailTransformer;
 use Denmasyarikin\Sales\Product\Transformers\ProductListCollectionTransformer;
 
 class GroupController extends Controller
 {
     /**
-     * get list.
+     * bank list.
      *
      * @param Request $request
      *
@@ -24,101 +25,30 @@ class GroupController extends Controller
      */
     public function getList(Request $request)
     {
-        $groups = $this->getProductGroupsList($request);
-        $products = $this->getProductList($request);
+        $banks = $this->getProductGroupList($request);
 
-        return $this->sendReturn($groups, $products);
+        $transform = new ProductGroupListTransformer($banks);
+
+        return new JsonResponse(['data' => $transform->toArray()]);
     }
 
     /**
-     * get children list.
+     * get bank list.
      *
      * @param Request $request
      *
-     * @return json
-     */
-    public function getChildrenList(DetailProductGroupRequest $request)
-    {
-        $productGroup = $request->getProductGroup();
-
-        $groups = $this->getProductGroupsList($request, $productGroup);
-        $products = $this->getProductList($request, $productGroup);
-
-        return $this->sendReturn($groups, $products);
-    }
-
-    /**
-     * send return data.
-     *
-     * @param Collection $groups
-     * @param Collection $products
-     *
-     * @return json
-     */
-    public function sendReturn($groups, $products)
-    {
-        $groupList = new ProductGroupListTransformer($groups);
-        $productList = new ProductListCollectionTransformer($products);
-
-        return new JsonResponse([
-            'data' => [
-                'groups' => $groupList->toArray(),
-                'products' => $productList->toArray(),
-            ],
-        ]);
-    }
-
-    /**
-     * get product group list.
-     *
-     * @param Request      $request
-     * @param ProductGroup $productGroup
-     *
      * @return paginator
      */
-    protected function getProductGroupsList(Request $request, ProductGroup $productGroup = null)
+    protected function getProductGroupList(Request $request)
     {
-        $productGroups = ProductGroup::whereStatus('active');
-
-        if (!is_null($productGroup)) {
-            $productGroups->whereParentId($productGroup->id);
-        }
+        $banks = ProductGroup::orderBy('created_at', 'DESC');
 
         if ($request->has('key')) {
-            $productGroups->where('id', $request->key);
-            $productGroups->orwhere('name', 'like', "%{$request->key}%");
+            $banks->where('id', $request->key);
+            $banks->orwhere('name', 'like', "%{$request->key}%");
         }
 
-        return $productGroups->get();
-    }
-
-    /**
-     * get product list.
-     *
-     * @param Request      $request
-     * @param ProductGroup $productGroup
-     *
-     * @return paginator
-     */
-    protected function getProductList(Request $request, ProductGroup $productGroup = null)
-    {
-        $products = Product::whereStatus('active');
-
-        if (is_null($productGroup)) {
-            $products->has('groups', '=', 0);
-        } else {
-            $products->whereHas('groups', function ($query) use ($productGroup) {
-                return $query->whereProductGroupId($productGroup->id);
-            });
-        }
-
-        if ($request->has('key')) {
-            $products->where('id', $request->key);
-            $products->orwhere('name', 'like', "%{$request->key}%");
-            $products->orWhere('description', 'like', "%{$request->key}%");
-        }
-
-        return $products->get();
+        return $banks->get();
     }
 
     /**
@@ -130,15 +60,12 @@ class GroupController extends Controller
      */
     public function createGroup(CreateProductGroupRequest $request)
     {
-        $productGroup = ProductGroup::create(
-            $request->only(['name', 'parent_id', 'status'])
-        );
+        $productGroup = ProductGroup::create($request->only(['name']));
 
-        if ($request->has('products') and count($request->products) > 0) {
-            $productGroup->products()->attach($request->products);
-        }
-
-        return new JsonResponse(['message' => 'Product group has been created'], 201);
+        return new JsonResponse([
+            'message' => 'Product group has been created',
+            'data' => (new ProductGroupDetailTransformer($productGroup))->toArray()
+        ], 201);
     }
 
     /**
@@ -151,17 +78,8 @@ class GroupController extends Controller
     public function updateGroup(UpdateProductGroupRequest $request)
     {
         $productGroup = $request->getProductGroup();
-        $productGroup->update(
-            $request->only(['name', 'parent_id', 'status'])
-        );
 
-        if ($request->has('products.remove') and count($request->products['remove']) > 0) {
-            $productGroup->products()->detach($request->products['remove']);
-        }
-
-        if ($request->has('products.add') and count($request->products['add']) > 0) {
-            $productGroup->products()->attach($request->products['add']);
-        }
+        $productGroup->update($request->only(['name']));
 
         return new JsonResponse(['message' => 'Product group has been updated']);
     }

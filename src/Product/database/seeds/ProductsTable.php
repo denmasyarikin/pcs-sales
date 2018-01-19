@@ -18,6 +18,7 @@ class ProductsTable extends Seeder
             'description' => 'Kartu nama pribadi atau perusahaan untuk keperluan bisnis',
             'unit_id' => 1,
             'min_order' => 1,
+            'product_group_id' => 1,
             'base_price' => 54000,
             'per_unit_price' => 54000,
             'status' => 'active',

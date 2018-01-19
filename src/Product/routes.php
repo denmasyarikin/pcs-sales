@@ -1,18 +1,14 @@
 <?php
 
 $router->get('/group', ['as' => 'sales.product.group.list', 'uses' => 'GroupController@getList']);
-$router->get('/group/{id}', ['as' => 'sales.product.group.detail', 'uses' => 'GroupController@getChildrenList']);
-$router->group(['middleware' => 'manage:sales,product,write'], function ($router) {
-    $router->post('group', ['as' => 'sales.product.group.create', 'uses' => 'GroupController@createGroup']);
-    $router->put('group/{id}', ['as' => 'sales.product.group.update', 'uses' => 'GroupController@updateGroup']);
-    $router->delete('group/{id}', ['as' => 'sales.product.group.delete', 'uses' => 'GroupController@deleteGroup']);
-});
-
 $router->get('/', ['as' => 'sales.product.list', 'uses' => 'ProductController@getList']);
 $router->get('/{id}', ['as' => 'sales.product.detail', 'uses' => 'ProductController@getDetail']);
 $router->get('/{id}/process', ['as' => 'sales.product.process.list', 'uses' => 'ProcessController@getList']);
 $router->get('/{id}/media', ['as' => 'sales.product.media.list', 'uses' => 'MediaController@getList']);
 $router->group(['middleware' => 'manage:sales,product,write'], function ($router) {
+    $router->post('group', ['as' => 'sales.product.group.create', 'uses' => 'GroupController@createGroup']);
+    $router->put('group/{id}', ['as' => 'sales.product.group.update', 'uses' => 'GroupController@updateGroup']);
+    $router->delete('group/{id}', ['as' => 'sales.product.group.delete', 'uses' => 'GroupController@deleteGroup']);
     $router->post('/', ['as' => 'sales.product.create', 'uses' => 'ProductController@createProduct']);
     $router->put('/{id}', ['as' => 'sales.product.update', 'uses' => 'ProductController@updateProduct']);
     $router->delete('/{id}', ['as' => 'sales.product.delete', 'uses' => 'ProductController@deleteProduct']);

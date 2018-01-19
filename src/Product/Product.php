@@ -30,16 +30,15 @@ class Product extends Model
      */
     public function unit()
     {
-        return $this->belongsTo('Modules\Unit\Unit');
+        return $this->belongsTo('Modules\Unit\Unit')->withTrashed();
     }
 
     /**
      * Get the groups record associated with the ProductGroup.
      */
-    public function groups()
+    public function group()
     {
-        return $this->belongsToMany(ProductGroup::class, 'sales_product_group_products')
-                    ->withTimestamps();
+        return $this->belongsTo(ProductGroup::class)->withTrashed();
     }
 
     /**

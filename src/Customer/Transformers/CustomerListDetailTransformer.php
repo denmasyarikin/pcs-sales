@@ -1,11 +1,11 @@
 <?php
 
-namespace Denmasyarikin\Sales\Product\Transformers;
+namespace Denmasyarikin\Sales\Customer\Transformers;
 
 use App\Http\Transformers\Detail;
 use Illuminate\Database\Eloquent\Model;
 
-class ProductGroupDetailTransformer extends Detail
+class CustomerListDetailTransformer extends Detail
 {
     /**
      * get data.
@@ -18,8 +18,12 @@ class ProductGroupDetailTransformer extends Detail
     {
         return [
             'id' => $model->id,
+            'type' => $model->type,
             'name' => $model->name,
-            'product_count' => $model->products()->count()
+            'address' => $model->address,
+            'email' => $model->email,
+            'telephone' => $model->telephone,
+            'contact_person' => $model->contact_person
         ];
     }
 }

@@ -14,11 +14,7 @@ class CreateProductGroupRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|min:3|max:20',
-            'status' => 'in:active,inactive',
-            'parent_id' => 'exists:sales_product_groups,id',
-            'products' => 'array',
-            'products.*' => 'exists:sales_products,id',
+            'name' => 'required|min:3|max:20'
         ];
     }
 }
