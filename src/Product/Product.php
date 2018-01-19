@@ -34,11 +34,11 @@ class Product extends Model
     }
 
     /**
-     * Get the groups record associated with the ProductGroup.
+     * Get the group record associated with the ProductGroup.
      */
     public function group()
     {
-        return $this->belongsTo(ProductGroup::class)->withTrashed();
+        return $this->belongsTo(ProductGroup::class, 'product_group_id')->withTrashed();
     }
 
     /**

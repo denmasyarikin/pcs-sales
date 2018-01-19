@@ -17,9 +17,12 @@ class ProductListDetailTransformer extends Detail
      */
     protected function getData(Model $model)
     {
+        $group = $model->group;
+
         return [
             'id' => $model->id,
             'name' => $model->name,
+            'group_name' => $group ? $group->name : null,
             'description' => $model->description,
             'image' => $model->image,
             'unit' => (new UnitDetailTransformer($model->unit, ['id', 'name', 'specific']))->toArray(),

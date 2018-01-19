@@ -101,7 +101,7 @@ class ProductController extends Controller
     {
         $product = Product::create($request->only([
             'name', 'description', 'unit_id',
-            'min_order', 'customizable',
+            'min_order', 'customizable', 'product_group_id'
         ]));
 
         return new JsonResponse([
@@ -132,12 +132,10 @@ class ProductController extends Controller
         $product->update($request->only([
             'name', 'description', 'unit_id',
             'min_order', 'customizable', 'status',
+            'product_group_id'
         ]));
 
-        return new JsonResponse([
-            'message' => 'Product has been updated',
-            'data' => (new ProductListDetailTransformer($product))->toArray(),
-        ]);
+        return new JsonResponse(['message' => 'Product has been updated']);
     }
 
     /**

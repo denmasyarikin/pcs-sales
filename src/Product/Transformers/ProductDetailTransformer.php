@@ -35,7 +35,7 @@ class ProductDetailTransformer extends Detail
             ],
             'processes' => (new ProductProcessListTransformer($model->processes))->toArray(),
             'medias' => (new ProductMediaListTransformer($model->medias))->toArray(),
-            'group_ids' => $model->groups->pluck('id'),
+            'product_group' => (new ProductGroupDetailTransformer($model->group))->toArray(),
             'status' => $model->status,
             'created_at' => $model->created_at->format('Y-m-d H:i:s'),
             'updated_at' => $model->updated_at->format('Y-m-d H:i:s'),
