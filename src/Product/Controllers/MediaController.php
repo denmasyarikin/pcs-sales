@@ -6,6 +6,7 @@ use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 use Denmasyarikin\Sales\Product\Product;
 use Denmasyarikin\Sales\Product\Requests\DetailProductRequest;
+use Denmasyarikin\Sales\Product\Requests\DetailProductMediaRequest;
 use Denmasyarikin\Sales\Product\Requests\CreateProductMediaRequest;
 use Denmasyarikin\Sales\Product\Requests\UpdateProductMediaRequest;
 use Denmasyarikin\Sales\Product\Requests\DeleteProductMediaRequest;
@@ -25,7 +26,7 @@ class MediaController extends Controller
     {
         $product = $request->getProduct($request);
 
-        $transform = new ProductMediaListTransformer($product->medias);
+        $transform = new ProductMediaListTransformer($product->medias()->orderBy('primary', 'DESC')->get());
 
         return new JsonResponse(['data' => $transform->toArray()]);
     }
@@ -58,7 +59,7 @@ class MediaController extends Controller
     /**
      * update media.
      *
-     * @param CreateProductMediaRequest $request
+     * @param UpdateProductMediaRequest $request
      *
      * @return json
      */
@@ -78,6 +79,29 @@ class MediaController extends Controller
         return new JsonResponse([
             'message' => 'Product Media has been updated',
             'data' => (new ProductMediaDetailTransformer($media))->toArray(),
+        ]);
+    }
+
+    /**
+     * update media primary.
+     *
+     * @param DetailProductMediaRequest $request
+     *
+     * @return json
+     */
+    public function updateMediaPrimary(DetailProductMediaRequest $request)
+    {
+        $product = $request->getProduct();
+        $media = $request->getProductMedia();
+
+        if ($request->primary) {
+            $product->medias()->update(['primary' => false]);
+        }
+
+        $media->update(['primary' => true]);
+
+        return new JsonResponse([
+            'message' => 'Product Media Primary has been updated'
         ]);
     }
 

@@ -43,9 +43,11 @@ class BankController extends Controller
         $banks = Bank::orderBy('created_at', 'DESC');
 
         if ($request->has('key')) {
-            $banks->where('id', $request->key);
-            $banks->orwhere('name', 'like', "%{$request->key}%");
-            $banks->orWhere('account_name', 'like', "%{$request->key}%");
+            $bank->where(function($query) use ($request) {
+                $query->where('id', $request->key);
+                $query->orwhere('name', 'like', "%{$request->key}%");
+                $query->orWhere('account_name', 'like', "%{$request->key}%");
+            });
         }
 
         return $banks->get();

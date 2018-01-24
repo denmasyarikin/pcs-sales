@@ -32,6 +32,7 @@ class ProductController extends Controller
 
         return new JsonResponse([
             'data' => $transform->toArray(),
+            'draft_count' => Product::whereStatus('draft')->count(),
             'pagination' => $transform->pagination(),
         ]);
     }
@@ -59,7 +60,7 @@ class ProductController extends Controller
                         break;
 
                     default:
-                        $request->whereStatus('active');
+                        $products->whereStatus('active');
                         break;
                 }
             }
@@ -68,9 +69,11 @@ class ProductController extends Controller
         }
 
         if ($request->has('key')) {
-            $products->where('id', $request->key);
-            $products->orwhere('name', 'like', "%{$request->key}%");
-            $products->orWhere('description', 'like', "%{$request->key}%");
+            $products->where(function($query) use ($request) {
+                $query->where('id', $request->key);
+                $query->orwhere('name', 'like', "%{$request->key}%");
+                $query->orWhere('description', 'like', "%{$request->key}%");
+            });
         }
 
         return $products->paginate($request->get('per_page') ?: 10);

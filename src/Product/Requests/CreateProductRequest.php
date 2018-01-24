@@ -15,7 +15,7 @@ class CreateProductRequest extends FormRequest
     {
         return [
             'name' => 'required|min:3|max:20',
-            'description' => 'required|min:20|max:150',
+            'description' => 'required|min:10|max:100',
             'unit_id' => 'required|exists:core_units,id',
             'min_order' => 'required|numeric|min:1',
             'customizable' => 'required|boolean',

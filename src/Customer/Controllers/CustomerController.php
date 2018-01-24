@@ -61,9 +61,11 @@ class CustomerController extends Controller
         }
 
         if ($request->has('key')) {
-            $customers->where('id', $request->key);
-            $customers->orwhere('name', 'like', "%{$request->key}%");
-            $customers->orWhere('address', 'like', "%{$request->key}%");
+            $customers->where(function($q) use ($request) {
+                $q->where('id', $request->key);
+                $q->orwhere('name', 'like', "%{$request->key}%");
+                $q->orWhere('address', 'like', "%{$request->key}%");
+            });
         }
 
         return $customers->paginate($request->get('per_page') ?: 10);

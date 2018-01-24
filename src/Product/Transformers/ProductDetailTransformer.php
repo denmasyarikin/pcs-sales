@@ -34,7 +34,6 @@ class ProductDetailTransformer extends Detail
                 'manual' => $model->process_manual_count,
             ],
             'processes' => (new ProductProcessListTransformer($model->processes))->toArray(),
-            'medias' => (new ProductMediaListTransformer($model->medias))->toArray(),
             'product_group' => (new ProductGroupDetailTransformer($model->group))->toArray(),
             'status' => $model->status,
             'created_at' => $model->created_at->format('Y-m-d H:i:s'),

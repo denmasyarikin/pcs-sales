@@ -20,6 +20,7 @@ $router->group(['middleware' => 'manage:sales,product,write'], function ($router
     $router->group(['prefix' => '/{id}/media'], function ($router) {
         $router->post('/', ['as' => 'sales.product.media.create', 'uses' => 'MediaController@createMedia']);
         $router->put('/{media_id}', ['as' => 'sales.product.media.update', 'uses' => 'MediaController@updateMedia']);
+        $router->put('/{media_id}/primary', ['as' => 'sales.product.media.update_primary', 'uses' => 'MediaController@updateMediaPrimary']);
         $router->delete('/{media_id}', ['as' => 'sales.product.media.delete', 'uses' => 'MediaController@deleteMedia']);
     });
 });
