@@ -4,6 +4,7 @@ $router->get('/group', ['as' => 'sales.product.group.list', 'uses' => 'GroupCont
 $router->get('/', ['as' => 'sales.product.list', 'uses' => 'ProductController@getList']);
 $router->get('/{id}', ['as' => 'sales.product.detail', 'uses' => 'ProductController@getDetail']);
 $router->get('/{id}/process', ['as' => 'sales.product.process.list', 'uses' => 'ProcessController@getList']);
+$router->get('/{id}/process/{process_id}', ['as' => 'sales.product.process.detail', 'uses' => 'ProcessController@getDetail']);
 $router->get('/{id}/media', ['as' => 'sales.product.media.list', 'uses' => 'MediaController@getList']);
 $router->group(['middleware' => 'manage:sales,product,write'], function ($router) {
     $router->post('group', ['as' => 'sales.product.group.create', 'uses' => 'GroupController@createGroup']);

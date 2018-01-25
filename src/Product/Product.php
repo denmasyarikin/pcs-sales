@@ -117,6 +117,6 @@ class Product extends Model
             return $this->cacheProcesses;
         }
 
-        return $this->cacheProcesses = $this->processes;
+        return $this->cacheProcesses = $this->processes()->whereNull('parent_id')->get();
     }
 }

@@ -2,15 +2,6 @@
 
 namespace Denmasyarikin\Sales\Product\Requests;
 
-class DeleteProductProcessRequest extends UpdateProductProcessRequest
+class DeleteProductProcessRequest extends DetailProductProcessRequest
 {
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
-    public function rules()
-    {
-        return [];
-    }
 }

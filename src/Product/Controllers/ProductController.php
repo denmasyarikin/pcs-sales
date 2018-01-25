@@ -86,7 +86,7 @@ class ProductController extends Controller
      *
      * @return json
      */
-    public function getDetail(DetailProductRequest $request, $id)
+    public function getDetail(DetailProductRequest $request)
     {
         $transform = new ProductDetailTransformer($request->getProduct());
 
