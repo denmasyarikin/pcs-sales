@@ -53,7 +53,7 @@ class ProcessController extends Controller
      *
      * @return json
      */
-    public function CreateProductProcessRequest(CreateProductProcessRequest $request)
+    public function createProcess(CreateProductProcessRequest $request)
     {
         $product = $request->getProduct();
 
