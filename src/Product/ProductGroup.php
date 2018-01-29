@@ -10,7 +10,7 @@ class ProductGroup extends Model
     use SoftDeletes;
 
     /**
-     * paths
+     * paths.
      *
      * @var array
      */

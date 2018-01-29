@@ -26,7 +26,7 @@ class ProductProcessDetailTransformer extends Detail
             'reference_id' => $model->reference_id,
             'name' => $model->name,
             'specific' => $model->specific,
-            'formatted' => $model->name . ($model->specific ? " ({$model->specific})" : ''),
+            'formatted' => $model->name.($model->specific ? " ({$model->specific})" : ''),
             'quantity' => $model->quantity,
             'base_price' => $model->base_price,
             'required' => (bool) $model->required,
@@ -40,9 +40,10 @@ class ProductProcessDetailTransformer extends Detail
     }
 
     /**
-     * get children
+     * get children.
      *
      * @param Collection $children
+     *
      * @return array
      */
     protected function getChildren(Collection $children)
@@ -50,7 +51,7 @@ class ProductProcessDetailTransformer extends Detail
         $data = [];
 
         foreach ($children as $child) {
-            $data[] = (new ProductProcessDetailTransformer($child))->toArray();
+            $data[] = (new self($child))->toArray();
         }
 
         return $data;

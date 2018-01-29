@@ -45,23 +45,12 @@ class CustomerController extends Controller
     {
         $customers = Customer::orderBy('created_at', 'DESC');
 
-        switch ($request->get('type')) {
-            case 'internal':
-                $customers->whereType('internal');
-                break;
-            case 'public':
-                $customers->whereType('public');
-                break;
-            case 'agent':
-                $customers->whereType('agent');
-                break;
-            case 'company':
-                $customers->whereType('company');
-                break;
+        if ($request->has('chanel_id')) {
+            $customers->whereChanelId($request->chanel_id);
         }
 
         if ($request->has('key')) {
-            $customers->where(function($q) use ($request) {
+            $customers->where(function ($q) use ($request) {
                 $q->where('id', $request->key);
                 $q->orwhere('name', 'like', "%{$request->key}%");
                 $q->orWhere('address', 'like', "%{$request->key}%");
@@ -97,7 +86,7 @@ class CustomerController extends Controller
     public function createCustomer(CreateCustomerRequest $request)
     {
         $customer = Customer::create($request->only([
-            'type', 'name', 'address', 'telephone', 'email',
+            'chanel_id', 'name', 'address', 'telephone', 'email',
             'contact_person', 'user_id',
         ]));
 
@@ -119,7 +108,7 @@ class CustomerController extends Controller
         $customer = $request->getCustomer();
 
         $customer->update($request->only([
-            'type', 'name', 'address', 'telephone', 'email',
+            'chanel_id', 'name', 'address', 'telephone', 'email',
             'contact_person', 'user_id',
         ]));
 

@@ -14,7 +14,6 @@ class Setting implements SettingContract
     public function getSetting()
     {
         return [
-            'material_icon' => 'receipt',
             'tagline' => 'Sistem Penjualan',
         ];
     }

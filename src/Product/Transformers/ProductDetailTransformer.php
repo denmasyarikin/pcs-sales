@@ -27,7 +27,7 @@ class ProductDetailTransformer extends Detail
             'min_order' => $model->min_order,
             'base_price' => $model->base_price,
             'per_unit_price' => $model->per_unit_price,
-            'process_count' =>  $model->process_count,
+            'process_count' => $model->process_count,
             'product_group' => (new ProductGroupDetailTransformer($model->group))->toArray(),
             'status' => $model->status,
             'created_at' => $model->created_at->format('Y-m-d H:i:s'),

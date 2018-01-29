@@ -14,7 +14,7 @@ class CreateCustomerRequest extends FormRequest
     public function rules()
     {
         return [
-            'type' => 'required|in:public,agent,company,internal',
+            'chanel_id' => 'required|exists:core_chanels,id',
             'name' => 'required|min:3|max:50',
             'address' => 'required',
             'telephone' => 'nullable|digits_between:4,20|numeric',

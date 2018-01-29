@@ -13,6 +13,8 @@ class CreateOrderRequest extends FormRequest
      */
     public function rules()
     {
-        return [];
+        return [
+        	'chanel_id' => 'required|exists:core_chanels,id'
+        ];
     }
 }

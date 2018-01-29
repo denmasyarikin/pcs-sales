@@ -3,6 +3,7 @@
 namespace Denmasyarikin\Sales\Order\Transformers;
 
 use App\Http\Transformers\Detail;
+use Modules\Chanel\Transformers\ChanelDetailTransformer;
 use Illuminate\Database\Eloquent\Model;
 
 class OrderCustomerTransformer extends Detail
@@ -18,7 +19,7 @@ class OrderCustomerTransformer extends Detail
     {
         return [
             'customer_id' => $model->customer_id,
-            'type' => $model->type,
+            'chanel' => (new ChanelDetailTransformer($model->customer->chanel, ['id', 'name', 'type']))->toArray(),
             'name' => $model->name,
             'address' => $model->address,
             'telephone' => $model->telephone,

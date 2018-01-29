@@ -22,7 +22,7 @@ class CreateProductProcessRequest extends DetailProductRequest
             'base_price' => 'required|numeric',
             'required' => 'boolean',
             'static_price' => 'boolean',
-            'static_to_order_count' => 'numeric|min:1|required_if:static_price,false',
+            'static_to_order_count' => 'nullable|numeric|min:1|required_if:static_price,false',
             'unit_id' => 'required|exists:core_units,id',
         ];
     }

@@ -68,8 +68,12 @@ class ProductController extends Controller
             $products->whereStatus('active');
         }
 
+        if ($request->has('group_id')) {
+            $products->whereProductGroupId($request->group_id);
+        }
+
         if ($request->has('key')) {
-            $products->where(function($query) use ($request) {
+            $products->where(function ($query) use ($request) {
                 $query->where('id', $request->key);
                 $query->orwhere('name', 'like', "%{$request->key}%");
                 $query->orWhere('description', 'like', "%{$request->key}%");
@@ -104,7 +108,7 @@ class ProductController extends Controller
     {
         $product = Product::create($request->only([
             'name', 'description', 'unit_id',
-            'min_order', 'customizable', 'product_group_id'
+            'min_order', 'customizable', 'product_group_id',
         ]));
 
         return new JsonResponse([
@@ -135,7 +139,7 @@ class ProductController extends Controller
         $product->update($request->only([
             'name', 'description', 'unit_id',
             'min_order', 'customizable', 'status',
-            'product_group_id'
+            'product_group_id',
         ]));
 
         return new JsonResponse(['message' => 'Product has been updated']);

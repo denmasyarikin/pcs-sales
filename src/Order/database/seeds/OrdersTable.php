@@ -13,6 +13,7 @@ class OrdersTable extends Seeder
     public function run()
     {
         $order = Order::create([
+            'chanel_id' => 2,
             'item_total' => 54000,
             'total' => 54000,
             'paid_off' => 0,

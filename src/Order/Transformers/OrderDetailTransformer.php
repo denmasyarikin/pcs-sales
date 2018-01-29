@@ -22,14 +22,6 @@ class OrderDetailTransformer extends Detail
             'customer' => $model->customer
                         ? (new OrderCustomerTransformer($model->customer))->toArray()
                         : null,
-            'item_count' => [
-                'total' => $model->item_count,
-                'product' => $model->item_product_count,
-                'product_process' => $model->item_product_process_count,
-                'service' => $model->item_service_count,
-                'good' => $model->item_good_count,
-                'manual' => $model->item_manual_count,
-            ],
             'item_total' => $model->item_total,
             'items' => (new OrderItemListTransformer($model->getItems()))->toArray(),
             'adjustment_total' => $model->adjustment_total,

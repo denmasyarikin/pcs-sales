@@ -12,7 +12,7 @@ class UpdateProductGroupRequest extends DetailProductGroupRequest
     public function rules()
     {
         return [
-            'name' => 'required|min:3|max:20'
+            'name' => 'required|min:3|max:20',
         ];
     }
 }

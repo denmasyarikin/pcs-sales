@@ -18,6 +18,14 @@ class Customer extends Model
     protected $table = 'sales_customers';
 
     /**
+     * Get the chanel record associated with the Customer.
+     */
+    public function chanel()
+    {
+        return $this->belongsTo('Modules\Chanel\Chanel')->withTrashed();
+    }
+
+    /**
      * Get the orders record associated with the Customer.
      */
     public function orders()

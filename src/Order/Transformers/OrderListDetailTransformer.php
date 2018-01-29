@@ -18,16 +18,12 @@ class OrderListDetailTransformer extends Detail
     {
         return [
             'id' => $model->id,
+            'chanel_type' => $model->chanel->type,
             'customer' => $model->customer ? (new OrderCustomerTransformer($model->customer))->toArray() : null,
-            'item_count' => [
-                'total' => $model->item_count,
-                'product' => $model->item_product_count,
-                'product_process' => $model->item_product_process_count,
-                'service' => $model->item_service_count,
-                'good' => $model->item_good_count,
-                'manual' => $model->item_manual_count,
-            ],
+            'item_count' => $model->item_count,
             'total' => $model->total,
+            'paid' => (bool) $model->paid,
+            'paid_off' => $model->paid_off,
             'cs_user_id' => $model->cs_user_id,
             'cs_name' => $model->cs_name,
             'due_date' => $model->due_date,

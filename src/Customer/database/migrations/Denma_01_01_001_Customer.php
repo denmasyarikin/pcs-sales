@@ -13,7 +13,7 @@ class Customer extends Migration
     {
         Schema::create('sales_customers', function (Blueprint $table) {
             $table->increments('id');
-            $table->enum('type', ['internal', 'public', 'agent', 'company'])->default('public');
+            $table->integer('chanel_id')->unsigned();
             $table->string('name', 50);
             $table->text('address')->nullable()->default(null);
             $table->string('telephone', 20)->nullable()->default(null);
@@ -24,6 +24,7 @@ class Customer extends Migration
             $table->timestamps();
             $table->softDeletes();
 
+            $table->foreign('chanel_id')->references('id')->on('core_chanels');
             $table->foreign('user_id')->references('id')->on('core_users');
         });
     }

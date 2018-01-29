@@ -18,12 +18,12 @@ class CustomerListDetailTransformer extends Detail
     {
         return [
             'id' => $model->id,
-            'type' => $model->type,
+            'chanel_type' => $model->chanel->type,
             'name' => $model->name,
             'address' => $model->address,
             'email' => $model->email,
             'telephone' => $model->telephone,
-            'contact_person' => $model->contact_person
+            'contact_person' => $model->contact_person,
         ];
     }
 }

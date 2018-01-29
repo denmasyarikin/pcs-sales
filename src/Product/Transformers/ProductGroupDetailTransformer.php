@@ -19,7 +19,7 @@ class ProductGroupDetailTransformer extends Detail
         return [
             'id' => $model->id,
             'name' => $model->name,
-            'product_count' => $model->products()->count()
+            'product_count' => $model->products()->count(),
         ];
     }
 }

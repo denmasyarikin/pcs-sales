@@ -12,7 +12,6 @@ use Denmasyarikin\Sales\Product\Requests\UpdateProductGroupRequest;
 use Denmasyarikin\Sales\Product\Requests\DetailProductGroupRequest;
 use Denmasyarikin\Sales\Product\Transformers\ProductGroupListTransformer;
 use Denmasyarikin\Sales\Product\Transformers\ProductGroupDetailTransformer;
-use Denmasyarikin\Sales\Product\Transformers\ProductListCollectionTransformer;
 
 class GroupController extends Controller
 {
@@ -64,7 +63,7 @@ class GroupController extends Controller
 
         return new JsonResponse([
             'message' => 'Product group has been created',
-            'data' => (new ProductGroupDetailTransformer($productGroup))->toArray()
+            'data' => (new ProductGroupDetailTransformer($productGroup))->toArray(),
         ], 201);
     }
 

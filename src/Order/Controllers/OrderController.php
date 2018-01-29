@@ -123,6 +123,25 @@ class OrderController extends Controller
     {
         $orders = Order::whereStatus($status);
 
+        switch ($status) {
+            case 'processing':
+                $orders->orderBy('start_process_date', 'DESC');
+                break;
+            case 'finished':
+                $orders->orderBy('end_process_date', 'DESC');
+                break;
+            case 'closed':
+                $orders->orderBy('close_date', 'DESC');
+                break;
+            case 'canceled':
+                $orders->orderBy('updated_at', 'DESC');
+                // no break
+            case 'created':
+            case 'draft':
+                $orders->orderBy('created_at', 'DESC');
+                break;
+        }
+
         if ($request->has('key')) {
             $orders->where('id', $request->key);
         }

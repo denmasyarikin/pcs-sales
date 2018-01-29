@@ -57,9 +57,9 @@ class ProcessController extends Controller
     {
         $product = $request->getProduct();
 
-        if ($request->input('parent_id') !== null) {
+        if (null !== $request->input('parent_id')) {
             if (!$product->processes()->whereNull('parent_id')->whereId($request->parent_id)->exists()) {
-                throw new BadRequestHttpException("Parent ID is not belong to this product  or is children");
+                throw new BadRequestHttpException('Parent ID is not belong to this product  or is children');
             }
         }
 
@@ -117,7 +117,7 @@ class ProcessController extends Controller
 
         $process->delete();
 
-        if ($product->processes()->count() === 0) {
+        if (0 === $product->processes()->count()) {
             $product->update(['status' => 'draft']);
         }
 

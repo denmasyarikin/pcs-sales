@@ -43,6 +43,14 @@ class Order extends Model implements Taxable, Voucherable, Discountable
     protected $table = 'sales_orders';
 
     /**
+     * Get the chanel record associated with the Order.
+     */
+    public function chanel()
+    {
+        return $this->belongsTo('Modules\Chanel\Chanel')->withTrashed();
+    }
+
+    /**
      * Get the customer record associated with the Order.
      */
     public function customer()

@@ -17,7 +17,7 @@ trait OrderRestrictionTrait
     protected function updateableOrder(Order $order)
     {
         if (!in_array($order->status, ['draft', 'created'])) {
-            throw new BadRequestHttpException("Can not update order on status {$order->status}");
+            throw new BadRequestHttpException("Can not update or delete order on status {$order->status}");
         }
     }
 

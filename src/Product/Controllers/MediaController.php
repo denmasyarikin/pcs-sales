@@ -101,7 +101,7 @@ class MediaController extends Controller
         $media->update(['primary' => true]);
 
         return new JsonResponse([
-            'message' => 'Product Media Primary has been updated'
+            'message' => 'Product Media Primary has been updated',
         ]);
     }
 

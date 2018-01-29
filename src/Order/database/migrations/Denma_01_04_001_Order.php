@@ -13,6 +13,7 @@ class Order extends Migration
     {
         Schema::create('sales_orders', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('chanel_id')->unsigned();
             $table->float('item_total')->default(0);
             $table->float('adjustment_total')->default(0);
             $table->float('total')->default(0);
@@ -31,6 +32,7 @@ class Order extends Migration
             $table->softDeletes();
 
             $table->foreign('cs_user_id')->references('id')->on('core_users');
+            $table->foreign('chanel_id')->references('id')->on('core_chanels');
         });
     }
 
