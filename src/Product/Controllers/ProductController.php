@@ -142,7 +142,10 @@ class ProductController extends Controller
             'product_group_id',
         ]));
 
-        return new JsonResponse(['message' => 'Product has been updated']);
+        return new JsonResponse([
+            'message' => 'Product has been updated',
+            'data' => (new ProductListDetailTransformer($product))->toArray(),
+        ]);
     }
 
     /**
