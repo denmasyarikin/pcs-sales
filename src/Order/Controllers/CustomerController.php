@@ -58,6 +58,8 @@ class CustomerController extends Controller
             $orderCustomer->update($customer);
         }
 
+        $order->touch();
+
         return new JsonResponse([
             'message' => 'Order Customer has been updated',
             'data' => (new OrderCustomerTransformer($orderCustomer))->toArray(),

@@ -155,15 +155,12 @@ class Order extends Model implements Taxable, Voucherable, Discountable
      *
      * @return Collection
      */
-    protected function getPrimaryItems()
+    public function getPrimaryItems()
     {
-        $items = new Collection();
-        $items->merge($this->itemProduct);
-        $items->merge($this->itemGood);
-        $items->merge($this->itemService);
-        $items->merge($this->itemManual);
-
-        return $item;
+        return $this->itemProduct
+            ->concat($this->itemGood)
+            ->concat($this->itemService)
+            ->concat($this->itemManual);
     }
 
     /**

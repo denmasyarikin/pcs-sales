@@ -2,8 +2,26 @@
 
 namespace Denmasyarikin\Sales\Payment\Requests;
 
+use Denmasyarikin\Sales\Payment\Payment;
+
 class UpdatePaymentRequest extends DetailPaymentRequest
 {
+    /**
+     * get payment.
+     *
+     * @param bool $refresh
+     *
+     * @return Payment
+     */
+    public function getPayment($refresh = true): ?Payment
+    {
+        $payment = parent::getPayment();
+
+        $this->checkFreshData($payment);
+
+        return $payment;
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *

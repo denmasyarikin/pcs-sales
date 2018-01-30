@@ -2,8 +2,24 @@
 
 namespace Denmasyarikin\Sales\Bank\Requests;
 
+use Denmasyarikin\Sales\Bank\Bank;
+
 class UpdateBankRequest extends DetailBankRequest
 {
+    /**
+     * get bank.
+     *
+     * @return Bank
+     */
+    public function getBank(): ?Bank
+    {
+        $bank = parent::getBank();
+
+        $this->checkFreshData($bank);
+
+        return $bank;
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *

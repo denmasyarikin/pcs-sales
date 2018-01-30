@@ -13,6 +13,13 @@ class OrderItem extends Model implements Markupable, Discountable, Voucherable
     use SoftDeletes;
 
     /**
+     * The relationships that should be touched on save.
+     *
+     * @var array
+     */
+    protected $touches = ['order'];
+
+    /**
      * cacheAdjustments.
      *
      * @var Collection
@@ -39,7 +46,7 @@ class OrderItem extends Model implements Markupable, Discountable, Voucherable
      */
     public function unit()
     {
-        return $this->belongsTo('Modules\Unit\Unit');
+        return $this->belongsTo('Modules\Unit\Unit')->withTrashed();
     }
 
     /**
@@ -137,16 +144,28 @@ class OrderItem extends Model implements Markupable, Discountable, Voucherable
     }
 
     /**
-     * check is product process.
+     * check is product.
      *
-     * @param
+     * @return bool
+     */
+    public function isProduct()
+    {
+        if ('product' === $this->type) {
+            return 'product' === $this->type_as;
+        }
+
+        return false;
+    }
+
+    /**
+     * check is product process.
      *
      * @return bool
      */
     public function isProductProcess()
     {
         if ('product' === $this->type) {
-            return 'product' !== $this->typeAs;
+            return 'product' !== $this->type_as;
         }
 
         return false;

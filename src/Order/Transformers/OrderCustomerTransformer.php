@@ -3,8 +3,8 @@
 namespace Denmasyarikin\Sales\Order\Transformers;
 
 use App\Http\Transformers\Detail;
-use Modules\Chanel\Transformers\ChanelDetailTransformer;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Chanel\Transformers\ChanelDetailTransformer;
 
 class OrderCustomerTransformer extends Detail
 {

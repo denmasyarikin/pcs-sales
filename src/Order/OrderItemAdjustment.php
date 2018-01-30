@@ -8,6 +8,13 @@ use Denmasyarikin\Sales\Order\Contracts\Adjustment;
 class OrderItemAdjustment extends Model implements Adjustment
 {
     /**
+     * The relationships that should be touched on save.
+     *
+     * @var array
+     */
+    protected $touches = ['orderItem'];
+
+    /**
      * The table associated with the model.
      *
      * @var string

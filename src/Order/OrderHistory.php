@@ -8,6 +8,13 @@ use Illuminate\Support\Facades\Auth;
 class OrderHistory extends Model
 {
     /**
+     * The relationships that should be touched on save.
+     *
+     * @var array
+     */
+    protected $touches = ['order'];
+
+    /**
      * mapping.
      *
      * @var array

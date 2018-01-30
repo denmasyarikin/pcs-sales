@@ -4,6 +4,7 @@ namespace Denmasyarikin\Sales\Order\Transformers;
 
 use App\Http\Transformers\Detail;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Chanel\Transformers\ChanelDetailTransformer;
 
 class OrderListDetailTransformer extends Detail
 {
@@ -18,15 +19,13 @@ class OrderListDetailTransformer extends Detail
     {
         return [
             'id' => $model->id,
-            'chanel_type' => $model->chanel->type,
+            'chanel' => (new ChanelDetailTransformer($model->chanel, ['id', 'name', 'type']))->toArray(),
             'customer' => $model->customer ? (new OrderCustomerTransformer($model->customer))->toArray() : null,
             'item_count' => $model->item_count,
             'total' => $model->total,
             'paid' => (bool) $model->paid,
             'paid_off' => $model->paid_off,
-            'cs_user_id' => $model->cs_user_id,
             'cs_name' => $model->cs_name,
-            'due_date' => $model->due_date,
             'status' => $model->status,
             'due_date' => $model->due_date,
             'start_process_date' => $model->start_process_date,

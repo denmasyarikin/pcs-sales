@@ -4,6 +4,7 @@ namespace Denmasyarikin\Sales\Order\Transformers;
 
 use App\Http\Transformers\Detail;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Chanel\Transformers\ChanelDetailTransformer;
 use Denmasyarikin\Sales\Payment\Transformers\PaymentListCollectionTransformer;
 
 class OrderDetailTransformer extends Detail
@@ -19,11 +20,10 @@ class OrderDetailTransformer extends Detail
     {
         return [
             'id' => $model->id,
-            'customer' => $model->customer
-                        ? (new OrderCustomerTransformer($model->customer))->toArray()
-                        : null,
+            'chanel' => (new ChanelDetailTransformer($model->chanel, ['id', 'name', 'type']))->toArray(),
+            'customer' => $model->customer ? (new OrderCustomerTransformer($model->customer))->toArray() : null,
             'item_total' => $model->item_total,
-            'items' => (new OrderItemListTransformer($model->getItems()))->toArray(),
+            'items' => (new OrderItemListTransformer($model->getPrimaryItems()))->toArray(),
             'adjustment_total' => $model->adjustment_total,
             'total' => $model->total,
             'paid_off' => $model->paid_off,

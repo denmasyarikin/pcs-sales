@@ -3,9 +3,24 @@
 namespace Denmasyarikin\Sales\Order\Requests;
 
 use App\Manager\Facades\Setting;
+use Denmasyarikin\Sales\Order\Order;
 
 class CancelOrderRequest extends DetailOrderRequest
 {
+    /**
+     * get order.
+     *
+     * @return Order
+     */
+    public function getOrder(): ?Order
+    {
+        $order = parent::getOrder();
+
+        $this->checkFreshData($order);
+
+        return $order;
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -17,7 +32,7 @@ class CancelOrderRequest extends DetailOrderRequest
 
         return [
             'reason' => 'required|in:'.implode(',', $reasons),
-            'descirption' => 'min:3',
+            'descirption' => 'min:3'
         ];
     }
 }
