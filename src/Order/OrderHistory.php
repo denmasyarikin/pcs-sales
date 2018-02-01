@@ -4,9 +4,12 @@ namespace Denmasyarikin\Sales\Order;
 
 use App\Model;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class OrderHistory extends Model
 {
+    use SoftDeletes;
+
     /**
      * The relationships that should be touched on save.
      *

@@ -135,7 +135,7 @@ class OrderController extends Controller
                 break;
             case 'canceled':
                 $orders->orderBy('updated_at', 'DESC');
-                // no break
+                break;
             case 'created':
             case 'draft':
                 $orders->orderBy('created_at', 'DESC');
@@ -185,7 +185,10 @@ class OrderController extends Controller
 
         return new JsonResponse([
             'message' => 'Order has been created',
-            'data' => ['id' => $order->id],
+            'data' => [
+                'id' => $order->id,
+                'updated_at' => $order->created_at->format('Y-m-d H:i:s')
+            ]
         ], 201);
     }
 
@@ -292,6 +295,7 @@ class OrderController extends Controller
 
         $order->cancelation()->create($request->only(['reason', 'description']));
         $order->update(['status' => 'canceled']);
+        $order->histories()->create(['type' => 'order', 'label' => 'canceled']);
 
         return new JsonResponse(['message' => 'Order has been canceled']);
     }

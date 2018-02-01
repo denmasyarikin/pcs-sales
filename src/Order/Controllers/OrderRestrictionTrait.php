@@ -16,8 +16,8 @@ trait OrderRestrictionTrait
      */
     protected function updateableOrder(Order $order)
     {
-        if (!in_array($order->status, ['draft', 'created'])) {
-            throw new BadRequestHttpException("Can not update or delete order on status {$order->status}");
+        if (!in_array($order->status, ['draft', 'created']) AND $order->paid_off === 0) {
+            throw new BadRequestHttpException("Can not update or delete order on status {$order->status} or has been paid");
         }
     }
 

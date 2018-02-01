@@ -18,6 +18,7 @@ class OrderHistory extends Migration
             $table->string('label');
             $table->string('actor');
             $table->timestamps();
+            $table->softDeletes();
 
             $table->foreign('order_id')->references('id')->on('sales_orders');
         });

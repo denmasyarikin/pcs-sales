@@ -4,7 +4,7 @@ namespace Denmasyarikin\Sales\Product\Transformers;
 
 use App\Http\Transformers\Detail;
 use Illuminate\Database\Eloquent\Model;
-use Modules\Unit\Transformers\UnitDetailTransformer;
+use Modules\Unit\Transformers\UnitListDetailTransformer;
 
 class ProductDetailTransformer extends Detail
 {
@@ -22,7 +22,7 @@ class ProductDetailTransformer extends Detail
             'name' => $model->name,
             'description' => $model->description,
             'image' => $model->image,
-            'unit' => (new UnitDetailTransformer($model->unit, ['id', 'name', 'specific', 'formatted']))->toArray(),
+            'unit' => (new UnitListDetailTransformer($model->unit]))->toArray(),
             'customizable' => (bool) $model->customizable,
             'min_order' => $model->min_order,
             'base_price' => $model->base_price,

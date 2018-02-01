@@ -5,7 +5,7 @@ namespace Denmasyarikin\Sales\Product\Transformers;
 use App\Http\Transformers\Detail;
 use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
-use Modules\Unit\Transformers\UnitDetailTransformer;
+use Modules\Unit\Transformers\UnitListDetailTransformer;
 
 class ProductProcessDetailTransformer extends Detail
 {
@@ -32,7 +32,7 @@ class ProductProcessDetailTransformer extends Detail
             'required' => (bool) $model->required,
             'static_price' => (bool) $model->static_price,
             'static_to_order_count' => $model->static_to_order_count,
-            'unit' => (new UnitDetailTransformer($model->unit, ['id', 'name', 'specific', 'formatted']))->toArray(),
+            'unit' => (new UnitListDetailTransformer($model->unit))->toArray(),
             'children' => $this->getChildren($model->children),
             'created_at' => $model->created_at->format('Y-m-d H:i:s'),
             'updated_at' => $model->updated_at->format('Y-m-d H:i:s'),
