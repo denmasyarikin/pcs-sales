@@ -79,7 +79,8 @@ class Factory
     {
         $payment->type = 'rest_payment';
 
-        if (0 === $this->order->paid_off) {
+        // use two equality is important
+        if (0 == $this->order->paid_off) {
             $payment->type = 'down_payment';
         }
 

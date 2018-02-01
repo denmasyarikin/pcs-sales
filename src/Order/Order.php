@@ -145,8 +145,11 @@ class Order extends Model implements Taxable, Voucherable, Discountable
      */
     public function updateTotal()
     {
+        $total = $this->item_total + $this->adjustment_total;
+
         $this->update([
-            'total' => $this->item_total + $this->adjustment_total,
+            'total' => $total,
+            'remaining' => $total - $this->paid_off
         ]);
     }
 
