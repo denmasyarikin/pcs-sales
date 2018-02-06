@@ -2,6 +2,7 @@
 
 namespace Denmasyarikin\Sales\Order\Requests;
 
+use Denmasyarikin\Sales\Order\Order;
 use Denmasyarikin\Sales\Order\OrderItem;
 
 class UpdateOrderItemRequest extends DetailOrderItemRequest

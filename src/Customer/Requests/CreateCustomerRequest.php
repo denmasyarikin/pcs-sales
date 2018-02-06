@@ -17,10 +17,10 @@ class CreateCustomerRequest extends FormRequest
             'chanel_id' => 'required|exists:core_chanels,id',
             'name' => 'required|min:3|max:50',
             'address' => 'required',
-            'telephone' => 'nullable|digits_between:4,20|numeric',
-            'email' => 'nullable|email',
-            'contact_person' => 'nullable|required_if:type,company|min:3|max:50',
-            'user_id' => 'nullable|numeric|exists:core_users,id',
+            'telephone' => 'digits_between:4,20|numeric',
+            'email' => 'email',
+            'contact_person' => 'required_if:type,company|min:3|max:50',
+            'user_id' => 'numeric|exists:core_users,id',
         ];
     }
 }

@@ -5,6 +5,7 @@ namespace Denmasyarikin\Sales\Order\Controllers;
 use Illuminate\Http\JsonResponse;
 use Denmasyarikin\Sales\Order\Order;
 use App\Http\Controllers\Controller;
+use Denmasyarikin\Sales\Customer\Customer;
 use Denmasyarikin\Sales\Order\Requests\DetailOrderRequest;
 use Denmasyarikin\Sales\Order\Requests\UpdateCustomerRequest;
 use Denmasyarikin\Sales\Order\Transformers\OrderCustomerTransformer;
@@ -44,6 +45,8 @@ class CustomerController extends Controller
     public function updateCustomer(UpdateCustomerRequest $request)
     {
         $order = $request->getOrder();
+        $customer = $request->getCustomer();
+
         $this->updateableOrder($order);
 
         $customer = $request->only([
@@ -62,7 +65,7 @@ class CustomerController extends Controller
 
         return new JsonResponse([
             'message' => 'Order Customer has been updated',
-            'data' => (new OrderCustomerTransformer($orderCustomer))->toArray(),
+            'data' => ['updated_at' => $order->updated_at->format('Y-m-d H:i:s')],
         ]);
     }
 

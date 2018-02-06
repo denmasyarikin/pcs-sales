@@ -143,7 +143,13 @@ class OrderController extends Controller
         }
 
         if ($request->has('key')) {
-            $orders->where('id', $request->key);
+            $orders->where(function($query) use ($request) {
+                $query->where('id', $request->key);
+                $query->orWhereHas('customer', function($query2) use ($request) {
+                    $query2->where('name', 'like', "%{$request->key}%");
+                    $query2->orWhere('email', 'like', "%{$request->key}%");
+                });
+            });
         }
 
         $this->dateRange($orders, $request);
@@ -185,10 +191,7 @@ class OrderController extends Controller
 
         return new JsonResponse([
             'message' => 'Order has been created',
-            'data' => [
-                'id' => $order->id,
-                'updated_at' => $order->created_at->format('Y-m-d H:i:s')
-            ]
+            'data' => ['id' => $order->id]
         ], 201);
     }
 
@@ -291,7 +294,7 @@ class OrderController extends Controller
     public function cancelOrder(CancelOrderRequest $request)
     {
         $order = $request->getOrder();
-        $this->cancelableOrder($order);
+        $this->deletableOrder($order);
 
         $order->cancelation()->create($request->only(['reason', 'description']));
         $order->update(['status' => 'canceled']);

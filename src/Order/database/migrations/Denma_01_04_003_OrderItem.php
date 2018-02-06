@@ -20,7 +20,7 @@ class OrderItem extends Migration
             $table->string('name', 50);
             $table->string('specific', 50)->nullable()->default(null);
             $table->text('note')->nullable()->default(null);
-            $table->integer('quantity');
+            $table->float('quantity');
             $table->float('unit_price');
             $table->float('unit_total');
             $table->float('adjustment_total')->default(0);

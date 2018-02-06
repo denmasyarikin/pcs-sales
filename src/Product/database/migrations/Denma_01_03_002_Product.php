@@ -17,7 +17,7 @@ class Product extends Migration
             $table->text('description')->nullable()->default(null);
             $table->integer('unit_id')->unsigned();
             $table->integer('product_group_id')->unsigned()->nullable()->default(null);
-            $table->integer('min_order');
+            $table->float('min_order');
             $table->boolean('customizable')->default(true);
             $table->float('base_price')->default(0);
             $table->float('per_unit_price')->default(0);

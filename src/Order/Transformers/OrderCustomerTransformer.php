@@ -18,8 +18,7 @@ class OrderCustomerTransformer extends Detail
     protected function getData(Model $model)
     {
         return [
-            'customer_id' => $model->customer_id,
-            'chanel' => (new ChanelDetailTransformer($model->customer->chanel, ['id', 'name', 'type']))->toArray(),
+            'customer_id' => (int) $model->customer_id,
             'name' => $model->name,
             'address' => $model->address,
             'telephone' => $model->telephone,

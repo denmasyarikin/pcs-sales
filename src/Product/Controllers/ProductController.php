@@ -48,24 +48,22 @@ class ProductController extends Controller
     {
         $products = Product::orderBy('created_at', 'DESC');
 
-        if ($request->has('status')) {
-            if ('all' !== $request->status) {
-                switch ($request->status) {
-                    case 'draft':
-                        $products->whereStatus('draft');
-                        break;
+        switch ($request->get('status')) {
+            case 'all':
+                // do nothing
+                break;
 
-                    case 'inactive':
-                        $products->whereStatus('inactive');
-                        break;
+            case 'draft':
+                $products->whereStatus('draft');
+                break;
 
-                    default:
-                        $products->whereStatus('active');
-                        break;
-                }
-            }
-        } else {
-            $products->whereStatus('active');
+            case 'inactive':
+                $products->whereStatus('inactive');
+                break;
+
+            default:
+                $products->whereStatus('active');
+                break;
         }
 
         if ($request->has('group_id')) {

@@ -10,18 +10,6 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 trait OrderRestrictionTrait
 {
     /**
-     * updateable order.
-     *
-     * @param
-     */
-    protected function updateableOrder(Order $order)
-    {
-        if ($order->status !== 'draft') {
-            throw new BadRequestHttpException("Can not update or delete order on status {$order->status}");
-        }
-    }
-
-    /**
      * has item totals.
      *
      * @param Order $order
@@ -100,9 +88,33 @@ trait OrderRestrictionTrait
     }
 
     /**
+     * updateable order.
+     *
+     * @param Order $order
+     */
+    protected function updateableOrder(Order $order)
+    {
+        if (!in_array($order->status, ['draft', 'created'])) {
+            throw new BadRequestHttpException("Can not update order on status {$order->status}");
+        }
+    }
+
+    /**
+     * updateable order.
+     *
+     * @param Order $order
+     */
+    protected function deletableOrder(Order $order)
+    {
+        if ($order->status !== 'draft') {
+            throw new BadRequestHttpException("Order can only be deleted, when status draft");
+        }
+    }
+
+    /**
      * cancelable order.
      *
-     * @param
+     * @param Order $order
      */
     protected function cancelableOrder(Order $order)
     {

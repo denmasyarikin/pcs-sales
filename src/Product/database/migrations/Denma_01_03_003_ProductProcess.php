@@ -20,7 +20,7 @@ class ProductProcess extends Migration
             $table->integer('reference_id')->nullable()->default(null);
             $table->string('name', 50);
             $table->string('specific', 50)->nullable()->default(null);
-            $table->integer('quantity');
+            $table->float('quantity');
             $table->float('base_price')->nullable()->default(null);
             $table->boolean('required')->default(true);
             $table->boolean('static_price')->default(true);
