@@ -28,7 +28,6 @@ class OrdersTable extends Seeder
 
         $order->customer()->create([
             'customer_id' => 1,
-            'type' => 'public',
             'name' => 'Sri Haryati',
             'address' => 'Karawang',
             'telephone' => '0897887869',

@@ -50,4 +50,15 @@ class MarkupFactory extends AdjustmentFactory
     {
         return ceil(($value * $adjustmentable->total) / 100);
     }
+
+    /**
+     * should be deleted
+     *
+     * @param Adjustment $adjustment
+     * @return bool
+     */
+    protected function shouldBeDeleted(Adjustment $adjustment)
+    {
+        return $adjustment->adjustment_value == 0;
+    }
 }

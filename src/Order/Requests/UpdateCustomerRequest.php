@@ -4,7 +4,6 @@ namespace Denmasyarikin\Sales\Order\Requests;
 
 use Denmasyarikin\Sales\Order\Order;
 use Denmasyarikin\Sales\Customer\Customer;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class UpdateCustomerRequest extends DetailOrderRequest
 {
@@ -31,8 +30,6 @@ class UpdateCustomerRequest extends DetailOrderRequest
         if ($this->customer = Customer::whereChanelId($order->chanel_id)->find($this->customer_id)) {
             return $this->customer;
         }
-
-        throw new NotFoundHttpException('Customer no in order chanel');
     }
 
     /**

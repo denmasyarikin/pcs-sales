@@ -60,6 +60,11 @@ abstract class AdjustmentFactory
             $this->resetAllAdjustments($adjustment, $value);
         }
 
+        // if value has been applyed and value not effected just delete
+        if ($this->shouldBeDeleted($adjustment)) {
+            $adjustment->delete();
+        } 
+
         return $this->adjustmentable;
     }
 
@@ -213,6 +218,17 @@ abstract class AdjustmentFactory
             'adjustment_total' => $adjustmentTotal,
             'total' => $this->adjustmentable->total + $adjustmentTotal,
         ];
+    }
+
+    /**
+     * should be deleted
+     *
+     * @param Adjustment $adjustment
+     * @return bool
+     */
+    protected function shouldBeDeleted(Adjustment $adjustment)
+    {
+        return false;
     }
 
     /**

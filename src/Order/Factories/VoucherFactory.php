@@ -50,4 +50,15 @@ class VoucherFactory extends AdjustmentFactory
     {
         dd('TODO Apply voucher');
     }
+
+    /**
+     * should be deleted
+     *
+     * @param Adjustment $adjustment
+     * @return bool
+     */
+    protected function shouldBeDeleted(Adjustment $adjustment)
+    {
+        return $adjustment->adjustment_value == '';
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace Denmasyarikin\Sales\Order\Factories;
 
+use Denmasyarikin\Sales\Order\Contracts\Adjustment;
 use Denmasyarikin\Sales\Order\Contracts\Discountable;
 use Denmasyarikin\Sales\Order\Contracts\Adjustmentable;
 use Symfony\Component\Process\Exception\InvalidArgumentException;
@@ -49,5 +50,16 @@ class DiscountFactory extends AdjustmentFactory
     protected function getAdjustmentTotal(Adjustmentable $adjustmentable, $value)
     {
         return ceil(($value * $adjustmentable->total) / 100) * -1;
+    }
+
+    /**
+     * should be deleted
+     *
+     * @param Adjustment $adjustment
+     * @return bool
+     */
+    protected function shouldBeDeleted(Adjustment $adjustment)
+    {
+        return $adjustment->adjustment_value == 0;
     }
 }

@@ -25,7 +25,7 @@ class CustomerListDetailTransformer extends Detail
             'email' => $model->email,
             'telephone' => $model->telephone,
             'contact_person' => $model->contact_person,
-            'updated_at' => $model->updated_at
+            'updated_at' => $model->updated_at->format('Y-m-d H:i:s')
         ];
     }
 }

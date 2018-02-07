@@ -95,19 +95,28 @@ class OrderFactory
      */
     protected function applyAdjustment(OrderItem $orderItem, $markup = null, $discount = null, $voucher = null)
     {
-        if (!is_null($markup)) {
+        if (!is_null($markup) AND $markup > 0) {
             $factory = new MarkupFactory($orderItem);
             $orderItem = $factory->apply($markup);
+        } else {
+            // remove markup
+            $orderItem->adjustments()->whereType('markup')->delete();
         }
 
-        if (!is_null($discount)) {
+        if (!is_null($discount) AND $discount > 0) {
             $factory = new DiscountFactory($orderItem);
             $orderItem = $factory->apply($discount);
+        } else {
+            // remove discount
+            $orderItem->adjustments()->whereType('discount')->delete();
         }
 
-        if (!is_null($voucher)) {
+        if (!is_null($voucher) AND $voucher !== '') {
             $factory = new VoucherFactory($orderItem);
             $orderItem = $factory->apply($voucher);
+        } else {
+            // remove voucher
+            $orderItem->adjustments()->whereType('voucher')->delete();
         }
 
         return $orderItem;

@@ -140,7 +140,7 @@ class OrderItem extends Model implements Markupable, Discountable, Voucherable
      */
     public function getVoucherAttribute($value)
     {
-        return ($voucher = $this->getVoucher()) ? $voucher->adjustment_value : 0;
+        return ($voucher = $this->getVoucher()) ? $voucher->adjustment_value : '';
     }
 
     /**
