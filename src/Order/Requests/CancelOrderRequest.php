@@ -32,7 +32,7 @@ class CancelOrderRequest extends DetailOrderRequest
 
         return [
             'reason' => 'required|in:'.implode(',', $reasons),
-            'descirption' => 'min:3'
+            'descirption' => 'nullable|min:3'
         ];
     }
 }

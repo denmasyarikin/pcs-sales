@@ -20,7 +20,7 @@ class UpdateCustomerRequest extends DetailOrderRequest
      *
      * @return Customer
      */
-    public function getCustomer(): ?Customer
+    public function getCustomer()
     {
         $order = $this->getOrder();
 
@@ -57,12 +57,12 @@ class UpdateCustomerRequest extends DetailOrderRequest
     public function rules()
     {
         return [
-            'customer_id' => 'required|exists:sales_customers,id',
+            'customer_id' => 'nullable|exists:sales_customers,id',
             'name' => 'required|min:2|max:20',
-            'address' => '',
-            'telephone' => 'numeric',
-            'email' => 'email',
-            'contact_person' => 'min:2|max:20',
+            'address' => 'required',
+            'telephone' => 'nullable|numeric',
+            'email' => 'nullable|email',
+            'contact_person' => 'nullable|min:2|max:20',
         ];
     }
 }

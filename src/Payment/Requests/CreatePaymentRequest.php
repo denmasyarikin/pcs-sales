@@ -16,10 +16,10 @@ class CreatePaymentRequest extends FormRequest
         return [
             'order_id' => 'required|exists:sales_orders,id',
             'payment_method' => 'required|in:cash,transfer',
-            'cash_total' => 'required_if:payment_method,cash|numeric',
-            'cash_back' => 'required_if:payment_method,cash|numeric',
-            'bank_id' => 'required_if:payment_method,transfer|exists:sales_banks,id',
-            'payment_slip' => 'required_if:payment_method,transfer',
+            'cash_total' => 'nullable|required_if:payment_method,cash|numeric',
+            'cash_back' => 'nullable|required_if:payment_method,cash|numeric',
+            'bank_id' => 'nullable|required_if:payment_method,transfer|exists:sales_banks,id',
+            'payment_slip' => 'nullable|required_if:payment_method,transfer',
             'pay' => 'required|numeric',
         ];
     }

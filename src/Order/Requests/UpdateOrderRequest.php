@@ -28,8 +28,8 @@ class UpdateOrderRequest extends DetailOrderRequest
     public function rules()
     {
         return [
-            'note' => '',
-            'due_date' => 'date_format:Y-m-d H:i:s',
+            'note' => 'nullable',
+            'due_date' => 'required|date_format:Y-m-d H:i:s',
         ];
     }
 }

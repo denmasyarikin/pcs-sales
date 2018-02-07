@@ -14,7 +14,7 @@ class OrderCustomer extends Migration
         Schema::create('sales_order_customers', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('order_id')->unsigned();
-            $table->integer('customer_id')->unsigned();
+            $table->integer('customer_id')->unsigned()->nullable()->default(null);
             $table->string('name', 50);
             $table->text('address')->nullable()->default(null);
             $table->string('telephone', 20)->nullable()->default(null);

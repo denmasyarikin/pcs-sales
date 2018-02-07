@@ -29,7 +29,7 @@ class UpdateBankRequest extends DetailBankRequest
     {
         return [
             'name' => 'required|max:50',
-            'logo' => '',
+            'logo' => 'nullable',
             'account_number' => 'required|numeric',
             'account_name' => 'required|min:4|max:20',
         ];
