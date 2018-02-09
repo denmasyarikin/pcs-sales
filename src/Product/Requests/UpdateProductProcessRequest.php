@@ -35,11 +35,15 @@ class UpdateProductProcessRequest extends DetailProductProcessRequest
             'name' => 'required|min:3|max:20',
             'specific' => 'nullable|min:3|max:20',
             'quantity' => 'required|numeric|min:1',
-            'base_price' => 'required|numeric',
-            'required' => 'nullable|boolean',
-            'static_price' => 'nullable|boolean',
-            'static_to_order_count' => 'nullable|numeric|min:1|required_if:static_price,false',
+            'unit_price' => 'required|numeric',
             'unit_id' => 'required|exists:core_units,id',
+            'required' => 'nullable|boolean',
+            'price_type' => 'nullable|in:static,dynamic',
+            'price_increase_multiples' => 'nullable|required_if:price_type,dynamic|numeric',
+            'price_increase_percentage' => 'nullable|required_if:price_type,dynamic|numeric|min:1|max:100',
+            'insheet_required' => 'nullable|boolean',
+            'insheet_type' => 'nullable|required_if:insheet_required,true|in:static,dynamic,percentage',
+            'insheet_value' => 'nullable|required_if:insheet_required,true|numeric',
         ];
     }
 }

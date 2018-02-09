@@ -59,15 +59,17 @@ class ProcessController extends Controller
 
         if (null !== $request->input('parent_id')) {
             if (!$product->processes()->whereNull('parent_id')->whereId($request->parent_id)->exists()) {
-                throw new BadRequestHttpException('Parent ID is not belong to this product  or is children');
+                throw new BadRequestHttpException('Parent ID is not belong to this product or that is children');
             }
         }
 
         $process = $product->createProcess($request->only([
             'parent_id', 'type', 'type_as', 'reference_id',
-            'name', 'specific', 'quantity', 'base_price', 'required',
-            'static_price', 'static_to_order_count', 'unit_id',
-        ]));
+            'name', 'specific', 'quantity', 'unit_price', 'unit_id',
+            'required', 'price_type', 'price_increase_multiples',
+            'price_increase_percentage', 'insheet_required',
+            'insheet_type', 'insheet_value',
+        ]) + ['unit_total' => $request->unit_price * $request->quantity]);
 
         if ('draft' === $product->status) {
             $product->update(['status' => 'active']);
@@ -93,9 +95,11 @@ class ProcessController extends Controller
 
         $process->update($request->only([
             'parent_id', 'type', 'type_as', 'reference_id',
-            'name', 'specific', 'quantity', 'base_price', 'required',
-            'static_price', 'static_to_order_count', 'unit_id',
-        ]));
+            'name', 'specific', 'quantity', 'unit_price', 'unit_id',
+            'required', 'price_type', 'price_increase_multiples',
+            'price_increase_percentage', 'insheet_required',
+            'insheet_type', 'insheet_value',
+        ]) + ['unit_total' => $request->unit_price * $request->quantity]);
 
         return new JsonResponse([
             'message' => 'Product Process has been updated',

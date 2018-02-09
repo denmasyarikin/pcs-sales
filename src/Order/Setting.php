@@ -27,6 +27,7 @@ class Setting implements SettingContract
                 'other',
             ],
             'required_down_payment' => true,
+            'enable_input_manual' => true
         ];
     }
 }

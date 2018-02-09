@@ -31,7 +31,8 @@ class ProductsTable extends Seeder
             'name' => 'Setting',
             'specific' => 'Kartu nama',
             'quantity' => 1,
-            'base_price' => 30000,
+            'unit_price' => 30000,
+            'unit_total' => 30000,
             'required' => false,
             'unit_id' => 10,
         ]);
@@ -43,9 +44,11 @@ class ProductsTable extends Seeder
             'name' => 'Print Digital',
             'specific' => 'Art Carton',
             'quantity' => 4,
-            'base_price' => 4000,
-            'static_price' => false,
-            'static_to_order_count' => 1,
+            'unit_price' => 4000,
+            'unit_total' => 16000,
+            'price_type' => 'dynamic',
+            'price_increase_multiples' => 1,
+            'price_increase_percentage' => 100,
             'unit_id' => 9,
         ]);
 
@@ -56,10 +59,12 @@ class ProductsTable extends Seeder
             'name' => 'Finishing Digital',
             'specific' => 'Laminating Gloys',
             'quantity' => 4,
-            'base_price' => 2000,
+            'unit_price' => 2000,
+            'unit_total' => 8000,
             'required' => false,
-            'static_price' => false,
-            'static_to_order_count' => 1,
+            'price_type' => 'dynamic',
+            'price_increase_multiples' => 1,
+            'price_increase_percentage' => 100,
             'unit_id' => 9,
         ]);
 
@@ -71,10 +76,12 @@ class ProductsTable extends Seeder
             'name' => 'Finishing Digital',
             'specific' => 'Laminating Doff',
             'quantity' => 4,
-            'base_price' => 2000,
+            'unit_price' => 2000,
+            'unit_total' => 8000,
             'required' => false,
-            'static_price' => false,
-            'static_to_order_count' => 1,
+            'price_type' => 'dynamic',
+            'price_increase_multiples' => 1,
+            'price_increase_percentage' => 100,
             'unit_id' => 9,
         ]);
     }

@@ -15,6 +15,7 @@ class Setting implements SettingContract
     {
         return [
             'default_image' => '/api/media/image/sales/product/image/default.jpeg',
+            'enable_input_manual' => true
         ];
     }
 }

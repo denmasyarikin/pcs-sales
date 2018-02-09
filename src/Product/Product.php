@@ -100,7 +100,7 @@ class Product extends Model
         $this->base_price = 0;
 
         foreach ($this->getProcesses()->whereStrict('parent_id', null) as $process) {
-            $this->base_price += $process->base_price * $process->quantity;
+            $this->base_price += $process->unit_price;
             $this->per_unit_price = Money::round($this->base_price / $this->min_order);
         }
 
