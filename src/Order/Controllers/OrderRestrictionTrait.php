@@ -94,6 +94,7 @@ trait OrderRestrictionTrait
      */
     protected function updateableOrder(Order $order)
     {
+        // only status draft and created are allowed
         if (!in_array($order->status, ['draft', 'created'])) {
             throw new BadRequestHttpException("Can not update order on status {$order->status}");
         }
@@ -106,6 +107,7 @@ trait OrderRestrictionTrait
      */
     protected function deletableOrder(Order $order)
     {
+        // only status draft are deletable
         if ($order->status !== 'draft') {
             throw new BadRequestHttpException("Order can only be deleted, when status draft");
         }
@@ -118,7 +120,8 @@ trait OrderRestrictionTrait
      */
     protected function cancelableOrder(Order $order)
     {
-        if (in_array($order->status, ['draft', 'closed'])) {
+        // canceled, draft or closed not cancelable
+        if (in_array($order->status, ['draft', 'closed', 'canceled'])) {
             throw new BadRequestHttpException("Can not cancle order when status is {$order->status}");
         }
     }

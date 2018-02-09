@@ -48,6 +48,11 @@ class OrderFactory
     {
         $item['unit_total'] = $item['total'] = $item['quantity'] * $item['unit_price'];
 
+        // if product process just store to db, they are not effected to the order
+        if ($item['type'] === 'product' AND $item['type_as'] !== 'product') {
+            return $this->order->items()->create($item);
+        }
+
         $orderItem = $this->order->items()->create($item);
         $orderItem = $this->applyAdjustment($orderItem, $markup, $discount, $voucher);
 

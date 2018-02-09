@@ -29,28 +29,29 @@ class ProductProcessDetailTransformer extends Detail
             'formatted' => $model->name.($model->specific ? " ({$model->specific})" : ''),
             'quantity' => $model->quantity,
             'base_price' => $model->base_price,
+            'unit_price' => $model->base_price * $model->quantity,
             'required' => (bool) $model->required,
             'static_price' => (bool) $model->static_price,
             'static_to_order_count' => $model->static_to_order_count,
             'unit' => (new UnitListDetailTransformer($model->unit))->toArray(),
-            'children' => $this->getChildren($model->children),
+            'options' => $this->getOptions($model->children),
             'created_at' => $model->created_at->format('Y-m-d H:i:s'),
             'updated_at' => $model->updated_at->format('Y-m-d H:i:s'),
         ];
     }
 
     /**
-     * get children.
+     * get options.
      *
-     * @param Collection $children
+     * @param Collection $options
      *
      * @return array
      */
-    protected function getChildren(Collection $children)
+    protected function getOptions(Collection $options)
     {
         $data = [];
 
-        foreach ($children as $child) {
+        foreach ($options as $child) {
             $data[] = (new self($child))->toArray();
         }
 

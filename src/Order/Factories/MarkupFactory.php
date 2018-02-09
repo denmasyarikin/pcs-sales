@@ -2,6 +2,8 @@
 
 namespace Denmasyarikin\Sales\Order\Factories;
 
+use App\Manager\Facades\Money;
+use Denmasyarikin\Sales\Order\Contracts\Adjustment;
 use Denmasyarikin\Sales\Order\Contracts\Markupable;
 use Denmasyarikin\Sales\Order\Contracts\Adjustmentable;
 use Symfony\Component\Process\Exception\InvalidArgumentException;
@@ -48,7 +50,7 @@ class MarkupFactory extends AdjustmentFactory
      */
     protected function getAdjustmentTotal(Adjustmentable $adjustmentable, $value)
     {
-        return ceil(($value * $adjustmentable->total) / 100);
+        return Money::round(($value * $adjustmentable->total) / 100);
     }
 
     /**

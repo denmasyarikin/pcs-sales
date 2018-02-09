@@ -53,7 +53,7 @@ class OrderItemDetailTransformer extends Detail
         $items = OrderItem::where('order_id', $model->order_id)
                             ->where('type', 'product')
                             ->where('type_as', '<>', 'product')
-                            ->where('reference_id', $model->reference_id)
+                            ->where('reference_id', $model->id)
                             ->get();
 
         return (new OrderItemListTransformer($items))->toArray();

@@ -14,6 +14,7 @@ use Denmasyarikin\Sales\Order\Requests\CancelOrderRequest;
 use Denmasyarikin\Sales\Order\Requests\UpdateStatusOrderRequest;
 use Denmasyarikin\Sales\Order\Transformers\OrderListTransformer;
 use Denmasyarikin\Sales\Order\Transformers\OrderDetailTransformer;
+use Denmasyarikin\Sales\Order\Transformers\OrderListDetailTransformer;
 
 class OrderController extends Controller
 {
@@ -209,7 +210,10 @@ class OrderController extends Controller
 
         $order->update($request->only(['note', 'due_date']));
 
-        return new JsonResponse(['message' => 'Order has been updated']);
+        return new JsonResponse([
+            'message' => 'Order has been updated',
+            'data' => (new OrderListDetailTransformer($order))->toArray()
+        ]);
     }
 
     /**
@@ -294,7 +298,7 @@ class OrderController extends Controller
     public function cancelOrder(CancelOrderRequest $request)
     {
         $order = $request->getOrder();
-        $this->deletableOrder($order);
+        $this->cancelableOrder($order);
 
         $order->cancelation()->create($request->only(['reason', 'description']));
         $order->update(['status' => 'canceled']);

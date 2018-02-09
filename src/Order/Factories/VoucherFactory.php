@@ -2,6 +2,7 @@
 
 namespace Denmasyarikin\Sales\Order\Factories;
 
+use Denmasyarikin\Sales\Order\Contracts\Adjustment;
 use Denmasyarikin\Sales\Order\Contracts\Voucherable;
 use Denmasyarikin\Sales\Order\Contracts\Adjustmentable;
 use Symfony\Component\Process\Exception\InvalidArgumentException;

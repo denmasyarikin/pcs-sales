@@ -2,6 +2,7 @@
 
 namespace Denmasyarikin\Sales\Order\Factories;
 
+use App\Manager\Facades\Money;
 use Denmasyarikin\Sales\Order\Contracts\Adjustment;
 use Denmasyarikin\Sales\Order\Contracts\Discountable;
 use Denmasyarikin\Sales\Order\Contracts\Adjustmentable;
@@ -49,7 +50,7 @@ class DiscountFactory extends AdjustmentFactory
      */
     protected function getAdjustmentTotal(Adjustmentable $adjustmentable, $value)
     {
-        return ceil(($value * $adjustmentable->total) / 100) * -1;
+        return Money::round(($value * $adjustmentable->total) / 100) * -1;
     }
 
     /**

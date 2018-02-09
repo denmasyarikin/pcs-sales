@@ -3,6 +3,7 @@
 namespace Denmasyarikin\Sales\Product;
 
 use App\Model;
+use App\Manager\Facades\Money;
 use App\Manager\Facades\Setting;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -100,7 +101,7 @@ class Product extends Model
 
         foreach ($this->getProcesses()->whereStrict('parent_id', null) as $process) {
             $this->base_price += $process->base_price * $process->quantity;
-            $this->per_unit_price = ceil($this->base_price / $this->min_order);
+            $this->per_unit_price = Money::round($this->base_price / $this->min_order);
         }
 
         $this->save();
