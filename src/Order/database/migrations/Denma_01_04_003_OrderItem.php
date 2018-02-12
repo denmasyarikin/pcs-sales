@@ -21,11 +21,15 @@ class OrderItem extends Migration
             $table->string('specific', 50)->nullable()->default(null);
             $table->text('note')->nullable()->default(null);
             $table->float('quantity');
-            $table->float('unit_price');
-            $table->float('unit_total');
-            $table->float('adjustment_total')->default(0);
-            $table->float('total');
+            $table->enum('price_type', ['static', 'dynamic'])->nullable()->default(null);
+            $table->float('price_increase_multiples')->nullable()->default(null);
+            $table->float('price_increase_percentage')->nullable()->default(null);
+            $table->bigInteger('unit_price')->default(0);
+            $table->bigInteger('unit_total')->default(0);
+            $table->bigInteger('adjustment_total')->default(0);
+            $table->bigInteger('total')->default(0);
             $table->integer('unit_id')->unsigned();
+            $table->float('insheet')->nullable()->default(null);
             $table->timestamps();
             $table->softDeletes();
 

@@ -26,8 +26,10 @@ class CreateProductProcessRequest extends DetailProductRequest
             'price_increase_multiples' => 'nullable|required_if:price_type,dynamic|numeric',
             'price_increase_percentage' => 'nullable|required_if:price_type,dynamic|numeric|min:1|max:100',
             'insheet_required' => 'nullable|boolean',
-            'insheet_type' => 'nullable|required_if:insheet_required,true|in:static,dynamic,percentage',
-            'insheet_value' => 'nullable|required_if:insheet_required,true|numeric',
+            'insheet_type' => 'nullable|required_if:insheet_required,true|in:static,dynamic',
+            'insheet_multiples' => 'nullable|required_if:insheet_type,dynamic|numeric',
+            'insheet_quantity' => 'nullable|required_if:insheet_required,true|numeric',
+            'insheet_added' => 'nullable|required_if:insheet_required,true|numeric',
         ];
     }
 }

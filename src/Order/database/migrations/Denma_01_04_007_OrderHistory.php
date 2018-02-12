@@ -17,6 +17,7 @@ class OrderHistory extends Migration
             $table->enum('type', ['order', 'process', 'payment', 'delivery']);
             $table->string('label');
             $table->string('actor');
+            $table->text('data')->nullable()->default(null);
             $table->timestamps();
             $table->softDeletes();
 

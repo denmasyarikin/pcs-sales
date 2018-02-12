@@ -46,14 +46,15 @@ class OrderFactory
      */
     public function createOrderItem(array $item, $markup = null, $discount = null, $voucher = null)
     {
-        $item['unit_total'] = $item['total'] = $item['quantity'] * $item['unit_price'];
-
-        // if product process just store to db, they are not effected to the order
-        if ($item['type'] === 'product' AND $item['type_as'] !== 'product') {
-            return $this->order->items()->create($item);
-        }
+        $item['total'] = $item['unit_total'];
 
         $orderItem = $this->order->items()->create($item);
+        
+        // if product process just store to db, they are not effected to the order
+        if ($item['type'] === 'product' AND $item['type_as'] !== 'product') {
+            return $orderItem;
+        }
+
         $orderItem = $this->applyAdjustment($orderItem, $markup, $discount, $voucher);
 
         $this->updateOrderItemTotal();
@@ -76,9 +77,15 @@ class OrderFactory
      */
     public function updateOrderItem(OrderItem $orderItem, array $item, $markup = null, $discount = null, $voucher = null)
     {
-        $item['unit_total'] = $item['quantity'] * $item['unit_price'];
+        $item['total'] = $item['unit_total'];
 
         $orderItem->update($item);
+
+        // if product process just store to db, they are not effected to the order
+        if ($item['type'] === 'product' AND $item['type_as'] !== 'product') {
+            return $orderItem;
+        }
+
         $orderItem = $this->applyAdjustment($orderItem, $markup, $discount, $voucher);
 
         $this->updateOrderItemTotal();
@@ -134,7 +141,7 @@ class OrderFactory
     {
         $this->order->item_total = 0;
 
-        foreach ($this->order->items as $item) {
+        foreach ($this->order->getPrimaryItems() as $item) {
             $this->order->item_total += $item->total;
         }
 

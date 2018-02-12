@@ -70,7 +70,9 @@ class ItemController extends Controller
         $orderItem = $factory->createOrderItem(
             $request->only([
                 'type', 'type_as', 'reference_id', 'name', 'specific',
-                'note', 'quantity', 'unit_price', 'unit_id',
+                'note', 'quantity', 'unit_price', 'unit_total', 'price_type',
+                'price_increase_multiples', 'price_increase_percentage',
+                'unit_id', 'insheet'
             ]),
             $request->input('markup'),
             $request->input('discount'),
@@ -104,7 +106,9 @@ class ItemController extends Controller
         $orderItem = $factory->updateOrderItem(
             $orderItem, $request->only([
                 'type', 'type_as', 'reference_id', 'name', 'specific',
-                'note', 'quantity', 'unit_price', 'unit_id',
+                'note', 'quantity', 'unit_price', 'unit_total', 'price_type',
+                'price_increase_multiples', 'price_increase_percentage',
+                'unit_id', 'insheet'
             ]),
             $request->input('markup'),
             $request->input('discount'),

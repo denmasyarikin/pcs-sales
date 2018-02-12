@@ -68,7 +68,7 @@ class ProcessController extends Controller
             'name', 'specific', 'quantity', 'unit_price', 'unit_id',
             'required', 'price_type', 'price_increase_multiples',
             'price_increase_percentage', 'insheet_required',
-            'insheet_type', 'insheet_value',
+            'insheet_type', 'insheet_multiples', 'insheet_quantity', 'insheet_added'
         ]) + ['unit_total' => $request->unit_price * $request->quantity]);
 
         if ('draft' === $product->status) {
@@ -98,7 +98,7 @@ class ProcessController extends Controller
             'name', 'specific', 'quantity', 'unit_price', 'unit_id',
             'required', 'price_type', 'price_increase_multiples',
             'price_increase_percentage', 'insheet_required',
-            'insheet_type', 'insheet_value',
+            'insheet_type', 'insheet_multiples', 'insheet_quantity', 'insheet_added'
         ]) + ['unit_total' => $request->unit_price * $request->quantity]);
 
         return new JsonResponse([

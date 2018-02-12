@@ -21,16 +21,18 @@ class ProductProcess extends Migration
             $table->string('name', 50);
             $table->string('specific', 50)->nullable()->default(null);
             $table->float('quantity');
-            $table->float('unit_price');
-            $table->float('unit_total');
+            $table->bigInteger('unit_price');
+            $table->bigInteger('unit_total');
             $table->integer('unit_id')->unsigned();
             $table->boolean('required')->default(true);
             $table->enum('price_type', ['static', 'dynamic'])->default('static');
             $table->float('price_increase_multiples')->nullable()->default(null);
             $table->float('price_increase_percentage')->nullable()->default(null);
             $table->boolean('insheet_required')->default(false);
-            $table->enum('insheet_type', ['static', 'dynamic', 'percentage'])->nullable()->default(null);
-            $table->float('insheet_value')->nullable()->default(null);
+            $table->enum('insheet_type', ['static', 'dynamic'])->nullable()->default(null);
+            $table->float('insheet_multiples')->nullable()->default(null);
+            $table->float('insheet_quantity')->nullable()->default(null);
+            $table->float('insheet_added', 10, 2)->nullable()->default(null);
             $table->timestamps();
             $table->softDeletes();
 

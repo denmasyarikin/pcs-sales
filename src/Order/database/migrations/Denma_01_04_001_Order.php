@@ -14,11 +14,11 @@ class Order extends Migration
         Schema::create('sales_orders', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('chanel_id')->unsigned();
-            $table->float('item_total')->default(0);
-            $table->float('adjustment_total')->default(0);
-            $table->float('total')->default(0);
-            $table->float('paid_off')->default(0);
-            $table->float('remaining')->default(0);
+            $table->bigInteger('item_total')->default(0);
+            $table->bigInteger('adjustment_total')->default(0);
+            $table->bigInteger('total')->default(0);
+            $table->bigInteger('paid_off')->default(0);
+            $table->bigInteger('remaining')->default(0);
             $table->boolean('paid')->default(false);
             $table->text('note')->nullable()->default(null);
             $table->integer('cs_user_id')->unsigned();

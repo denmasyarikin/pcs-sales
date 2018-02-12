@@ -16,10 +16,10 @@ class OrderItemAdjustment extends Migration
             $table->integer('order_item_id')->unsigned();
             $table->integer('priority');
             $table->enum('type', ['markup', 'discount', 'voucher']);
-            $table->float('adjustment_origin');
+            $table->bigInteger('adjustment_origin')->default(0);
             $table->string('adjustment_value');
-            $table->float('adjustment_total');
-            $table->float('total');
+            $table->bigInteger('adjustment_total')->default(0);
+            $table->bigInteger('total')->default(0);
             $table->timestamps();
 
             $table->foreign('order_item_id')->references('id')->on('sales_order_items');
