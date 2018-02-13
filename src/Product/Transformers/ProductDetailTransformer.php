@@ -25,6 +25,7 @@ class ProductDetailTransformer extends Detail
             'unit' => (new UnitListDetailTransformer($model->unit))->toArray(),
             'customizable' => (bool) $model->customizable,
             'min_order' => $model->min_order,
+            'order_multiples' => $model->order_multiples,
             'base_price' => $model->base_price,
             'per_unit_price' => $model->per_unit_price,
             'process_count' => $model->process_count,

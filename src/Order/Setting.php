@@ -19,12 +19,12 @@ class Setting implements SettingContract
             'enabled_voucher' => true,
             'enabled_discount' => true,
             'cancelation_reasons' => [
-                'replaced',
-                'customer_request',
-                'prdouction_error',
-                'rejected',
-                'unknown',
-                'other',
+                'Salah input',
+                'Permintaan Konsumen',
+                'Error produksi',
+                'Ditolak',
+                'Tidak diketahui',
+                'Lainnya',
             ],
             'required_down_payment' => true,
             'enable_input_manual' => true

@@ -2,6 +2,7 @@
 
 namespace Denmasyarikin\Sales\Product\Controllers;
 
+use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 use Denmasyarikin\Sales\Product\Product;
@@ -63,13 +64,7 @@ class ProcessController extends Controller
             }
         }
 
-        $process = $product->createProcess($request->only([
-            'parent_id', 'type', 'type_as', 'reference_id',
-            'name', 'specific', 'quantity', 'unit_price', 'unit_id',
-            'required', 'price_type', 'price_increase_multiples',
-            'price_increase_percentage', 'insheet_required',
-            'insheet_type', 'insheet_multiples', 'insheet_quantity', 'insheet_added'
-        ]) + ['unit_total' => $request->unit_price * $request->quantity]);
+        $process = $product->createProcess($this->getDataFromRequest($request));
 
         if ('draft' === $product->status) {
             $product->update(['status' => 'active']);
@@ -93,18 +88,29 @@ class ProcessController extends Controller
         $product = $request->getProduct();
         $process = $request->getProductProcess();
 
-        $process->update($request->only([
-            'parent_id', 'type', 'type_as', 'reference_id',
-            'name', 'specific', 'quantity', 'unit_price', 'unit_id',
-            'required', 'price_type', 'price_increase_multiples',
-            'price_increase_percentage', 'insheet_required',
-            'insheet_type', 'insheet_multiples', 'insheet_quantity', 'insheet_added'
-        ]) + ['unit_total' => $request->unit_price * $request->quantity]);
+        $process->update($this->getDataFromRequest($request));
 
         return new JsonResponse([
             'message' => 'Product Process has been updated',
             'data' => (new ProductProcessDetailTransformer($process))->toArray(),
         ]);
+    }
+
+    /**
+     * get data from request
+     *
+     * @param Request $request
+     * @return array
+     */
+    protected function getDataFromRequest(Request $request)
+    {
+        return $request->only([
+            'parent_id', 'type', 'type_as', 'reference_id',
+            'name', 'specific', 'quantity', 'unit_price', 'unit_id', 'required',
+            'depending_to_dimension', 'dimension', 'dimension_unit_id', 'length', 'width', 'height', 'weight',
+            'price_type', 'price_increase_multiples', 'price_increase_percentage',
+            'insheet_required', 'insheet_type', 'insheet_multiples', 'insheet_quantity', 'insheet_added'
+        ]) + ['unit_total' => $request->unit_price * $request->quantity];
     }
 
     /**

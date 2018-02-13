@@ -32,6 +32,7 @@ class UpdateProductRequest extends DetailProductRequest
             'description' => 'required|min:20|max:150',
             'unit_id' => 'required|exists:core_units,id',
             'min_order' => 'required|numeric|min:1',
+            'order_multiples' => 'required|numeric|min:1',
             'customizable' => 'required|boolean',
             'status' => 'nullable|in:active,inactive,draft',
             'product_group_id' => 'nullable|exists:sales_product_groups,id',

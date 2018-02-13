@@ -27,6 +27,7 @@ class ProductListDetailTransformer extends Detail
             'image' => $model->image,
             'unit' => (new UnitListDetailTransformer($model->unit))->toArray(),
             'min_order' => (int) $model->min_order,
+            'order_multiples' => (int) $model->order_multiples,
             'base_price' => $model->base_price ?: 0,
             'per_unit_price' => $model->per_unit_price ?: 0,
             'process_count' => $model->process_count,

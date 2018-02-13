@@ -17,19 +17,35 @@ class OrderItem extends Migration
             $table->enum('type', ['product', 'good', 'service', 'manual']);
             $table->enum('type_as', ['product', 'good', 'service', 'manual']);
             $table->integer('reference_id')->nullable()->default(null);
+            $table->string('reference_type')->nullable()->default(null);
             $table->string('name', 50);
             $table->string('specific', 50)->nullable()->default(null);
-            $table->text('note')->nullable()->default(null);
             $table->float('quantity');
-            $table->enum('price_type', ['static', 'dynamic'])->nullable()->default(null);
-            $table->float('price_increase_multiples')->nullable()->default(null);
-            $table->float('price_increase_percentage')->nullable()->default(null);
             $table->bigInteger('unit_price')->default(0);
             $table->bigInteger('unit_total')->default(0);
             $table->bigInteger('adjustment_total')->default(0);
             $table->bigInteger('total')->default(0);
             $table->integer('unit_id')->unsigned();
-            $table->float('insheet')->nullable()->default(null);
+            $table->text('note')->nullable()->default(null);
+            // dimension
+            $table->boolean('depending_to_dimension')->default(false);
+            $table->enum('dimension', ['length', 'area', 'volume', 'weight'])->nullable()->default(null);
+            $table->integer('dimension_unit_id')->unsigned()->nullable()->default(null);
+            $table->float('length')->nullable()->default(null);
+            $table->float('width')->nullable()->default(null);
+            $table->float('height')->nullable()->default(null);
+            $table->float('weight')->nullable()->default(null);
+            // increasment
+            $table->enum('price_type', ['static', 'dynamic'])->nullable()->default(null);
+            $table->float('price_increase_multiples')->nullable()->default(null);
+            $table->float('price_increase_percentage')->nullable()->default(null);
+            // insheet
+            $table->boolean('insheet_required')->default(false);
+            $table->enum('insheet_type', ['static', 'dynamic'])->nullable()->default(null);
+            $table->float('insheet_multiples')->nullable()->default(null);
+            $table->float('insheet_quantity')->nullable()->default(null);
+            $table->float('insheet_added')->nullable()->default(null);
+
             $table->timestamps();
             $table->softDeletes();
 

@@ -68,12 +68,7 @@ class ItemController extends Controller
         $factory = new OrderFactory($order);
 
         $orderItem = $factory->createOrderItem(
-            $request->only([
-                'type', 'type_as', 'reference_id', 'name', 'specific',
-                'note', 'quantity', 'unit_price', 'unit_total', 'price_type',
-                'price_increase_multiples', 'price_increase_percentage',
-                'unit_id', 'insheet'
-            ]),
+            $this->getDataFromRequest($request),
             $request->input('markup'),
             $request->input('discount'),
             $request->input('voucher')
@@ -104,12 +99,8 @@ class ItemController extends Controller
         $factory = new OrderFactory($order);
 
         $orderItem = $factory->updateOrderItem(
-            $orderItem, $request->only([
-                'type', 'type_as', 'reference_id', 'name', 'specific',
-                'note', 'quantity', 'unit_price', 'unit_total', 'price_type',
-                'price_increase_multiples', 'price_increase_percentage',
-                'unit_id', 'insheet'
-            ]),
+            $orderItem,
+            $this->getDataFromRequest($request),
             $request->input('markup'),
             $request->input('discount'),
             $request->input('voucher')
@@ -118,6 +109,23 @@ class ItemController extends Controller
         return new JsonResponse([
             'message' => 'Order Item has been updated',
             'data' => (new OrderItemDetailTransformer($orderItem))->toArray(),
+        ]);
+    }
+
+    /**
+     * get data from request
+     *
+     * @param Request $request
+     * @return array
+     */
+    protected function getDataFromRequest(Request $request)
+    {
+        return $request->only([
+            'type', 'type_as', 'reference_id', 'reference_type', 'name', 'specific',
+            'quantity', 'unit_price', 'unit_total', 'note', 'unit_id',
+            'depending_to_dimension', 'dimension', 'dimension_unit_id', 'length', 'width', 'height', 'weight',
+            'price_type', 'price_increase_multiples', 'price_increase_percentage',
+            'insheet_required', 'insheet_type', 'insheet_multiples', 'insheet_quantity', 'insheet_added'
         ]);
     }
 

@@ -1,0 +1,15 @@
+- customer
+( ) order history in detail
+
+- bank
+( ) transfer history
+
+- product
+( ) add filed order multiples
+( ) copy parent data in create option
+( ) implement dimension
+
+- order
+(v) order item insheet should be same with product process
+( ) edit order product
+( ) implement dimension

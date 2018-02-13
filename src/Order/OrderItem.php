@@ -50,6 +50,14 @@ class OrderItem extends Model implements Markupable, Discountable, Voucherable
     }
 
     /**
+     * Get the dimensionUnit record associated with the OrderItem.
+     */
+    public function dimensionUnit()
+    {
+        return $this->belongsTo('Modules\Unit\Unit', 'dimension_unit_id')->withTrashed();
+    }
+
+    /**
      * Get the adjustments record associated with the OrderItem.
      */
     public function adjustments()

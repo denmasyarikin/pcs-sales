@@ -56,6 +56,14 @@ class ProductProcess extends Model
     }
 
     /**
+     * Get the dimensionUnit record associated with the OrderItem.
+     */
+    public function dimensionUnit()
+    {
+        return $this->belongsTo('Modules\Unit\Unit', 'dimension_unit_id')->withTrashed();
+    }
+
+    /**
      * The "booting" method of the model.
      */
     protected static function boot()
