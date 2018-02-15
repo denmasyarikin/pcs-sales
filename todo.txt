@@ -5,6 +5,7 @@
 ( ) transfer history
 
 - product
+( ) take out customizable
 ( ) add filed order multiples
 ( ) copy parent data in create option
 ( ) implement dimension

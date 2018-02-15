@@ -24,6 +24,7 @@ class ProductProcessDetailTransformer extends Detail
             'type_as' => $model->type_as,
             'parent_id' =>$model->parent_id,
             'reference_id' => $model->reference_id,
+            'reference_type' => $model->reference_type,
             'name' => $model->name,
             'specific' => $model->specific,
             'formatted' => $model->name.($model->specific ? " ({$model->specific})" : ''),
