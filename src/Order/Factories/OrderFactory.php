@@ -186,6 +186,22 @@ class OrderFactory
     {
         $orderItem->delete();
 
+        // special case for product
+        if ($orderItem->type === 'product') {
+            if ($orderItem->type_as === 'product') {
+                // also delete its process
+                $this->order->items()
+                    ->whereType('product')
+                    ->where('type_as', '<>', 'product')
+                    ->whereReferenceId($orderItem->id)
+                    ->whereReferenceType('product')
+                    ->delete();
+            } else {
+                // if product process they are not effected to the order
+                return;
+            }
+        }
+
         $this->updateOrderItemTotal();
         $this->resetOrderAdjustment();
         $this->resetOrderPayment();

@@ -106,7 +106,7 @@ class ProductController extends Controller
     {
         $product = Product::create($request->only([
             'name', 'description', 'unit_id', 'min_order', 
-            'order_multiples', 'customizable', 'product_group_id',
+            'order_multiples', 'product_group_id',
         ]));
 
         return new JsonResponse([
@@ -136,7 +136,7 @@ class ProductController extends Controller
 
         $product->update($request->only([
             'name', 'description', 'unit_id', 'min_order',
-            'order_multiples', 'customizable', 'status', 'product_group_id',
+            'order_multiples', 'status', 'product_group_id',
         ]));
 
         return new JsonResponse([

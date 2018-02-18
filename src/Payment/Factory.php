@@ -4,6 +4,7 @@ namespace Denmasyarikin\Sales\Payment;
 
 use Illuminate\Support\Facades\Auth;
 use Denmasyarikin\Sales\Order\Order;
+use Denmasyarikin\Sales\Payment\Payment;
 
 class Factory
 {
@@ -63,7 +64,7 @@ class Factory
         $payment->save();
 
         $this->updateOrderPayment($payment);
-        $this->createOrderHistory($payment->type);
+        $this->createOrderHistory($payment);
 
         return $payment;
     }
@@ -183,10 +184,14 @@ class Factory
     /**
      * order history.
      *
-     * @param string $status
+     * @param Payment $payment
      */
-    protected function createOrderHistory($status)
+    protected function createOrderHistory(Payment $payment)
     {
-        $this->order->histories()->create(['type' => 'payment', 'label' => $status]);
+        $this->order->histories()->create([
+            'type' => 'payment',
+            'label' => $payment->status,
+            'data' => json_encode($payment)
+        ]);
     }
 }

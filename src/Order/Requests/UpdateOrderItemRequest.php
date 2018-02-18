@@ -15,8 +15,12 @@ class UpdateOrderItemRequest extends DetailOrderItemRequest
     public function getOrder(): ?Order
     {
         $order = parent::getOrder();
+        $orderItem = parent::getOrderItem($order);
 
-        $this->checkFreshData($order);
+        // only for item primary
+        if (!$orderItem->isProductProcess()) {
+            $this->checkFreshData($order);
+        }
 
         return $order;
     }

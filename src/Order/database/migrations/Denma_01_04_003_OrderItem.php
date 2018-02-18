@@ -18,6 +18,7 @@ class OrderItem extends Migration
             $table->enum('type_as', ['product', 'good', 'service', 'manual']);
             $table->integer('reference_id')->nullable()->default(null);
             $table->string('reference_type')->nullable()->default(null);
+            $table->integer('reference_second_id')->nullable()->default(null);
             $table->string('name', 50);
             $table->string('specific', 50)->nullable()->default(null);
             $table->float('quantity');

@@ -23,6 +23,8 @@ class OrderItemDetailTransformer extends Detail
             'type' => $model->type,
             'type_as' => $model->type_as,
             'reference_id' => $model->reference_id,
+            'reference_type' => $model->reference_type,
+            'reference_second_id' => $model->reference_second_id,
             'process' => $model->isProduct() ? $this->getProductProcess($model) : [],
             'name' => $model->name,
             'specific' => $model->specific,

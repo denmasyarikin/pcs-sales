@@ -2,6 +2,7 @@
 
 namespace Denmasyarikin\Sales\Order\Requests;
 
+use Denmasyarikin\Sales\Order\Order;
 use Denmasyarikin\Sales\Order\OrderItem;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -19,13 +20,13 @@ class DetailOrderItemRequest extends DetailOrderRequest
      *
      * @return OrderItem
      */
-    public function getOrderItem(): ?OrderItem
+    public function getOrderItem(Order $order = null): ?OrderItem
     {
         if ($this->orderItem) {
             return $this->orderItem;
         }
 
-        $order = $this->getOrder();
+        $order = $order === null ? $this->getOrder() : $order;
         $id = $this->route('item_id');
 
         if ($this->orderItem = $order->items()->find($id)) {

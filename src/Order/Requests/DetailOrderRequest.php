@@ -25,6 +25,7 @@ class DetailOrderRequest extends FormRequest
         'type_as' => 'required|in:product,service,good,manual',
         'reference_id' => 'nullable|numeric',
         'reference_type' => 'nullable|required_with:reference_id',
+        'reference_second_id' => 'nullable|numeric',
         'name' => 'required|min:3|max:50',
         'specific' => 'nullable|min:3|max:50',
         'note' => 'nullable|min:3',

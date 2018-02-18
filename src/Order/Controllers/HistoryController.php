@@ -38,7 +38,11 @@ class HistoryController extends Controller
 	public function createHistory(CreateOrderHistoryRequest $request)
 	{
 		$order = $request->getOrder();
-		$history = $order->histories()->create($request->only(['type', 'label']));
+		$history = $order->histories()->create(
+			$request->only(['type', 'label']) + [
+				'data' => !is_null($data) ? json_encode($request->data) : null
+			]
+		);
 
 		return new JsonResponse([
 			'messaage' => 'Order history has been created',

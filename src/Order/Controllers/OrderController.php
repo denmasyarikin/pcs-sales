@@ -239,7 +239,14 @@ class OrderController extends Controller
                     $customer->update(['last_order' => date('Y-m-d H:i:s')]);
                 }
 
-                $order->histories()->create(['type' => 'order', 'label' => 'created']);
+                $order->histories()->create([
+                    'type' => 'order',
+                    'label' => 'created',
+                    'data' => json_encode([
+                        'item_count' => count($order->getPrimaryItems()),
+                        'item_total' => $order->item_total
+                    ])
+                ]);
                 break;
             case 'processing':
                 $order->update([

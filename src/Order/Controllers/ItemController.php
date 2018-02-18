@@ -121,7 +121,7 @@ class ItemController extends Controller
     protected function getDataFromRequest(Request $request)
     {
         return $request->only([
-            'type', 'type_as', 'reference_id', 'reference_type', 'name', 'specific',
+            'type', 'type_as', 'reference_id', 'reference_type', 'reference_second_id', 'name', 'specific',
             'quantity', 'unit_price', 'unit_total', 'note', 'unit_id',
             'depending_to_dimension', 'dimension', 'dimension_unit_id', 'length', 'width', 'height', 'weight',
             'price_type', 'price_increase_multiples', 'price_increase_percentage',
@@ -146,7 +146,10 @@ class ItemController extends Controller
 
         $factory->deleteOrderItem($orderItem);
 
-        return new JsonResponse(['message' => 'Order Item has been deleted']);
+        return new JsonResponse([
+            'message' => 'Order Item has been deleted',
+            'updated_at' => $order->updated_at
+        ]);
     }
 
     /**
