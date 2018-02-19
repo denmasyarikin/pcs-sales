@@ -190,8 +190,11 @@ class Factory
     {
         $this->order->histories()->create([
             'type' => 'payment',
-            'label' => $payment->status,
-            'data' => json_encode($payment)
+            'label' => $payment->type,
+            'data' => json_encode([
+                'method' => $payment->methode,
+                'bayar' => $payment->pay // todo currency format
+            ])
         ]);
     }
 }

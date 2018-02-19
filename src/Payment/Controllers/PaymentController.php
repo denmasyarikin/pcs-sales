@@ -112,7 +112,8 @@ class PaymentController extends Controller
     protected function getOrder(int $orderId)
     {
         $order = Order::whereId($orderId)
-                    ->whereIn('status', ['created', 'processing', 'finihsed'])
+                    ->where('paid', 0)
+                    ->whereNotIn('status', ['canceled', 'closed'])
                     ->first();
 
         if ($order) {
