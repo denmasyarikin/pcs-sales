@@ -2,6 +2,8 @@
 
 namespace Denmasyarikin\Sales\Payment;
 
+use App\Manager\Facades\Money;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Denmasyarikin\Sales\Order\Order;
 use Denmasyarikin\Sales\Payment\Payment;
@@ -62,7 +64,7 @@ class Factory
         $this->setPaymentType($payment);
 
         $payment->save();
-
+        Log::info($this->order);
         $this->updateOrderPayment($payment);
         $this->createOrderHistory($payment);
 
@@ -141,8 +143,9 @@ class Factory
      */
     protected function updateOrderPayment(Payment $payment)
     {
+        Log::info($payment);
         $this->order->update([
-            'paid_off' => $totalPaid = $this->getTotalPaid($payment->pay),
+            'paid_off' => $this->getTotalPaid($payment->pay),
             'remaining' => $payment->remaining,
             'paid' => $this->isPaid($payment->pay),
         ]);
@@ -192,8 +195,10 @@ class Factory
             'type' => 'payment',
             'label' => $payment->type,
             'data' => json_encode([
-                'method' => $payment->methode,
-                'bayar' => $payment->pay // todo currency format
+                'method' => $payment->payment_method,
+                'payment_total' => Money::format($payment->payment_total),
+                'pay' => Money::format($payment->pay),
+                'remaining' => Money::format($payment->remaining)
             ])
         ]);
     }

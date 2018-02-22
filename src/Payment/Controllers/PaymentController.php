@@ -87,6 +87,10 @@ class PaymentController extends Controller
         $order = $this->getOrder($request->order_id);
         $factory = new Factory($order);
 
+        if (is_null($order->customer)) {
+            throw new BadRequestHttpException('Order not assign to any customer');
+        }
+
         if ($factory->isOverpayment($request->pay)) {
             throw new BadRequestHttpException('Over payment');
         }

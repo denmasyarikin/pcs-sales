@@ -8,6 +8,7 @@
 (x) take out customizable
 ( ) add filed order multiples
 ( ) copy parent data in create option
+( ) make sure option required is use parent required
 ( ) implement dimension
 
 - order
