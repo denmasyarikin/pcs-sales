@@ -1,17 +1,17 @@
 - customer
-( ) order history in detail
+(x) order history in detail
 
 - bank
 ( ) transfer history
 
 - product
 (x) take out customizable
-( ) add filed order multiples
-( ) copy parent data in create option
-( ) make sure option required is use parent required
-( ) implement dimension
+(x) add filed order multiples
+(x) copy parent data in create option
+(x) make sure option required is use parent required
+(x) implement dimension
 
 - order
-(v) order item insheet should be same with product process
-( ) edit order product
-( ) implement dimension
+(x) order item insheet should be same with product process
+(x) edit order product
+(x) implement dimension

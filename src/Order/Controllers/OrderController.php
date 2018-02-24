@@ -21,6 +21,44 @@ class OrderController extends Controller
     use OrderRestrictionTrait;
 
     /**
+     * get counter
+     *
+     * @param Request $request
+     * @return Json
+     */
+    public function getCounter(Request $request)
+    {
+        $query = Order::orderBy('created_at', 'DESC');
+
+        $this->dateRange($query, $request);
+
+        $orders = $query->get();
+
+        return new JsonResponse([
+            'data' => [
+                'draft' => $orders->where('status', 'draft')->count(),
+                'created' =>  $orders->where('status', 'created')->count(),
+                'processing' =>  $orders->where('status', 'processing')->count(),
+                'finished' =>  $orders->where('status', 'finished')->count(),
+                'closed' =>  $orders->where('status', 'closed')->count(),
+                'canceled' =>  $orders->where('status', 'canceled')->count()
+            ]
+        ]);
+    }
+
+    /**
+     * get list all.
+     *
+     * @param Request $request
+     *
+     * @return json
+     */
+    public function getListAll(Request $request)
+    {
+        return $this->getList($request);
+    }
+
+    /**
      * get list draft.
      *
      * @param Request $request
@@ -100,7 +138,7 @@ class OrderController extends Controller
      *
      * @return json
      */
-    protected function getList(Request $request, $status)
+    protected function getList(Request $request, $status = null)
     {
         $orders = $this->getOrderList($request, $status);
 
@@ -120,27 +158,54 @@ class OrderController extends Controller
      *
      * @return paginator
      */
-    protected function getOrderList(Request $request, $status)
+    protected function getOrderList(Request $request, $status = null)
     {
-        $orders = Order::whereStatus($status);
+        if (! is_null($status)) {
+            $orders = Order::whereStatus($status);
 
-        switch ($status) {
-            case 'processing':
-                $orders->orderBy('start_process_date', 'DESC');
-                break;
-            case 'finished':
-                $orders->orderBy('end_process_date', 'DESC');
-                break;
-            case 'closed':
-                $orders->orderBy('close_date', 'DESC');
-                break;
-            case 'canceled':
-                $orders->orderBy('updated_at', 'DESC');
-                break;
-            case 'created':
-            case 'draft':
-                $orders->orderBy('created_at', 'DESC');
-                break;
+            switch ($status) {
+                case 'processing':
+                    $orders->orderBy('start_process_date', 'DESC');
+                    break;
+                case 'finished':
+                    $orders->orderBy('end_process_date', 'DESC');
+                    break;
+                case 'closed':
+                    $orders->orderBy('close_date', 'DESC');
+                    break;
+                case 'canceled':
+                    $orders->orderBy('updated_at', 'DESC');
+                    break;
+                case 'created':
+                case 'draft':
+                    $orders->orderBy('created_at', 'DESC');
+                    break;
+            }
+        } else {
+            $orders = Order::orderBy('created_at', 'DESC');
+        }
+
+        if ($request->has('customer_id')) {
+            $orders->where('status', '<>', 'draft');
+            $orders->whereHas('customer', function($query) use ($request) {
+                $query->where('customer_id', $request->customer_id);
+            });
+        }
+
+        if ($request->has('product_id')) {
+            $orders->where('status', '<>', 'draft');
+            $orders->whereHas('items', function($query) use ($request) {
+                $query->where('reference_id', $request->product_id);
+                $query->where('reference_type', 'product');
+            });
+        }
+
+        if ($request->has('chanel_id')) {
+            $orders->whereChanelId($request->chanel_id);
+        }
+
+        if ($request->has('created_at')) {
+            $orders->whereDate('created_at', $request->created_at);
         }
 
         if ($request->has('key')) {
@@ -206,7 +271,8 @@ class OrderController extends Controller
     public function updateOrder(UpdateOrderRequest $request)
     {
         $order = $request->getOrder();
-        $this->updateableOrder($order);
+
+        $this->updateableOrder($order, false);
 
         $order->update($request->only(['note', 'due_date']));
 
@@ -241,7 +307,7 @@ class OrderController extends Controller
                     'label' => 'created',
                     'data' => json_encode([
                         'item_count' => count($order->getPrimaryItems()),
-                        'item_total' => $order->item_total
+                        'item_total' => Money::format($order->item_total)
                     ])
                 ]);
                 break;
@@ -306,7 +372,14 @@ class OrderController extends Controller
 
         $order->cancelation()->create($request->only(['reason', 'description']));
         $order->update(['status' => 'canceled']);
-        $order->histories()->create(['type' => 'order', 'label' => 'canceled']);
+        $order->histories()->create([
+            'type' => 'order',
+            'label' => 'canceled',
+            'data' => json_encode([
+                'reason' => $request->reason,
+                'description' => $request->description
+            ])
+        ]);
 
         return new JsonResponse(['message' => 'Order has been canceled']);
     }

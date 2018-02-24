@@ -2,6 +2,7 @@
 
 $router->get('/group', ['as' => 'sales.product.group.list', 'uses' => 'GroupController@getList']);
 $router->get('/', ['as' => 'sales.product.list', 'uses' => 'ProductController@getList']);
+$router->get('/counter', ['as' => 'sales.product.counter', 'uses' => 'ProductController@getCounter']);
 $router->get('/{id}', ['as' => 'sales.product.detail', 'uses' => 'ProductController@getDetail']);
 $router->get('/{id}/process', ['as' => 'sales.product.process.list', 'uses' => 'ProcessController@getList']);
 $router->get('/{id}/process/{process_id}', ['as' => 'sales.product.process.detail', 'uses' => 'ProcessController@getDetail']);

@@ -2,6 +2,7 @@
 
 namespace Denmasyarikin\Sales\Customer\Controllers;
 
+use Modules\Chanel\Chanel;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
@@ -15,6 +16,30 @@ use Denmasyarikin\Sales\Customer\Transformers\CustomerDetailTransformer;
 
 class CustomerController extends Controller
 {
+    /**
+     * get counter
+     *
+     * @param Request $request
+     * @return Json
+     */
+    public function getCounter(Request $request)
+    {
+        $chanels = Chanel::whereStatus('active')->get();
+        $customers = Customer::orderBy('created_at', 'DESC')->get();
+
+        $data = [];
+
+        foreach ($chanels as $chanel) {
+            $data[] = [
+                'id' => $chanel->id,
+                'chanel' => $chanel->name,
+                'count' => $customers->where('chanel_id', $chanel->id)->count()
+            ];
+        }
+
+        return new JsonResponse(['data' => $data]);
+    }
+
     /**
      * customer list.
      *

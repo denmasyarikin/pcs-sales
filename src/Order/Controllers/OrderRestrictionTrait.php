@@ -91,12 +91,22 @@ trait OrderRestrictionTrait
      * updateable order.
      *
      * @param Order $order
+     * @param Bool $includePayment
      */
-    protected function updateableOrder(Order $order)
+    protected function updateableOrder(Order $order, $includePayment = true)
     {
         // only status draft and created are allowed
         if (!in_array($order->status, ['draft', 'created'])) {
             throw new BadRequestHttpException("Can not update order on status {$order->status}");
+        }
+
+        if (! $includePayment) {
+            return true;
+        }
+
+        // and of course no payment
+        if ($order->payments->count() > 0) {
+            throw new BadRequestHttpException("Can not update order that has been paid");
         }
     }
 

@@ -19,6 +19,36 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 class PaymentController extends Controller
 {
     /**
+     * get counter
+     *
+     * @param Request $request
+     * @return Json
+     */
+    public function getCounter(Request $request)
+    {
+        $query = Payment::orderBy('created_at', 'DESC');
+
+        $this->dateRange($query, $request);
+
+        $payments = $query->get();
+
+        return new JsonResponse([
+            'data' => [
+                'count' => [
+                    'total' => $payments->count(),
+                    'transfer' =>  $payments->where('payment_method', 'transfer')->count(),
+                    'cash' =>  $payments->where('payment_method', 'cash')->count()
+                ],
+                'payment' => [
+                    'total' => $payments->sum('pay'),
+                    'transfer' => $payments->where('payment_method', 'transfer')->sum('pay'),
+                    'cash' => $payments->where('payment_method', 'cash')->sum('pay')
+                ]
+            ]
+        ]);
+    }
+
+    /**
      * payment list.
      *
      * @param Request $request
@@ -46,7 +76,25 @@ class PaymentController extends Controller
      */
     protected function getPaymentList(Request $request)
     {
-        $payments = Payment::with('customer')->orderBy('created_at', 'DESC');
+        $payments = Payment::whereHas('order', function($query) {
+            $query->whereNotIn('status', ['draft', 'canceled']);
+        })->with('customer')->orderBy('created_at', 'DESC');
+
+        if ($request->has('payment_method')) {
+            $payments->wherePaymentMethod($request->payment_method);
+        }
+
+        if ($request->has('type')) {
+            $payments->whereType($request->type);
+        }
+
+        if ($request->has('bank_id')) {
+            $payments->whereBankId($request->bank_id);
+        }
+
+        if ($request->has('created_at')) {
+            $payments->whereDate('created_at', $request->created_at);
+        }
 
         if ($request->has('key')) {
             $payments->whereHas('customer', function ($query) use ($request) {
@@ -86,6 +134,10 @@ class PaymentController extends Controller
     {
         $order = $this->getOrder($request->order_id);
         $factory = new Factory($order);
+        
+        if (in_array($order->status, ['canceled', 'closed'])) {
+            throw new BadRequestHttpException('Order status not allowed');
+        }
 
         if (is_null($order->customer)) {
             throw new BadRequestHttpException('Order not assign to any customer');
@@ -139,7 +191,7 @@ class PaymentController extends Controller
         $payment = $request->getPayment();
         $order = $payment->order;
 
-        if (!in_array($order->status, ['created', 'processing', 'finsihed'])) {
+        if (in_array($order->status, ['canceled', 'closed'])) {
             throw new BadRequestHttpException('Order status not allowed');
         }
 
@@ -175,7 +227,7 @@ class PaymentController extends Controller
         $payment = $request->getPayment();
         $order = $payment->order;
 
-        if (!in_array($order->status, ['created', 'processing', 'finsihed'])) {
+        if (in_array($order->status, ['canceled', 'closed'])) {
             throw new BadRequestHttpException('Order status not allowed');
         }
 

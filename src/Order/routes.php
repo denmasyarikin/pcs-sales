@@ -1,11 +1,13 @@
 <?php
 
+$router->get('/all', ['as' => 'sales.order.all', 'uses' => 'OrderController@getListAll']);
 $router->get('/draft', ['as' => 'sales.order.draft', 'uses' => 'OrderController@getListDraft']);
 $router->get('/created', ['as' => 'sales.order.created', 'uses' => 'OrderController@getListCreated']);
 $router->get('/processing', ['as' => 'sales.order.processing', 'uses' => 'OrderController@getListProcessing']);
 $router->get('/finished', ['as' => 'sales.order.finished', 'uses' => 'OrderController@getListFinished']);
 $router->get('/closed', ['as' => 'sales.order.closed', 'uses' => 'OrderController@getListArchived']);
 $router->get('/canceled', ['as' => 'sales.order.canceled', 'uses' => 'OrderController@getListCanceled']);
+$router->get('/counter', ['as' => 'sales.order.counter', 'uses' => 'OrderController@getCounter']);
 $router->get('/{id}', ['as' => 'sales.order.detail', 'uses' => 'OrderController@getDetail']);
 $router->get('/{id}/customer', ['as' => 'sales.order.customer.detail', 'uses' => 'CustomerController@getDetail']);
 $router->get('/{id}/item', ['as' => 'sales.order.item.list', 'uses' => 'ItemController@getList']);
