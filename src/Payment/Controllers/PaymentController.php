@@ -148,8 +148,7 @@ class PaymentController extends Controller
         }
 
         $payment = $factory->pay($request->only([
-            'payment_method', 'cash_total', 'cash_back',
-            'bank_id', 'payment_slip', 'pay',
+            'payment_method', 'payment_slip', 'pay', 'account_id'
         ]));
 
         return new JsonResponse([
@@ -202,8 +201,7 @@ class PaymentController extends Controller
         }
 
         $payment->update($request->only([
-            'payment_method', 'cash_total', 'cash_back',
-            'bank_id', 'payment_slip', 'pay',
+            'payment_method', 'payment_slip', 'pay', 'account_id'
         ]));
 
         $factory->resetAllPayment();

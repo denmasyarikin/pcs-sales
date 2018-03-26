@@ -17,9 +17,6 @@ class Payment extends Migration
             $table->integer('order_customer_id')->unsigned();
             $table->enum('type', ['down_payment', 'rest_payment', 'settlement'])->default('down_payment');
             $table->enum('payment_method', ['cash', 'transfer']);
-            $table->float('cash_total')->nullable()->default(null);
-            $table->float('cash_back')->nullable()->default(null);
-            $table->integer('bank_id')->unsigned()->nullable()->default(null);
             $table->text('payment_slip')->nullable()->default(null);
             $table->float('order_total', 12, 2);
             $table->float('payment_total', 12, 2);
@@ -27,13 +24,13 @@ class Payment extends Migration
             $table->float('remaining', 12, 2);
             $table->integer('cs_user_id')->unsigned();
             $table->string('cs_name', 50);
+            $table->integer('account_id')->nullable()->default(null);
             $table->timestamps();
             $table->softDeletes();
 
             $table->foreign('cs_user_id')->references('id')->on('core_users');
             $table->foreign('order_id')->references('id')->on('sales_orders');
             $table->foreign('order_customer_id')->references('id')->on('sales_order_customers');
-            $table->foreign('bank_id')->references('id')->on('sales_banks');
         });
     }
 

@@ -24,6 +24,7 @@ class Order extends Migration
             $table->integer('cs_user_id')->unsigned();
             $table->string('cs_name', 50);
             $table->timestamp('due_date')->nullable()->default(null);
+            $table->timestamp('estimated_finish_date')->nullable()->default(null);
             $table->timestamp('start_process_date')->nullable()->default(null);
             $table->timestamp('end_process_date')->nullable()->default(null);
             $table->timestamp('close_date')->nullable()->default(null);

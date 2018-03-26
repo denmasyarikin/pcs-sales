@@ -35,6 +35,7 @@ class UpdateCustomerRequest extends DetailCustomerRequest
             'email' => 'nullable|email',
             'contact_person' => 'nullable|min:3|max:50',
             'user_id' => 'nullable|numeric|exists:core_users,id',
+            'due_date_day_count' => 'nullable|numeric',
         ];
     }
 }

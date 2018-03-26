@@ -112,7 +112,7 @@ class CustomerController extends Controller
     {
         $customer = Customer::create($request->only([
             'chanel_id', 'name', 'address', 'telephone', 'email',
-            'contact_person', 'user_id',
+            'contact_person', 'due_date_day_count', 'user_id',
         ]));
 
         return new JsonResponse([
@@ -134,7 +134,7 @@ class CustomerController extends Controller
 
         $customer->update($request->only([
             'chanel_id', 'name', 'address', 'telephone', 'email',
-            'contact_person', 'user_id',
+            'contact_person','due_date_day_count', 'user_id',
         ]));
 
         return new JsonResponse([

@@ -3,7 +3,6 @@
 namespace Denmasyarikin\Sales\Payment;
 
 use App\Model;
-use Denmasyarikin\Sales\Bank\Bank;
 use Denmasyarikin\Sales\Order\Order;
 use Denmasyarikin\Sales\Order\OrderCustomer;
 
@@ -37,13 +36,5 @@ class Payment extends Model
     public function customer()
     {
         return $this->belongsTo(OrderCustomer::class, 'order_customer_id');
-    }
-
-    /**
-     * Get the bank record associated with the Payment.
-     */
-    public function bank()
-    {
-        return $this->belongsTo(Bank::class);
     }
 }

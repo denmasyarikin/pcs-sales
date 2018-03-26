@@ -39,7 +39,7 @@ class OrderDetailTransformer extends Detail
             'close_date' => $model->close_date,
             'status' => $model->status,
             'adjustments' => (new OrderAdjustmentListTransformer($model->getAdjustments()))->toArray(),
-            'histories' => (new OrderHistoryListTransformer($model->histories))->toArray(),
+            'histories' => (new OrderHistoryListTransformer($model->histories->sortByDesc('id')))->toArray(),
             'cancelation' => $model->cancelation ? (new OrderCancelationDetailTransformer($model->cancelation))->toArray() : null,
             'created_at' => $model->created_at->format('Y-m-d H:i:s'),
             'updated_at' => $model->updated_at->format('Y-m-d H:i:s'),

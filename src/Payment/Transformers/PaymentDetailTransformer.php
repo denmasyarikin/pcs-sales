@@ -24,8 +24,6 @@ class PaymentDetailTransformer extends Detail
             'customer' => (new OrderCustomerTransformer($model->customer))->toArray(),
             'type' => $model->type,
             'payment_method' => $model->payment_method,
-            'cash_total' => (float) $model->cash_total,
-            'cash_back' => (float) $model->cash_back,
             'bank' => !is_null($model->bank)
                         ? (new BankDetailTransformer($model->bank))->toArray()
                         : null,
@@ -35,6 +33,7 @@ class PaymentDetailTransformer extends Detail
             'pay' => (float) $model->pay,
             'remaining' => (float) $model->remaining,
             'cs_name' => $model->cs_name,
+            'account_id' => $model->account_id,
             'created_at' => $model->created_at->format('Y-m-d H:i:s'),
             'updated_at' => $model->updated_at->format('Y-m-d H:i:s'),
         ];

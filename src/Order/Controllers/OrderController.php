@@ -3,6 +3,7 @@
 namespace Denmasyarikin\Sales\Order\Controllers;
 
 use Illuminate\Http\Request;
+use App\Manager\Facades\Money;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 use Denmasyarikin\Sales\Order\Order;

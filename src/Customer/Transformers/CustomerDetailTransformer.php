@@ -26,6 +26,7 @@ class CustomerDetailTransformer extends Detail
             'email' => $model->email,
             'contact_person' => $model->contact_person,
             'last_order' => $model->last_order,
+            'due_date_day_count' => $model->due_date_day_count,
             'created_at' => $model->created_at->format('Y-m-d H:i:s'),
             'updated_at' => $model->updated_at->format('Y-m-d H:i:s'),
         ];

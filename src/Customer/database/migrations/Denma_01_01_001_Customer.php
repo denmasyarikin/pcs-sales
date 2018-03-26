@@ -21,6 +21,7 @@ class Customer extends Migration
             $table->string('contact_person', 50)->nullable()->default(null);
             $table->integer('user_id')->unsigned()->nullable()->default(null);
             $table->timestamp('last_order')->nullable()->default(null);
+            $table->integer('due_date_day_count')->nullable()->default(null)->comment('null is COD');
             $table->timestamps();
             $table->softDeletes();
 
