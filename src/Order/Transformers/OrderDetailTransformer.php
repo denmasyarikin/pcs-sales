@@ -34,6 +34,7 @@ class OrderDetailTransformer extends Detail
             'cs_user_id' => $model->cs_user_id,
             'cs_name' => $model->cs_name,
             'due_date' => $model->due_date,
+            'estimated_finish_date' => $model->estimated_finish_date,
             'start_process_date' => $model->start_process_date,
             'end_process_date' => $model->end_process_date,
             'close_date' => $model->close_date,

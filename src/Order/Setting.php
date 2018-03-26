@@ -26,7 +26,6 @@ class Setting implements SettingContract
                 'Tidak diketahui',
                 'Lainnya',
             ],
-            'required_down_payment' => true,
             'enable_input_manual' => true
         ];
     }

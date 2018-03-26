@@ -30,6 +30,7 @@ class UpdateOrderRequest extends DetailOrderRequest
         return [
             'note' => 'nullable',
             'due_date' => 'required|date_format:Y-m-d H:i:s',
+            'estimated_finish_date' => 'required|date_format:Y-m-d H:i:s',
         ];
     }
 }

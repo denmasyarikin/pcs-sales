@@ -96,7 +96,7 @@ abstract class AdjustmentFactory
      *
      * @param Adjustment $adjustment
      */
-    protected function updateAdjustmentable(Adjustment $adjustment)
+    protected function updateAdjustmentable(Adjustment &$adjustment)
     {
         $this->adjustmentable->adjustment_total += $adjustment->adjustment_total;
         $this->adjustmentable->save();
@@ -115,7 +115,7 @@ abstract class AdjustmentFactory
     protected function resetAllAdjustments(Adjustment $updateAdjustment = null, $value = null)
     {
         $this->resetAdjustmentable();
-        $adjustments = $this->adjustmentable->adjustments()->orderBy('priority', 'ASC')->get();
+        $adjustments = $this->adjustmentable->getAdjustments();
 
         foreach ($adjustments as $adjustment) {
             $factory = $this->createFactory($adjustment);

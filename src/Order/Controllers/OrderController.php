@@ -275,7 +275,7 @@ class OrderController extends Controller
 
         $this->updateableOrder($order, false);
 
-        $order->update($request->only(['note', 'due_date']));
+        $order->update($request->only(['note', 'due_date', 'estimated_finish_date']));
 
         return new JsonResponse([
             'message' => 'Order has been updated',
