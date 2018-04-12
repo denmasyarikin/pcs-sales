@@ -4,6 +4,7 @@ namespace Denmasyarikin\Sales\Order\Requests;
 
 use Denmasyarikin\Sales\Order\Order;
 use Denmasyarikin\Sales\Order\OrderHistory;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class UpdateOrderHistoryRequest extends DetailOrderRequest
 {

@@ -20,7 +20,7 @@ class OrderDetailTransformer extends Detail
     {
         return [
             'id' => $model->id,
-            'chanel' => (new ChanelDetailTransformer($model->chanel, ['id', 'name', 'type', 'markup']))->toArray(),
+            'chanel' => (new ChanelDetailTransformer($model->chanel, ['id', 'name', 'type', 'markup', 'required_down_payment', 'due_date_day_count']))->toArray(),
             'customer' => $model->customer ? (new OrderCustomerTransformer($model->customer))->toArray() : null,
             'item_total' => $model->item_total,
             'items' => (new OrderItemListTransformer($model->getPrimaryItems()))->toArray(),
@@ -41,6 +41,7 @@ class OrderDetailTransformer extends Detail
             'status' => $model->status,
             'adjustments' => (new OrderAdjustmentListTransformer($model->getAdjustments()))->toArray(),
             'histories' => (new OrderHistoryListTransformer($model->histories->sortByDesc('id')))->toArray(),
+            'attachments' => (new OrderAttachmentListTransformer($model->attachments))->toArray(),
             'cancelation' => $model->cancelation ? (new OrderCancelationDetailTransformer($model->cancelation))->toArray() : null,
             'created_at' => $model->created_at->format('Y-m-d H:i:s'),
             'updated_at' => $model->updated_at->format('Y-m-d H:i:s'),

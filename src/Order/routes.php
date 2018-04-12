@@ -13,6 +13,7 @@ $router->get('/{id}/customer', ['as' => 'sales.order.customer.detail', 'uses' =>
 $router->get('/{id}/item', ['as' => 'sales.order.item.list', 'uses' => 'ItemController@getList']);
 $router->get('/{id}/item/{item_id}', ['as' => 'sales.order.item.detail', 'uses' => 'ItemController@getDetail']);
 $router->get('/{id}/history', ['as' => 'sales.order.history.list', 'uses' => 'HistoryController@getList']);
+$router->get('/{id}/attachment', ['as' => 'sales.order.attachment.list', 'uses' => 'AttachmentController@getList']);
 
 $router->group(['middleware' => 'manage:sales,order,write'], function ($router) {
     $router->post('/', ['as' => 'sales.order.create', 'uses' => 'OrderController@createOrder']);
@@ -24,9 +25,18 @@ $router->group(['middleware' => 'manage:sales,order,write'], function ($router) 
     $router->post('/{id}/discount', ['as' => 'sales.order.discount', 'uses' => 'AdjustmentController@applyDiscount']);
     $router->post('/{id}/tax', ['as' => 'sales.order.tax', 'uses' => 'AdjustmentController@applyTax']);
     $router->post('/{id}/voucher', ['as' => 'sales.order.voucher', 'uses' => 'AdjustmentController@applyVoucher']);
-    $router->post('/{id}/history', ['as' => 'sales.order.history.create', 'uses' => 'HistoryController@createHistory']);
-    $router->put('/{id}/history/{history_id}', ['as' => 'sales.order.history.update', 'uses' => 'HistoryController@updateHistory']);
-    $router->delete('/{id}/history/{history_id}', ['as' => 'sales.order.history.delete', 'uses' => 'HistoryController@deleteHistory']);
+    
+    $router->group(['prefix' => '/{id}/history'], function ($router) {
+        $router->post('/', ['as' => 'sales.order.history.create', 'uses' => 'HistoryController@createHistory']);
+        $router->put('/{history_id}', ['as' => 'sales.order.history.update', 'uses' => 'HistoryController@updateHistory']);
+        $router->delete('/{history_id}', ['as' => 'sales.order.history.delete', 'uses' => 'HistoryController@deleteHistory']);
+    });
+    
+    $router->group(['prefix' => '/{id}/attachment'], function ($router) {
+        $router->post('/', ['as' => 'sales.order.attachment.create', 'uses' => 'AttachmentController@createAttachment']);
+        $router->put('/{attachment_id}', ['as' => 'sales.order.attachment.update', 'uses' => 'AttachmentController@updateAttachment']);
+        $router->delete('/{attachment_id}', ['as' => 'sales.order.attachment.delete', 'uses' => 'AttachmentController@deleteAttachment']);
+    });
 
     $router->group(['prefix' => '/{id}/item'], function ($router) {
         $router->post('/', ['as' => 'sales.order.item.create', 'uses' => 'ItemController@createOrderItem']);

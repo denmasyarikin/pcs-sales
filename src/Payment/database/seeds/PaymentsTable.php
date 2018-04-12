@@ -48,7 +48,6 @@ class PaymentsTable extends Seeder
             'payment_total' => 70000,
             'pay' => 20000,
             'remaining' => 0,
-            'bank_id' => 1,
             'payment_slip' => 'api/media/image/sales/payment/payment_slip/bukti.jpeg',
             'cs_user_id' => 1,
             'cs_name' => 'Denma Syarikin',

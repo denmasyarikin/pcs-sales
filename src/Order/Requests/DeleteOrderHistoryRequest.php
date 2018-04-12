@@ -3,10 +3,11 @@
 namespace Denmasyarikin\Sales\Order\Requests;
 
 use Denmasyarikin\Sales\Order\OrderHistory;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class DeleteOrderHistoryRequest extends DetailOrderRequest
 {
-	/**
+    /**
      * orderHistory.
      *
      * @var OrderHistory

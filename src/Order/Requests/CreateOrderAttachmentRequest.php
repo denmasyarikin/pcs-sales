@@ -2,7 +2,7 @@
 
 namespace Denmasyarikin\Sales\Order\Requests;
 
-class CreateOrderHistoryRequest extends DetailOrderRequest
+class CreateOrderAttachmentRequest extends DetailOrderRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -12,8 +12,9 @@ class CreateOrderHistoryRequest extends DetailOrderRequest
     public function rules()
     {
         return [
-            'type' => 'required|in:order,process,payment,delivery',
-            'label' => 'required',
+            'type' => 'required|in:po,sample',
+            'file' => 'required',
+            'description' => 'required'
         ];
     }
 }

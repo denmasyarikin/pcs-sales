@@ -83,6 +83,14 @@ class Order extends Model implements Taxable, Voucherable, Discountable
     }
 
     /**
+     * Get the adjustments record associated with the OrderItem.
+     */
+    public function attachments()
+    {
+        return $this->hasMany(OrderAttachment::class);
+    }
+
+    /**
      * Get the cancelation record associated with the Order.
      */
     public function cancelation()

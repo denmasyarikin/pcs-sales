@@ -88,10 +88,6 @@ class PaymentController extends Controller
             $payments->whereType($request->type);
         }
 
-        if ($request->has('bank_id')) {
-            $payments->whereBankId($request->bank_id);
-        }
-
         if ($request->has('created_at')) {
             $payments->whereDate('created_at', $request->created_at);
         }
