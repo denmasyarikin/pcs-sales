@@ -28,7 +28,7 @@ class UpdateOrderAttachmentRequest extends DetailOrderRequest
 
         return $order;
     }
-    
+
     /**
      * get orderAttachment.
      *
@@ -60,7 +60,7 @@ class UpdateOrderAttachmentRequest extends DetailOrderRequest
         return [
             'type' => 'required|in:po,sample',
             'file' => 'required',
-            'description' => 'required'
+            'description' => 'required',
         ];
     }
 }

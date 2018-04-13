@@ -15,3 +15,12 @@
 (x) order item insheet should be same with product process
 (x) edit order product
 (x) implement dimension
+
+- discount jadi amount and percentage
+- error upload gambar tampilkan indikasi
+- error ppn terus disccount
+- tampikan order id di list pembayaran
+- pembulatan jadi 1 (setting)
+- update status sementar
+- print Invoice
+- default estimated date is today

@@ -14,7 +14,7 @@ class Setting implements SettingContract
     public function getSetting()
     {
         return [
-            'tagline' => 'Sistem Penjualan'
+            'tagline' => 'Sistem Penjualan',
         ];
     }
 }

@@ -19,9 +19,10 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 class PaymentController extends Controller
 {
     /**
-     * get counter
+     * get counter.
      *
      * @param Request $request
+     *
      * @return Json
      */
     public function getCounter(Request $request)
@@ -36,15 +37,15 @@ class PaymentController extends Controller
             'data' => [
                 'count' => [
                     'total' => $payments->count(),
-                    'transfer' =>  $payments->where('payment_method', 'transfer')->count(),
-                    'cash' =>  $payments->where('payment_method', 'cash')->count()
+                    'transfer' => $payments->where('payment_method', 'transfer')->count(),
+                    'cash' => $payments->where('payment_method', 'cash')->count(),
                 ],
                 'payment' => [
                     'total' => $payments->sum('pay'),
                     'transfer' => $payments->where('payment_method', 'transfer')->sum('pay'),
-                    'cash' => $payments->where('payment_method', 'cash')->sum('pay')
-                ]
-            ]
+                    'cash' => $payments->where('payment_method', 'cash')->sum('pay'),
+                ],
+            ],
         ]);
     }
 
@@ -76,7 +77,7 @@ class PaymentController extends Controller
      */
     protected function getPaymentList(Request $request)
     {
-        $payments = Payment::whereHas('order', function($query) {
+        $payments = Payment::whereHas('order', function ($query) {
             $query->whereNotIn('status', ['draft', 'canceled']);
         })->with('customer')->orderBy('created_at', 'DESC');
 
@@ -130,7 +131,7 @@ class PaymentController extends Controller
     {
         $order = $this->getOrder($request->order_id);
         $factory = new Factory($order);
-        
+
         if (in_array($order->status, ['canceled', 'closed'])) {
             throw new BadRequestHttpException('Order status not allowed');
         }
@@ -144,7 +145,7 @@ class PaymentController extends Controller
         }
 
         $payment = $factory->pay($request->only([
-            'payment_method', 'payment_slip', 'pay', 'account_id'
+            'payment_method', 'payment_slip', 'pay', 'account_id',
         ]));
 
         return new JsonResponse([
@@ -197,7 +198,7 @@ class PaymentController extends Controller
         }
 
         $payment->update($request->only([
-            'payment_method', 'payment_slip', 'pay', 'account_id'
+            'payment_method', 'payment_slip', 'pay', 'account_id',
         ]));
 
         $factory->resetAllPayment();

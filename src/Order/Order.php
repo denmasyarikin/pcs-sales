@@ -157,7 +157,7 @@ class Order extends Model implements Taxable, Voucherable, Discountable
 
         $this->update([
             'total' => $total,
-            'remaining' => $total - $this->paid_off
+            'remaining' => $total - $this->paid_off,
         ]);
     }
 

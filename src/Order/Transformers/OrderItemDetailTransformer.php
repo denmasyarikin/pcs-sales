@@ -51,7 +51,9 @@ class OrderItemDetailTransformer extends Detail
             'insheet_quantity' => $model->insheet_quantity,
             'insheet_added' => $model->insheet_added,
             'markup' => $model->markup,
+            'markup_type' => $model->markup_type,
             'discount' => $model->discount,
+            'discount_type' => $model->discount_type,
             'voucher' => $model->voucher,
             'total' => $model->total,
             'unit' => (new UnitListDetailTransformer($model->unit))->toArray(),
@@ -59,10 +61,12 @@ class OrderItemDetailTransformer extends Detail
             'updated_at' => $model->updated_at->format('Y-m-d H:i:s'),
         ];
     }
+
     /**
-     * get product process
+     * get product process.
      *
      * @param Model $model
+     *
      * @return array
      */
     protected function getProductProcess(Model $model)

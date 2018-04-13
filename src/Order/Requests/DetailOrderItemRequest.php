@@ -26,7 +26,7 @@ class DetailOrderItemRequest extends DetailOrderRequest
             return $this->orderItem;
         }
 
-        $order = $order === null ? $this->getOrder() : $order;
+        $order = null === $order ? $this->getOrder() : $order;
         $id = $this->route('item_id');
 
         if ($this->orderItem = $order->items()->find($id)) {

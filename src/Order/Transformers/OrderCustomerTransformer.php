@@ -4,7 +4,6 @@ namespace Denmasyarikin\Sales\Order\Transformers;
 
 use App\Http\Transformers\Detail;
 use Illuminate\Database\Eloquent\Model;
-use Modules\Chanel\Transformers\ChanelDetailTransformer;
 use Denmasyarikin\Sales\Customer\Transformers\CustomerListDetailTransformer;
 
 class OrderCustomerTransformer extends Detail

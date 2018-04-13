@@ -16,7 +16,7 @@ class DetailProductRequest extends FormRequest
     public $product;
 
     /**
-     * process rules
+     * process rules.
      *
      * @var array
      */
@@ -49,7 +49,7 @@ class DetailProductRequest extends FormRequest
         'insheet_type' => 'nullable|required_if:insheet_required,true|in:static,dynamic',
         'insheet_multiples' => 'nullable|required_if:insheet_type,dynamic|numeric',
         'insheet_quantity' => 'nullable|required_if:insheet_required,true|numeric',
-        'insheet_added' => 'nullable|required_if:insheet_required,true|numeric'
+        'insheet_added' => 'nullable|required_if:insheet_required,true|numeric',
     ];
 
     /**

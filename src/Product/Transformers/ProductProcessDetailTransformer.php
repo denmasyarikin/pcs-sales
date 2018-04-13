@@ -22,7 +22,7 @@ class ProductProcessDetailTransformer extends Detail
             'id' => (int) $model->id,
             'type' => $model->type,
             'type_as' => $model->type_as,
-            'parent_id' =>$model->parent_id,
+            'parent_id' => $model->parent_id,
             'reference_id' => $model->reference_id,
             'reference_type' => $model->reference_type,
             'name' => $model->name,

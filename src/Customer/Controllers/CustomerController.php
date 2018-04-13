@@ -17,9 +17,10 @@ use Denmasyarikin\Sales\Customer\Transformers\CustomerDetailTransformer;
 class CustomerController extends Controller
 {
     /**
-     * get counter
+     * get counter.
      *
      * @param Request $request
+     *
      * @return Json
      */
     public function getCounter(Request $request)
@@ -33,7 +34,7 @@ class CustomerController extends Controller
             $data[] = [
                 'id' => $chanel->id,
                 'chanel' => $chanel->name,
-                'count' => $customers->where('chanel_id', $chanel->id)->count()
+                'count' => $customers->where('chanel_id', $chanel->id)->count(),
             ];
         }
 
@@ -134,7 +135,7 @@ class CustomerController extends Controller
 
         $customer->update($request->only([
             'chanel_id', 'name', 'address', 'telephone', 'email',
-            'contact_person','due_date_day_count', 'user_id',
+            'contact_person', 'due_date_day_count', 'user_id',
         ]));
 
         return new JsonResponse([

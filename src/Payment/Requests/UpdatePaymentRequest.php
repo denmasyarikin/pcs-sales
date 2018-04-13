@@ -34,7 +34,7 @@ class UpdatePaymentRequest extends DetailPaymentRequest
             'payment_method' => 'required|in:cash,transfer',
             'payment_slip' => 'nullable|required_if:payment_method,transfer',
             'pay' => 'required|numeric',
-            'account_id' => 'nullable|numeric'
+            'account_id' => 'nullable|numeric',
         ];
     }
 }

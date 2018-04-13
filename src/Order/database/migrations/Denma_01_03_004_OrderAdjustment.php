@@ -16,8 +16,8 @@ class OrderAdjustment extends Migration
             $table->integer('order_id')->unsigned();
             $table->integer('priority');
             $table->enum('type', ['discount', 'voucher', 'tax']);
+            $table->string('adjustment_value')->nullable()->default(null);
             $table->bigInteger('adjustment_origin')->default(0);
-            $table->string('adjustment_value');
             $table->bigInteger('adjustment_total')->default(0);
             $table->bigInteger('total')->default(0);
             $table->timestamps();

@@ -28,7 +28,7 @@ class UpdateOrderHistoryRequest extends DetailOrderRequest
 
         return $order;
     }
-    
+
     /**
      * get orderHistory.
      *

@@ -42,42 +42,43 @@ abstract class AdjustmentFactory
      * apply.
      *
      * @param mixed $value
+     * @param mxied $option
      *
      * @return Adjustmentable
      */
-    public function apply($value)
+    public function apply($value, $option = null)
     {
         $adjustment = $this->getAdjustment($this->adjustmentable);
 
         if (is_null($adjustment)) {
-            $adjustment = $this->createAdjustment($value);
-            $this->updateAdjustmentable($adjustment);
-        } elseif ($this->noNeedResetAdjustment($adjustment)) {
-            $this->substractAdjustmentable($adjustment);
-            $adjustment = $this->updateAdjustment($adjustment, $value);
-            $this->updateAdjustmentable($adjustment);
+            $adjustment = $this->createAdjustment($value, $option);
         } else {
-            $this->resetAllAdjustments($adjustment, $value);
+            $this->substractAdjustmentable($adjustment);
+            $adjustment = $this->updateAdjustment($adjustment, $value, $option);
+        }
+
+        $this->updateAdjustmentable($adjustment);
+
+        if ($this->isNeedResetAdjustment()) {
+            $this->resetAllAdjustments();
         }
 
         // if value has been applyed and value not effected just delete
-        if ($this->shouldBeDeleted($adjustment)) {
+        if ($this->shouldDelete($adjustment, $option)) {
             $adjustment->delete();
-        } 
+        }
 
         return $this->adjustmentable;
     }
 
     /**
-     * check is no need reset adjustment.
-     *
-     * @param Adjustment $adjustment
+     * check is need reset adjustment.
      *
      * @return bool
      */
-    protected function noNeedResetAdjustment(Adjustment $adjustment)
+    protected function isNeedResetAdjustment()
     {
-        return $this->adjustmentable->total === $adjustment->total;
+        return $this->adjustmentable->adjustments()->count() > 1;
     }
 
     /**
@@ -108,23 +109,33 @@ abstract class AdjustmentFactory
 
     /**
      * reset all adjustments by changed adjustment.
-     *
-     * @param Adjustment $updateAdjustment
-     * @param mixed      $value
      */
-    protected function resetAllAdjustments(Adjustment $updateAdjustment = null, $value = null)
+    protected function resetAllAdjustments()
     {
         $this->resetAdjustmentable();
         $adjustments = $this->adjustmentable->getAdjustments();
 
         foreach ($adjustments as $adjustment) {
+            $option = null;
+            $adjustmentValue = $adjustment->adjustment_value;
             $factory = $this->createFactory($adjustment);
 
-            if (!is_null($updateAdjustment) and $updateAdjustment->id === $adjustment->id) {
-                $adjustment = $factory->updateAdjustment($adjustment, $value);
-            } else {
-                $adjustment = $factory->updateAdjustment($adjustment, $adjustment->adjustment_value);
+            switch ($adjustment->type) {
+                case 'discount':
+                    $option = null === $adjustment->adjustment_value ? 'amount' : 'percentage';
+                    if ('amount' === $option) {
+                        $adjustmentValue = $adjustment->adjustment_total * -1;
+                    }
+                    break;
+                case 'markup':
+                    $option = null === $adjustment->adjustment_value ? 'amount' : 'percentage';
+                    if ('amount' === $option) {
+                        $adjustmentValue = $adjustment->adjustment_total;
+                    }
+                    break;
             }
+
+            $adjustment = $factory->updateAdjustment($adjustment, $adjustmentValue, $option);
 
             $this->updateAdjustmentable($adjustment);
         }
@@ -172,13 +183,14 @@ abstract class AdjustmentFactory
      * create adjustment.
      *
      * @param mixed $value
+     * @param mixed $option
      *
      * @return OrderAdjustment
      */
-    public function createAdjustment($value)
+    public function createAdjustment($value, $option = null)
     {
         return $this->adjustmentable->adjustments()->create(
-            $this->generateAdjustment($value)
+            $this->generateAdjustment($value, $option)
         );
     }
 
@@ -187,13 +199,14 @@ abstract class AdjustmentFactory
      *
      * @param Adjustment $adjustment
      * @param mixed      $value
+     * @param mixed      $option
      *
      * @return Adjustment
      */
-    public function updateAdjustment(Adjustment $adjustment, $value)
+    public function updateAdjustment(Adjustment $adjustment, $value, $option = null)
     {
         $adjustment->update(
-            $this->generateAdjustment($value)
+            $this->generateAdjustment($value, $option)
         );
 
         return $adjustment;
@@ -203,30 +216,34 @@ abstract class AdjustmentFactory
      * generate adjustment.
      *
      * @param mixed $value
+     * @param mixed $option
      *
      * @return array
      */
-    protected function generateAdjustment($value)
+    protected function generateAdjustment($value, $option = null)
     {
-        $adjustmentTotal = $this->getAdjustmentTotal($this->adjustmentable, $value);
+        $adjustmentTotal = $this->getAdjustmentTotal($this->adjustmentable, $value, $option);
+        $adjustmentValue = $this->getAdjustmentValue($value, $option);
 
         return [
             'type' => $this->adjustmentType,
             'priority' => $this->priority,
             'adjustment_origin' => $this->adjustmentable->total,
-            'adjustment_value' => $value,
             'adjustment_total' => $adjustmentTotal,
+            'adjustment_value' => $adjustmentValue,
             'total' => $this->adjustmentable->total + $adjustmentTotal,
         ];
     }
 
     /**
-     * should be deleted
+     * should be deleted.
      *
      * @param Adjustment $adjustment
+     * @param mixed      $option
+     *
      * @return bool
      */
-    protected function shouldBeDeleted(Adjustment $adjustment)
+    protected function shouldDelete(Adjustment $adjustment, $option = null)
     {
         return false;
     }
@@ -245,8 +262,19 @@ abstract class AdjustmentFactory
      *
      * @param Adjustmentable $adjustmentable
      * @param mixed          $value
+     * @param mixed          $option
      *
-     * @return string
+     * @return int
      */
-    abstract protected function getAdjustmentTotal(Adjustmentable $adjustmentable, $value);
+    abstract protected function getAdjustmentTotal(Adjustmentable $adjustmentable, $value, $option);
+
+    /**
+     * get Adjustment value.
+     *
+     * @param mixed $value
+     * @param mixed $option
+     *
+     * @return int
+     */
+    abstract protected function getAdjustmentValue($value, $option);
 }

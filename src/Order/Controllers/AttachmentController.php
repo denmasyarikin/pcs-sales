@@ -2,7 +2,6 @@
 
 namespace Denmasyarikin\Sales\Order\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 use Denmasyarikin\Sales\Order\Requests\DetailOrderRequest;
@@ -15,9 +14,10 @@ use Denmasyarikin\Sales\Order\Transformers\OrderAttachmentDetailTransformer;
 class AttachmentController extends Controller
 {
     /**
-     * get list
+     * get list.
      *
      * @param DetailOrderRequest $request
+     *
      * @return json
      */
     public function getList(DetailOrderRequest $request)
@@ -25,14 +25,15 @@ class AttachmentController extends Controller
         $order = $request->getOrder();
 
         return new JsonResponse([
-            'data' => (new OrderAttachmentListTransformer($order->attachments))->toArray()
+            'data' => (new OrderAttachmentListTransformer($order->attachments))->toArray(),
         ]);
     }
 
     /**
-     * create attachemnt
+     * create attachemnt.
      *
      * @param CreateOrderAttachmentRequest $request
+     *
      * @return json
      */
     public function createAttachment(CreateOrderAttachmentRequest $request)
@@ -45,14 +46,15 @@ class AttachmentController extends Controller
 
         return new JsonResponse([
             'messaage' => 'Order attachemnt has been created',
-            'data' => (new OrderAttachmentDetailTransformer($attachemnt))->toArray()
+            'data' => (new OrderAttachmentDetailTransformer($attachemnt))->toArray(),
         ], 201);
     }
 
     /**
-     * update attachemnt
+     * update attachemnt.
      *
      * @param UpdateOrderAttachmentRequest $request
+     *
      * @return json
      */
     public function updateAttachment(UpdateOrderAttachmentRequest $request)
@@ -63,14 +65,15 @@ class AttachmentController extends Controller
 
         return new JsonResponse([
             'messaage' => 'Order attachemnt has been updated',
-            'data' => (new OrderAttachmentDetailTransformer($attachemnt))->toArray()
+            'data' => (new OrderAttachmentDetailTransformer($attachemnt))->toArray(),
         ]);
     }
 
     /**
-     * delete attachemnt
+     * delete attachemnt.
      *
      * @param DeleteOrderAttachmentRequest $request
+     *
      * @return json
      */
     public function deleteAttachment(DeleteOrderAttachmentRequest $request)

@@ -5,7 +5,6 @@ namespace Denmasyarikin\Sales\Payment;
 use App\Manager\Facades\Money;
 use Illuminate\Support\Facades\Auth;
 use Denmasyarikin\Sales\Order\Order;
-use Denmasyarikin\Sales\Payment\Payment;
 
 class Factory
 {
@@ -196,8 +195,8 @@ class Factory
                 'method' => $payment->payment_method,
                 'payment_total' => Money::format($payment->payment_total),
                 'pay' => Money::format($payment->pay),
-                'remaining' => Money::format($payment->remaining)
-            ])
+                'remaining' => Money::format($payment->remaining),
+            ]),
         ]);
     }
 }

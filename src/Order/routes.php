@@ -25,13 +25,13 @@ $router->group(['middleware' => 'manage:sales,order,write'], function ($router) 
     $router->post('/{id}/discount', ['as' => 'sales.order.discount', 'uses' => 'AdjustmentController@applyDiscount']);
     $router->post('/{id}/tax', ['as' => 'sales.order.tax', 'uses' => 'AdjustmentController@applyTax']);
     $router->post('/{id}/voucher', ['as' => 'sales.order.voucher', 'uses' => 'AdjustmentController@applyVoucher']);
-    
+
     $router->group(['prefix' => '/{id}/history'], function ($router) {
         $router->post('/', ['as' => 'sales.order.history.create', 'uses' => 'HistoryController@createHistory']);
         $router->put('/{history_id}', ['as' => 'sales.order.history.update', 'uses' => 'HistoryController@updateHistory']);
         $router->delete('/{history_id}', ['as' => 'sales.order.history.delete', 'uses' => 'HistoryController@deleteHistory']);
     });
-    
+
     $router->group(['prefix' => '/{id}/attachment'], function ($router) {
         $router->post('/', ['as' => 'sales.order.attachment.create', 'uses' => 'AttachmentController@createAttachment']);
         $router->put('/{attachment_id}', ['as' => 'sales.order.attachment.update', 'uses' => 'AttachmentController@updateAttachment']);

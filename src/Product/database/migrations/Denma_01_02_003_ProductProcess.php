@@ -44,7 +44,7 @@ class ProductProcess extends Migration
             $table->float('insheet_multiples')->nullable()->default(null);
             $table->float('insheet_quantity')->nullable()->default(null);
             $table->float('insheet_added')->nullable()->default(null);
-            
+
             $table->timestamps();
             $table->softDeletes();
 

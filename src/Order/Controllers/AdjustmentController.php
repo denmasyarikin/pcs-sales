@@ -33,7 +33,7 @@ class AdjustmentController extends Controller
         $this->hasItems($order);
 
         $factory = new DiscountFactory($order);
-        $factory->apply($request->percent);
+        $factory->apply($request->value, $request->type);
 
         return new JsonResponse(['message' => 'Discount has been applyed']);
     }

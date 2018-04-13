@@ -18,9 +18,10 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 class ProductController extends Controller
 {
     /**
-     * get counter
+     * get counter.
      *
      * @param Request $request
+     *
      * @return Json
      */
     public function getCounter(Request $request)
@@ -31,8 +32,8 @@ class ProductController extends Controller
             'data' => [
                 'draft' => $products->where('status', 'draft')->count(),
                 'active' => $products->where('status', 'active')->count(),
-                'inactive' => $products->where('status', 'inactive')->count()
-            ]
+                'inactive' => $products->where('status', 'inactive')->count(),
+            ],
         ]);
     }
 
@@ -124,7 +125,7 @@ class ProductController extends Controller
     public function createProduct(CreateProductRequest $request)
     {
         $product = Product::create($request->only([
-            'name', 'description', 'unit_id', 'min_order', 
+            'name', 'description', 'unit_id', 'min_order',
             'order_multiples', 'product_group_id',
         ]));
 

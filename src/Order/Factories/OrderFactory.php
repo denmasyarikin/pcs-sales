@@ -39,23 +39,25 @@ class OrderFactory
      *
      * @param array  $item
      * @param string $markup
+     * @param string $markupType
      * @param string $discount
+     * @param string $discountType
      * @param string $voucher
      *
      * @return OrderItem
      */
-    public function createOrderItem(array $item, $markup = null, $discount = null, $voucher = null)
+    public function createOrderItem(array $item, $markup = null, $markupType = null, $discount = null, $discountType = null, $voucher = null)
     {
         $item['total'] = $item['unit_total'];
 
         $orderItem = $this->order->items()->create($item);
-        
+
         // if product process just store to db, they are not effected to the order
-        if ($item['type'] === 'product' AND $item['type_as'] !== 'product') {
+        if ('product' === $item['type'] and 'product' !== $item['type_as']) {
             return $orderItem;
         }
 
-        $orderItem = $this->applyAdjustment($orderItem, $markup, $discount, $voucher);
+        $orderItem = $this->applyAdjustment($orderItem, $markup, $markupType, $discount, $discountType, $voucher);
 
         $this->updateOrderItemTotal();
         $this->resetOrderAdjustment();
@@ -70,23 +72,25 @@ class OrderFactory
      * @param OrderItem $orderItem
      * @param array     $item
      * @param string    $markup
+     * @param string    $markupType
      * @param string    $discount
+     * @param string    $discountType
      * @param string    $voucher
      *
      * @return OrderItem
      */
-    public function updateOrderItem(OrderItem $orderItem, array $item, $markup = null, $discount = null, $voucher = null)
+    public function updateOrderItem(OrderItem $orderItem, array $item, $markup = null, $markupType = null, $discount = null, $discountType = null, $voucher = null)
     {
         $item['total'] = $item['unit_total'];
 
         $orderItem->update($item);
 
         // if product process just store to db, they are not effected to the order
-        if ($item['type'] === 'product' AND $item['type_as'] !== 'product') {
+        if ('product' === $item['type'] and 'product' !== $item['type_as']) {
             return $orderItem;
         }
 
-        $orderItem = $this->applyAdjustment($orderItem, $markup, $discount, $voucher);
+        $orderItem = $this->applyAdjustment($orderItem, $markup, $markupType, $discount, $discountType, $voucher);
 
         $this->updateOrderItemTotal();
         $this->resetOrderAdjustment();
@@ -100,30 +104,32 @@ class OrderFactory
      *
      * @param OrderItem $orderItem
      * @param string    $markup
+     * @param string    $markupType
      * @param string    $discount
+     * @param string    $discountType
      * @param string    $voucher
      *
      * @return OrderItem
      */
-    protected function applyAdjustment(OrderItem $orderItem, $markup = null, $discount = null, $voucher = null)
+    protected function applyAdjustment(OrderItem $orderItem, $markup = null, $markupType = null, $discount = null, $discountType = null, $voucher = null)
     {
-        if (!is_null($markup) AND $markup > 0) {
+        if (!is_null($markup) and $markup > 0) {
             $factory = new MarkupFactory($orderItem);
-            $orderItem = $factory->apply($markup);
+            $orderItem = $factory->apply($markup, $markupType);
         } else {
             // remove markup
             $orderItem->adjustments()->whereType('markup')->delete();
         }
 
-        if (!is_null($discount) AND $discount > 0) {
+        if (!is_null($discount) and $discount > 0) {
             $factory = new DiscountFactory($orderItem);
-            $orderItem = $factory->apply($discount);
+            $orderItem = $factory->apply($discount, $discountType);
         } else {
             // remove discount
             $orderItem->adjustments()->whereType('discount')->delete();
         }
 
-        if (!is_null($voucher) AND $voucher !== '') {
+        if (!is_null($voucher) and '' !== $voucher) {
             $factory = new VoucherFactory($orderItem);
             $orderItem = $factory->apply($voucher);
         } else {
@@ -187,8 +193,8 @@ class OrderFactory
         $orderItem->delete();
 
         // special case for product
-        if ($orderItem->type === 'product') {
-            if ($orderItem->type_as === 'product') {
+        if ('product' === $orderItem->type) {
+            if ('product' === $orderItem->type_as) {
                 // also delete its process
                 $this->order->items()
                     ->whereType('product')

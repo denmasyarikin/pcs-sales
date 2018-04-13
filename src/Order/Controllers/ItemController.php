@@ -70,7 +70,9 @@ class ItemController extends Controller
         $orderItem = $factory->createOrderItem(
             $this->getDataFromRequest($request),
             $request->input('markup'),
+            $request->input('markup_type'),
             $request->input('discount'),
+            $request->input('discount_type'),
             $request->input('voucher')
         );
 
@@ -102,7 +104,9 @@ class ItemController extends Controller
             $orderItem,
             $this->getDataFromRequest($request),
             $request->input('markup'),
+            $request->input('markup_type'),
             $request->input('discount'),
+            $request->input('discount_type'),
             $request->input('voucher')
         );
 
@@ -113,9 +117,10 @@ class ItemController extends Controller
     }
 
     /**
-     * get data from request
+     * get data from request.
      *
      * @param Request $request
+     *
      * @return array
      */
     protected function getDataFromRequest(Request $request)
@@ -125,7 +130,7 @@ class ItemController extends Controller
             'quantity', 'unit_price', 'unit_total', 'note', 'unit_id',
             'depending_to_dimension', 'dimension', 'dimension_unit_id', 'length', 'width', 'height', 'weight',
             'price_type', 'price_increase_multiples', 'price_increase_percentage',
-            'insheet_required', 'insheet_type', 'insheet_multiples', 'insheet_quantity', 'insheet_added'
+            'insheet_required', 'insheet_type', 'insheet_multiples', 'insheet_quantity', 'insheet_added',
         ]);
     }
 
@@ -148,7 +153,7 @@ class ItemController extends Controller
 
         return new JsonResponse([
             'message' => 'Order Item has been deleted',
-            'updated_at' => $order->updated_at
+            'updated_at' => $order->updated_at,
         ]);
     }
 

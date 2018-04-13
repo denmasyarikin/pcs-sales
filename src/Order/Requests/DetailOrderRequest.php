@@ -16,7 +16,7 @@ class DetailOrderRequest extends FormRequest
     public $order;
 
     /**
-     * item validation rules
+     * item validation rules.
      *
      * @var array
      */
@@ -33,8 +33,10 @@ class DetailOrderRequest extends FormRequest
         'unit_price' => 'required|numeric',
         'unit_total' => 'required|numeric',
         'unit_id' => 'required|exists:core_units,id',
-        'markup' => 'nullable|numeric|max:100',
-        'discount' => 'nullable|numeric|max:100',
+        'markup' => 'nullable|numeric',
+        'markup_type' => 'nullable|in:percentage,amount',
+        'discount' => 'nullable|numeric',
+        'discount_type' => 'nullable|in:percentage,amount',
         'voucher' => 'nullable|size:8|voucher',
         // dimension
         'depending_to_dimension' => 'nullable|boolean',
@@ -53,7 +55,7 @@ class DetailOrderRequest extends FormRequest
         'insheet_type' => 'nullable|required_if:insheet_required,true|in:static,dynamic',
         'insheet_multiples' => 'nullable|required_if:insheet_type,dynamic|numeric',
         'insheet_quantity' => 'nullable|required_if:insheet_required,true|numeric',
-        'insheet_added' => 'nullable|required_if:insheet_required,true|numeric'
+        'insheet_added' => 'nullable|required_if:insheet_required,true|numeric',
     ];
 
     /**

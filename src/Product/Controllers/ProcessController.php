@@ -97,9 +97,10 @@ class ProcessController extends Controller
     }
 
     /**
-     * get data from request
+     * get data from request.
      *
      * @param Request $request
+     *
      * @return array
      */
     protected function getDataFromRequest(Request $request)
@@ -109,7 +110,7 @@ class ProcessController extends Controller
             'name', 'specific', 'quantity', 'unit_price', 'unit_id', 'required',
             'depending_to_dimension', 'dimension', 'dimension_unit_id', 'length', 'width', 'height', 'weight',
             'price_type', 'price_increase_multiples', 'price_increase_percentage',
-            'insheet_required', 'insheet_type', 'insheet_multiples', 'insheet_quantity', 'insheet_added'
+            'insheet_required', 'insheet_type', 'insheet_multiples', 'insheet_quantity', 'insheet_added',
         ]) + ['unit_total' => $request->unit_price * $request->quantity];
     }
 

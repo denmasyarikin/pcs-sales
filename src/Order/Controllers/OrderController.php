@@ -22,9 +22,10 @@ class OrderController extends Controller
     use OrderRestrictionTrait;
 
     /**
-     * get counter
+     * get counter.
      *
      * @param Request $request
+     *
      * @return Json
      */
     public function getCounter(Request $request)
@@ -38,12 +39,12 @@ class OrderController extends Controller
         return new JsonResponse([
             'data' => [
                 'draft' => $orders->where('status', 'draft')->count(),
-                'created' =>  $orders->where('status', 'created')->count(),
-                'processing' =>  $orders->where('status', 'processing')->count(),
-                'finished' =>  $orders->where('status', 'finished')->count(),
-                'closed' =>  $orders->where('status', 'closed')->count(),
-                'canceled' =>  $orders->where('status', 'canceled')->count()
-            ]
+                'created' => $orders->where('status', 'created')->count(),
+                'processing' => $orders->where('status', 'processing')->count(),
+                'finished' => $orders->where('status', 'finished')->count(),
+                'closed' => $orders->where('status', 'closed')->count(),
+                'canceled' => $orders->where('status', 'canceled')->count(),
+            ],
         ]);
     }
 
@@ -161,7 +162,7 @@ class OrderController extends Controller
      */
     protected function getOrderList(Request $request, $status = null)
     {
-        if (! is_null($status)) {
+        if (!is_null($status)) {
             $orders = Order::whereStatus($status);
 
             switch ($status) {
@@ -188,14 +189,14 @@ class OrderController extends Controller
 
         if ($request->has('customer_id')) {
             $orders->where('status', '<>', 'draft');
-            $orders->whereHas('customer', function($query) use ($request) {
+            $orders->whereHas('customer', function ($query) use ($request) {
                 $query->where('customer_id', $request->customer_id);
             });
         }
 
         if ($request->has('product_id')) {
             $orders->where('status', '<>', 'draft');
-            $orders->whereHas('items', function($query) use ($request) {
+            $orders->whereHas('items', function ($query) use ($request) {
                 $query->where('reference_id', $request->product_id);
                 $query->where('reference_type', 'product');
             });
@@ -210,9 +211,9 @@ class OrderController extends Controller
         }
 
         if ($request->has('key')) {
-            $orders->where(function($query) use ($request) {
+            $orders->where(function ($query) use ($request) {
                 $query->where('id', $request->key);
-                $query->orWhereHas('customer', function($query2) use ($request) {
+                $query->orWhereHas('customer', function ($query2) use ($request) {
                     $query2->where('name', 'like', "%{$request->key}%");
                     $query2->orWhere('email', 'like', "%{$request->key}%");
                 });
@@ -258,7 +259,7 @@ class OrderController extends Controller
 
         return new JsonResponse([
             'message' => 'Order has been created',
-            'data' => ['id' => $order->id]
+            'data' => ['id' => $order->id],
         ], 201);
     }
 
@@ -279,7 +280,7 @@ class OrderController extends Controller
 
         return new JsonResponse([
             'message' => 'Order has been updated',
-            'data' => (new OrderListDetailTransformer($order))->toArray()
+            'data' => (new OrderListDetailTransformer($order))->toArray(),
         ]);
     }
 
@@ -308,8 +309,8 @@ class OrderController extends Controller
                     'label' => 'created',
                     'data' => json_encode([
                         'item_count' => count($order->getPrimaryItems()),
-                        'item_total' => Money::format($order->item_total)
-                    ])
+                        'item_total' => Money::format($order->item_total),
+                    ]),
                 ]);
                 break;
             case 'processing':
@@ -378,8 +379,8 @@ class OrderController extends Controller
             'label' => 'canceled',
             'data' => json_encode([
                 'reason' => $request->reason,
-                'description' => $request->description
-            ])
+                'description' => $request->description,
+            ]),
         ]);
 
         return new JsonResponse(['message' => 'Order has been canceled']);

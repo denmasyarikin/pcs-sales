@@ -26,7 +26,7 @@ class CustomerListDetailTransformer extends Detail
             'telephone' => $model->telephone,
             'contact_person' => $model->contact_person,
             'due_date_day_count' => $model->due_date_day_count,
-            'updated_at' => $model->updated_at->format('Y-m-d H:i:s')
+            'updated_at' => $model->updated_at->format('Y-m-d H:i:s'),
         ];
     }
 }
