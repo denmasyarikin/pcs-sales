@@ -7,6 +7,7 @@ use App\Manager\Facades\Money;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 use Denmasyarikin\Sales\Order\Order;
+use Illuminate\Support\Facades\Auth;
 use Denmasyarikin\Sales\Order\Requests\DetailOrderRequest;
 use Denmasyarikin\Sales\Order\Requests\CreateOrderRequest;
 use Denmasyarikin\Sales\Order\Requests\UpdateOrderRequest;
@@ -30,20 +31,32 @@ class OrderController extends Controller
      */
     public function getCounter(Request $request)
     {
-        $query = Order::orderBy('created_at', 'DESC');
+        $queryDraft = Order::whereStatus('draft');
+        $this->dateRange($queryDraft, $request);
 
-        $this->dateRange($query, $request);
+        $queryCreated = Order::whereStatus('created');
+        $this->dateRange($queryCreated, $request);
 
-        $orders = $query->get();
+        $queryProcessing = Order::whereStatus('processing');
+        $this->dateRange($queryProcessing, $request, 'start_process_date');
+
+        $queryFinished = Order::whereStatus('finished');
+        $this->dateRange($queryFinished, $request, 'end_process_date');
+
+        $queryClosed = Order::whereStatus('closed');
+        $this->dateRange($queryClosed, $request, 'close_date');
+
+        $queryCanceled = Order::whereStatus('canceled');
+        $this->dateRange($queryCanceled, $request);
 
         return new JsonResponse([
             'data' => [
-                'draft' => $orders->where('status', 'draft')->count(),
-                'created' => $orders->where('status', 'created')->count(),
-                'processing' => $orders->where('status', 'processing')->count(),
-                'finished' => $orders->where('status', 'finished')->count(),
-                'closed' => $orders->where('status', 'closed')->count(),
-                'canceled' => $orders->where('status', 'canceled')->count(),
+                'draft' => $queryDraft->count(),
+                'created' =>  $queryCreated->count(),
+                'processing' =>  $queryProcessing->count(),
+                'finished' =>  $queryFinished->count(),
+                'closed' =>  $queryClosed->count(),
+                'canceled' =>  $queryCanceled->count(),
             ],
         ]);
     }
@@ -109,15 +122,15 @@ class OrderController extends Controller
     }
 
     /**
-     * get list artchived.
+     * get list closed.
      *
      * @param Request $request
      *
      * @return json
      */
-    public function getListArchived(Request $request)
+    public function getListClosed(Request $request)
     {
-        return $this->getList($request, 'artchived');
+        return $this->getList($request, 'closed');
     }
 
     /**
@@ -208,6 +221,30 @@ class OrderController extends Controller
 
         if ($request->has('created_at')) {
             $orders->whereDate('created_at', $request->created_at);
+        }
+
+        if ($request->has('start_process_date')) {
+            $orders->whereDate('start_process_date', $request->start_process_date);
+        }
+
+        if ($request->has('end_process_date')) {
+            $orders->whereDate('end_process_date', $request->end_process_date);
+        }
+
+        if ($request->has('close_date')) {
+            $orders->whereDate('close_date', $request->close_date);
+        }
+
+        if ($request->input('over_due_date') === 'true') {
+            $orders->where('paid', false)->where('due_date', '<=', date('Y-m-d H:i:s'));
+        }
+
+        if ($request->input('over_estimate') === 'true') {
+            $orders->whereNotIn('status', ['finished', 'closed'])->where('estimated_finish_date', '<=', date('Y-m-d H:i:s'));
+        }
+
+        if ($request->input('me') === 'true') {
+            $orders->where('cs_user_id', Auth::user()->id);
         }
 
         if ($request->has('key')) {

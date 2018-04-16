@@ -56,7 +56,7 @@ class UpdateCustomerRequest extends DetailOrderRequest
         return [
             'customer_id' => 'nullable|exists:sales_customers,id',
             'name' => 'required|min:2|max:20',
-            'address' => 'required',
+            'address' => 'nullable',
             'telephone' => 'nullable|numeric',
             'email' => 'nullable|email',
             'contact_person' => 'nullable|min:2|max:20',

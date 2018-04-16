@@ -16,7 +16,7 @@ class CreateCustomerRequest extends FormRequest
         return [
             'chanel_id' => 'required|exists:core_chanels,id',
             'name' => 'required|min:3|max:50',
-            'address' => 'required',
+            'address' => 'nullable',
             'telephone' => 'nullable|digits_between:4,20|numeric',
             'email' => 'nullable|email',
             'contact_person' => 'nullable|min:3|max:50',

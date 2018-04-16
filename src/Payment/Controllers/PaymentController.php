@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 use Denmasyarikin\Sales\Order\Order;
+use Illuminate\Support\Facades\Auth;
 use Denmasyarikin\Sales\Payment\Payment;
 use Denmasyarikin\Sales\Payment\Factory;
 use Denmasyarikin\Sales\Payment\Requests\DetailPaymentRequest;
@@ -91,6 +92,10 @@ class PaymentController extends Controller
 
         if ($request->has('created_at')) {
             $payments->whereDate('created_at', $request->created_at);
+        }
+
+        if ($request->input('me') === 'true') {
+            $payments->where('cs_user_id', Auth::user()->id);
         }
 
         if ($request->has('key')) {
