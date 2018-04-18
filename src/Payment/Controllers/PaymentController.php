@@ -37,14 +37,14 @@ class PaymentController extends Controller
         return new JsonResponse([
             'data' => [
                 'count' => [
-                    'total' => $payments->count(),
-                    'transfer' => $payments->where('payment_method', 'transfer')->count(),
                     'cash' => $payments->where('payment_method', 'cash')->count(),
+                    'transfer' => $payments->where('payment_method', 'transfer')->count(),
+                    'total' => $payments->count(),
                 ],
                 'payment' => [
-                    'total' => $payments->sum('pay'),
-                    'transfer' => $payments->where('payment_method', 'transfer')->sum('pay'),
                     'cash' => $payments->where('payment_method', 'cash')->sum('pay'),
+                    'transfer' => $payments->where('payment_method', 'transfer')->sum('pay'),
+                    'total' => $payments->sum('pay'),
                 ],
             ],
         ]);

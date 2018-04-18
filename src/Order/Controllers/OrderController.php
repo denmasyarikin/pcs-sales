@@ -2,12 +2,16 @@
 
 namespace Denmasyarikin\Sales\Order\Controllers;
 
+use \DateTime;
+use \DatePeriod;
+use \DateInterval;
 use Illuminate\Http\Request;
 use App\Manager\Facades\Money;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 use Denmasyarikin\Sales\Order\Order;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Collection;
 use Denmasyarikin\Sales\Order\Requests\DetailOrderRequest;
 use Denmasyarikin\Sales\Order\Requests\CreateOrderRequest;
 use Denmasyarikin\Sales\Order\Requests\UpdateOrderRequest;
@@ -31,33 +35,83 @@ class OrderController extends Controller
      */
     public function getCounter(Request $request)
     {
-        $queryDraft = Order::whereStatus('draft');
-        $this->dateRange($queryDraft, $request);
+        $date = date('Y-m-d');
+        $query = Order::orderBy('created_at', 'ASC');
+        
+        if ($request->has('date')) {
+            $date = $request->date;
+        }
+        
+        $data = $query->whereDate('created_at', $date)->get();
+        
+        return new JsonResponse(['data' => $this->generateCounter($data)]);
+    }
 
-        $queryCreated = Order::whereStatus('created');
-        $this->dateRange($queryCreated, $request);
+    /**
+     * get counters.
+     *
+     * @param Request $request
+     *
+     * @return Json
+     */
+    public function getCounters(Request $request)
+    {
+        $dates = [];
+        $start = new DateTime($request->start_date);
+        $interval = DateInterval::createFromDateString('1 day');
+        $end = (new DateTime($request->end_date))->add($interval);
+        $period = new DatePeriod($start, $interval, $end);
 
-        $queryProcessing = Order::whereStatus('processing');
-        $this->dateRange($queryProcessing, $request, 'start_process_date');
+        foreach ($period as $dt) {
+            $formated = $dt->format("Y-m-d");
+            $data = Order::whereDate('created_at', $formated)->get();
+            $dates[] = [
+                'date' => $formated,
+                'data' => $this->generateCounter($data)
+            ];
+        }
+        
+        return new JsonResponse(['data' => (array)$dates]);
+    }
 
-        $queryFinished = Order::whereStatus('finished');
-        $this->dateRange($queryFinished, $request, 'end_process_date');
+    /**
+     * generate counter
+     *
+     * @param Collection $data
+     * @return array
+     */
+    protected function generateCounter(Collection $data)
+    {
+        return [
+            'total' => $data->count(),
+            'draft' => $data->where('status', 'draft')->count(),
+            'created' =>  $data->where('status', 'created')->count(),
+            'new' => $data->whereIn('status', ['draft', 'created'])->count(),
+            'processing' =>  $data->where('status', 'processing')->count(),
+            'finished' =>  $data->where('status', 'finished')->count(),
+            'closed' =>  $data->where('status', 'closed')->count(),
+            'canceled' =>  $data->where('status', 'canceled')->count(),
+            'paid' =>  $data->whereStrict('paid', 1)->count(),
+        ];
+    }
 
-        $queryClosed = Order::whereStatus('closed');
-        $this->dateRange($queryClosed, $request, 'close_date');
-
-        $queryCanceled = Order::whereStatus('canceled');
-        $this->dateRange($queryCanceled, $request);
-
+    /**
+     * get overs.
+     *
+     * @param Request $request
+     *
+     * @return Json
+     */
+    public function getOvers(Request $request)
+    {
+        $queryDueDate = Order::overDueDate($request->date);
+        $queryEstimate = Order::overEstimated($request->date);
+        
         return new JsonResponse([
             'data' => [
-                'draft' => $queryDraft->count(),
-                'created' =>  $queryCreated->count(),
-                'processing' =>  $queryProcessing->count(),
-                'finished' =>  $queryFinished->count(),
-                'closed' =>  $queryClosed->count(),
-                'canceled' =>  $queryCanceled->count(),
-            ],
+                'due_date' => $queryDueDate->count(),
+                'estimated' => $queryEstimate->count()
+            ]
         ]);
     }
 
@@ -217,30 +271,6 @@ class OrderController extends Controller
 
         if ($request->has('chanel_id')) {
             $orders->whereChanelId($request->chanel_id);
-        }
-
-        if ($request->has('created_at')) {
-            $orders->whereDate('created_at', $request->created_at);
-        }
-
-        if ($request->has('start_process_date')) {
-            $orders->whereDate('start_process_date', $request->start_process_date);
-        }
-
-        if ($request->has('end_process_date')) {
-            $orders->whereDate('end_process_date', $request->end_process_date);
-        }
-
-        if ($request->has('close_date')) {
-            $orders->whereDate('close_date', $request->close_date);
-        }
-
-        if ($request->input('over_due_date') === 'true') {
-            $orders->where('paid', false)->where('due_date', '<=', date('Y-m-d H:i:s'));
-        }
-
-        if ($request->input('over_estimate') === 'true') {
-            $orders->whereNotIn('status', ['finished', 'closed'])->where('estimated_finish_date', '<=', date('Y-m-d H:i:s'));
         }
 
         if ($request->input('me') === 'true') {
