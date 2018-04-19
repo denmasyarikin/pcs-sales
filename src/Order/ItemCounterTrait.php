@@ -104,4 +104,26 @@ trait ItemCounterTrait
     {
         return $this->itemManual->count();
     }
+
+    /**
+     * Get OverDueDate.
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function getOverDueDateAttribute()
+    {
+        return (bool) $this->paid === false && strtotime($this->due_date) < time();
+    }
+
+    /**
+     * Get OverEstimate.
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function getOverEstimateAttribute()
+    {
+        return strtotime($this->estimated_finish_date) < time() && in_array($this->status, ['draft', 'created', 'processing']);
+    }
 }

@@ -104,13 +104,15 @@ class OrderController extends Controller
      */
     public function getOvers(Request $request)
     {
-        $queryDueDate = Order::overDueDate($request->date);
-        $queryEstimate = Order::overEstimated($request->date);
+        $queryDueDate = Order::overDueDate($request->date)->get();
+        $queryEstimate = Order::overEstimated($request->date)->get();
         
         return new JsonResponse([
             'data' => [
-                'due_date' => $queryDueDate->count(),
-                'estimated' => $queryEstimate->count()
+                'due_date_count' => $queryDueDate->count(),
+                'due_date_data' => $queryDueDate->toArray(),
+                'estimated_count' => $queryEstimate->count(),
+                'estimated_data' => $queryEstimate->toArray()
             ]
         ]);
     }
@@ -273,6 +275,10 @@ class OrderController extends Controller
             $orders->whereChanelId($request->chanel_id);
         }
 
+        if ($request->has('created_at')) {
+            $orders->whereDate('created_at', $request->created_at);
+        }
+
         if ($request->input('me') === 'true') {
             $orders->where('cs_user_id', Auth::user()->id);
         }
@@ -361,6 +367,7 @@ class OrderController extends Controller
     public function updateStatusOrder(UpdateStatusOrderRequest $request)
     {
         $order = $request->getOrder();
+
         $this->updateOrderStatusRetriction($order, $request->status);
 
         switch ($request->status) {

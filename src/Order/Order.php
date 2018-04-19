@@ -211,7 +211,7 @@ class Order extends Model implements Taxable, Voucherable, Discountable
      */
     public function scopeOverDueDate($query, $date)
     {
-        return $query->where('due_date', '>', $date)->where('paid', false);
+        return $query->whereDate('due_date', '<', $date)->where('paid', false);
     }
 
     /**
@@ -221,6 +221,6 @@ class Order extends Model implements Taxable, Voucherable, Discountable
      */
     public function scopeOverEstimated($query, $date)
     {
-        return $query->where('estimated_finish_date', '>', $date)->whereIn('status', ['draft', 'created', 'processing']);
+        return $query->whereDate('estimated_finish_date', '<', $date)->whereIn('status', ['draft', 'created', 'processing']);
     }
 }

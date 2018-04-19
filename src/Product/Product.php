@@ -118,6 +118,6 @@ class Product extends Model
             return $this->cacheProcesses;
         }
 
-        return $this->cacheProcesses = $this->processes()->whereNull('parent_id')->get();
+        return $this->cacheProcesses = $this->processes()->whereNull('parent_id')->orderBy('created_at', 'ASC')->get();
     }
 }

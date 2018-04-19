@@ -28,10 +28,13 @@ class OrderListDetailTransformer extends Detail
             'cs_name' => $model->cs_name,
             'status' => $model->status,
             'due_date' => $model->due_date,
+            'over_due_date' => (bool) $model->over_due_date,
             'estimated_finish_date' => $model->estimated_finish_date,
+            'over_estimate' => (bool) $model->over_estimate,
             'start_process_date' => $model->start_process_date,
             'end_process_date' => $model->end_process_date,
             'close_date' => $model->close_date,
+            'cancelation' => $model->cancelation ? (new OrderCancelationDetailTransformer($model->cancelation))->toArray() : null,
             'created_at' => $model->created_at->format('Y-m-d H:i:s'),
             'updated_at' => $model->updated_at->format('Y-m-d H:i:s'),
         ];

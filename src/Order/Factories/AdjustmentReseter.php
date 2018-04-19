@@ -32,10 +32,24 @@ class AdjustmentReseter extends AdjustmentFactory
      *
      * @param Adjustmentable $adjustmentable
      * @param mixed          $value
+     * @param mixed          $option
      *
      * @return string
      */
-    protected function getAdjustmentTotal(Adjustmentable $adjustmentable, $value)
+    protected function getAdjustmentTotal(Adjustmentable $adjustmentable, $value, $option = null)
+    {
+        // never called
+    }
+
+    /**
+     * get Adjustment value.
+     *
+     * @param mixed $value
+     * @param mixed $option
+     *
+     * @return int
+     */
+    protected function getAdjustmentValue($value, $option)
     {
         // never called
     }
