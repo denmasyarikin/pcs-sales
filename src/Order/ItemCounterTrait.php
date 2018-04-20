@@ -113,7 +113,9 @@ trait ItemCounterTrait
      */
     public function getOverDueDateAttribute()
     {
-        return (bool) $this->paid === false && strtotime($this->due_date) < time();
+        return (bool) $this->paid === false && 
+                in_array($this->status, ['created', 'processing', 'finished']) &&
+                strtotime($this->due_date) < time();
     }
 
     /**

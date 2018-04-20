@@ -19,6 +19,7 @@ use Denmasyarikin\Sales\Order\Requests\DeleteOrderRequest;
 use Denmasyarikin\Sales\Order\Requests\CancelOrderRequest;
 use Denmasyarikin\Sales\Order\Requests\UpdateStatusOrderRequest;
 use Denmasyarikin\Sales\Order\Transformers\OrderListTransformer;
+use Denmasyarikin\Sales\Order\Transformers\OrderListAllTransformer;
 use Denmasyarikin\Sales\Order\Transformers\OrderDetailTransformer;
 use Denmasyarikin\Sales\Order\Transformers\OrderListDetailTransformer;
 
@@ -107,12 +108,15 @@ class OrderController extends Controller
         $queryDueDate = Order::overDueDate($request->date)->get();
         $queryEstimate = Order::overEstimated($request->date)->get();
         
+        $transformDueDate = new OrderListAllTransformer($queryDueDate);
+        $transformEstimate = new OrderListAllTransformer($queryEstimate);
+        
         return new JsonResponse([
             'data' => [
                 'due_date_count' => $queryDueDate->count(),
-                'due_date_data' => $queryDueDate->toArray(),
+                'due_date_data' => $transformDueDate->toArray(),
                 'estimated_count' => $queryEstimate->count(),
-                'estimated_data' => $queryEstimate->toArray()
+                'estimated_data' => $transformEstimate->toArray()
             ]
         ]);
     }

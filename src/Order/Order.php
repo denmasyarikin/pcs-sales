@@ -211,7 +211,9 @@ class Order extends Model implements Taxable, Voucherable, Discountable
      */
     public function scopeOverDueDate($query, $date)
     {
-        return $query->whereDate('due_date', '<', $date)->where('paid', false);
+        return $query->whereDate('due_date', '<', $date)
+                        ->whereIn('status', ['created', 'processing', 'finished'])
+                        ->where('paid', false);
     }
 
     /**
