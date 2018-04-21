@@ -28,7 +28,7 @@ class UpdateStatusOrderRequest extends DetailOrderRequest
     public function rules()
     {
         return [
-            'status' => 'required|in:created,processing,finished,closed',
+            'status' => 'required|in:created,processing,finished,taken,closed',
         ];
     }
 }

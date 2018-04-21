@@ -27,8 +27,9 @@ class Order extends Migration
             $table->timestamp('estimated_finish_date')->nullable()->default(null);
             $table->timestamp('start_process_date')->nullable()->default(null);
             $table->timestamp('end_process_date')->nullable()->default(null);
+            $table->timestamp('taken_date')->nullable()->default(null);
             $table->timestamp('close_date')->nullable()->default(null);
-            $table->enum('status', ['draft', 'created', 'processing', 'finished', 'closed', 'canceled'])->default('draft');
+            $table->enum('status', ['draft', 'created', 'processing', 'finished', 'taken', 'closed', 'canceled'])->default('draft');
             $table->timestamps();
             $table->softDeletes();
 

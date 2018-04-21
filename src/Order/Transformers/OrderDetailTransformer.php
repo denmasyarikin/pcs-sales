@@ -39,6 +39,7 @@ class OrderDetailTransformer extends Detail
             'over_estimate' => (bool) $model->over_estimate,
             'start_process_date' => $model->start_process_date,
             'end_process_date' => $model->end_process_date,
+            'taken_date' => $model->taken_date,
             'close_date' => $model->close_date,
             'status' => $model->status,
             'adjustments' => (new OrderAdjustmentListTransformer($model->getAdjustments()))->toArray(),

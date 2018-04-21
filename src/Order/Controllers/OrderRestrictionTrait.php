@@ -71,8 +71,12 @@ trait OrderRestrictionTrait
                 $allow = 'processing' === $order->status;
                 break;
 
-            case 'closed':
+            case 'taken':
                 $allow = 'finished' === $order->status;
+                break;
+
+            case 'closed':
+                $allow = 'taken' === $order->status AND (bool) $order->paid === true;
                 break;
 
             default:
@@ -131,7 +135,7 @@ trait OrderRestrictionTrait
     protected function cancelableOrder(Order $order)
     {
         // canceled, draft or closed not cancelable
-        if (in_array($order->status, ['draft', 'closed', 'canceled'])) {
+        if (in_array($order->status, ['draft', 'taken', 'closed', 'canceled'])) {
             throw new BadRequestHttpException("Can not cancle order when status is {$order->status}");
         }
     }

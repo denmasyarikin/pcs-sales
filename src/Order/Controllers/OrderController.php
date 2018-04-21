@@ -5,6 +5,7 @@ namespace Denmasyarikin\Sales\Order\Controllers;
 use \DateTime;
 use \DatePeriod;
 use \DateInterval;
+use Modules\User\User;
 use Illuminate\Http\Request;
 use App\Manager\Facades\Money;
 use Illuminate\Http\JsonResponse;
@@ -90,6 +91,7 @@ class OrderController extends Controller
             'new' => $data->whereIn('status', ['draft', 'created'])->count(),
             'processing' =>  $data->where('status', 'processing')->count(),
             'finished' =>  $data->where('status', 'finished')->count(),
+            'taken' =>  $data->where('status', 'taken')->count(),
             'closed' =>  $data->where('status', 'closed')->count(),
             'canceled' =>  $data->where('status', 'canceled')->count(),
             'paid' =>  $data->whereStrict('paid', 1)->count(),
@@ -117,6 +119,27 @@ class OrderController extends Controller
                 'due_date_data' => $transformDueDate->toArray(),
                 'estimated_count' => $queryEstimate->count(),
                 'estimated_data' => $transformEstimate->toArray()
+            ]
+        ]);
+    }
+
+    /**
+     * get debt.
+     *
+     * @param Request $request
+     *
+     * @return Json
+     */
+    public function getDebt(Request $request)
+    {
+        $query = Order::whereStatus('taken')->where('paid', 0)->get();
+        $transform = new OrderListAllTransformer($query);
+        
+        return new JsonResponse([
+            'data' => [
+                'count' => $query->count(),
+                'total' => $query->sum('remaining'),
+                'data' => $transform->toArray()
             ]
         ]);
     }
@@ -179,6 +202,18 @@ class OrderController extends Controller
     public function getListFinished(Request $request)
     {
         return $this->getList($request, 'finished');
+    }
+
+    /**
+     * get list taken.
+     *
+     * @param Request $request
+     *
+     * @return json
+     */
+    public function getListTaken(Request $request)
+    {
+        return $this->getList($request, 'taken');
     }
 
     /**
@@ -287,6 +322,10 @@ class OrderController extends Controller
             $orders->where('cs_user_id', Auth::user()->id);
         }
 
+        if ($request->has('cs_user_id')) {
+            $orders->where('cs_user_id', $request->cs_user_id);
+        }
+
         if ($request->has('key')) {
             $orders->where(function ($query) use ($request) {
                 $query->where('id', $request->key);
@@ -333,6 +372,9 @@ class OrderController extends Controller
             'cs_user_id' => $user->id,
             'cs_name' => $user->name,
         ]);
+
+        $order->histories()->create(['type' => 'order', 'label' => 'draft']);
+
 
         return new JsonResponse([
             'message' => 'Order has been created',
@@ -407,6 +449,14 @@ class OrderController extends Controller
                 $order->histories()->create(['type' => 'order', 'label' => 'finished']);
                 break;
 
+            case 'taken':
+                $order->update([
+                    'taken_date' => date('Y-m-d H:i:s'),
+                    'status' => 'taken',
+                ]);
+                $order->histories()->create(['type' => 'order', 'label' => 'taken']);
+                break;
+
             case 'closed':
                 $order->update([
                     'close_date' => date('Y-m-d H:i:s'),
@@ -417,6 +467,7 @@ class OrderController extends Controller
         }
 
         return new JsonResponse([
+            'updated_at' => $order->updated_at->format('Y-m-d H:i:s'),
             'message' => 'Order status has been updated to '.$request->status,
         ]);
     }
@@ -462,5 +513,26 @@ class OrderController extends Controller
         ]);
 
         return new JsonResponse(['message' => 'Order has been canceled']);
+    }
+
+    /**
+     * get customer services.
+     *
+     * @param Request $request
+     * @return json
+     */
+    public function getCustomerServices(Request $request)
+    {
+        $usersIds = Order::select('cs_user_id')
+                        ->distinct('cs_user_id')
+                        ->get()
+                        ->pluck('cs_user_id')
+                        ->toArray();
+
+        $users = User::whereIn('id', $usersIds)->whereStatus('active')->get();
+
+        return new JsonResponse([
+            'data' => $users->toArray()
+        ]);
     }
 }

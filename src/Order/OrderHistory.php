@@ -23,11 +23,13 @@ class OrderHistory extends Model
      * @var array
      */
     protected $mapping = [
-        'created' => 'Order Dibuat',
-        'processing' => 'Order Mulai Diproses',
-        'finished' => 'Order Selesai Proses',
-        'closed' => 'Order Close',
-        'canceled' => 'Order Dibatalkan',
+        'draft' => 'Kalkulasi Pesanan',
+        'created' => 'Pesanan Dibuat',
+        'processing' => 'Pesanan Diproses',
+        'finished' => 'Pesanan Selesai',
+        'taken' => 'Pesanan Diambil',
+        'closed' => 'Pesanan Diarsipkan',
+        'canceled' => 'Pesanan Dibatalkan',
         'down_payment' => 'Bayar Uang Muka',
         'rest_payment' => 'Pembayaran Sisa',
         'settlement' => 'Pembayaran Lunas',
