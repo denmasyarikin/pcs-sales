@@ -30,6 +30,8 @@ $router->group(['middleware' => 'manage:sales,order,write'], function ($router) 
     $router->post('/{id}/discount', ['as' => 'sales.order.discount', 'uses' => 'AdjustmentController@applyDiscount']);
     $router->post('/{id}/tax', ['as' => 'sales.order.tax', 'uses' => 'AdjustmentController@applyTax']);
     $router->post('/{id}/voucher', ['as' => 'sales.order.voucher', 'uses' => 'AdjustmentController@applyVoucher']);
+    $router->put('/{id}/change_due_date', ['as' => 'sales.order.change_due_date', 'uses' => 'OrderController@changeDueDate']);
+    $router->put('/{id}/change_estimated_finish_date', ['as' => 'sales.order.change_estimated_finish_date', 'uses' => 'OrderController@changeEstimatedFinishDate']);
 
     $router->group(['prefix' => '/{id}/history'], function ($router) {
         $router->post('/', ['as' => 'sales.order.history.create', 'uses' => 'HistoryController@createHistory']);

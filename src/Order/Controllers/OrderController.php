@@ -18,7 +18,9 @@ use Denmasyarikin\Sales\Order\Requests\CreateOrderRequest;
 use Denmasyarikin\Sales\Order\Requests\UpdateOrderRequest;
 use Denmasyarikin\Sales\Order\Requests\DeleteOrderRequest;
 use Denmasyarikin\Sales\Order\Requests\CancelOrderRequest;
+use Denmasyarikin\Sales\Order\Requests\ChangeDueDateRequest;
 use Denmasyarikin\Sales\Order\Requests\UpdateStatusOrderRequest;
+use Denmasyarikin\Sales\Order\Requests\ChangeEstimatedFinishDateRequest;
 use Denmasyarikin\Sales\Order\Transformers\OrderListTransformer;
 use Denmasyarikin\Sales\Order\Transformers\OrderListAllTransformer;
 use Denmasyarikin\Sales\Order\Transformers\OrderDetailTransformer;
@@ -375,7 +377,6 @@ class OrderController extends Controller
 
         $order->histories()->create(['type' => 'order', 'label' => 'draft']);
 
-
         return new JsonResponse([
             'message' => 'Order has been created',
             'data' => ['id' => $order->id],
@@ -533,6 +534,64 @@ class OrderController extends Controller
 
         return new JsonResponse([
             'data' => $users->toArray()
+        ]);
+    }
+
+    /**
+     * change due date
+     *
+     * @param ChangeDueDateRequest $request
+     * @return Json
+     */
+    public function changeDueDate(ChangeDueDateRequest $request)
+    {
+        $order = $request->getOrder();
+        $from = $order->due_date;
+
+        $order->update([
+            'due_date' => $request->to
+        ]);
+
+        $order->histories()->create([
+            'type' => 'order',
+            'label' => 'change_due_date',
+            'data' => json_encode([
+                'from' => $from,
+                'to' => $order->due_date
+            ])
+        ]);
+
+        return new JsonResponse([
+            'message' => 'Order due date has been change'
+        ]);
+    }
+
+    /**
+     * change estimated finish date
+     *
+     * @param ChangeEstimatedFinishDateRequest $request
+     * @return Json
+     */
+    public function changeEstimatedFinishDate(ChangeEstimatedFinishDateRequest $request)
+    {
+        $order = $request->getOrder();
+        $from = $order->estimated_finish_date;
+
+        $order->update([
+            'estimated_finish_date' => $request->to
+        ]);
+
+        $order->histories()->create([
+            'type' => 'order',
+            'label' => 'change_estimated_finish_date',
+            'data' => json_encode([
+                'from' => $from,
+                'to' => $order->estimated_finish_date
+            ])
+        ]);
+
+        return new JsonResponse([
+            'message' => 'Order estimated finish date has been change'
         ]);
     }
 }

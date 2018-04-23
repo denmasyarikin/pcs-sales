@@ -30,6 +30,9 @@ class OrderHistory extends Model
         'taken' => 'Pesanan Diambil',
         'closed' => 'Pesanan Diarsipkan',
         'canceled' => 'Pesanan Dibatalkan',
+        'change_due_date' => 'Ubah Tempo Pembayaran',
+        'change_estimated_finish_date' => 'Ubah Perkiraan Selesai',
+        // payment
         'down_payment' => 'Bayar Uang Muka',
         'rest_payment' => 'Pembayaran Sisa',
         'settlement' => 'Pembayaran Lunas',
