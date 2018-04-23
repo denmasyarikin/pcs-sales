@@ -2,6 +2,7 @@
 
 namespace Denmasyarikin\Sales\Order\Requests;
 
+use Modules\Chanel\Chanel;
 use App\Http\Requests\FormRequest;
 use Denmasyarikin\Sales\Order\Order;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -69,9 +70,21 @@ class DetailOrderRequest extends FormRequest
             return $this->order;
         }
 
+        $order = null;
         $id = $this->route('id');
 
-        if ($this->order = Order::find($id)) {
+        if (Order::isCode($id)) {
+            $ids = Order::getIdFromCode($id);
+            $order = Order::whereHas('chanel', function($chanel) use ($ids) {
+                $chanelIds = Chanel::getIdFromCode($ids['chanel_code']);
+                $chanel->whereType($chanelIds['type']);
+                $chanel->whereId($chanelIds['id']);
+            })->whereCsUserId($ids['cs_user_id'])->find($ids['id']);
+        } else {
+            $order = Order::find($id);
+        }
+
+        if ($this->order = $order) {
             return $this->order;
         }
 

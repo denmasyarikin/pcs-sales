@@ -76,11 +76,24 @@ class CustomerController extends Controller
         }
 
         if ($request->has('key')) {
-            $customers->where(function ($q) use ($request) {
-                $q->where('id', $request->key);
-                $q->orwhere('name', 'like', "%{$request->key}%");
-                $q->orWhere('address', 'like', "%{$request->key}%");
-            });
+            if (Customer::isCode($request->key)) {
+                $customers->where(function($q) use ($request) {
+                    $ids = Customer::getIdFromCode($request->key);
+                    $q->where('id', $ids['id']);
+                    $q->whereHas('chanel', function($chanel) use ($ids) {
+                        $chanelIds = Chanel::getIdFromCode($ids['chanel_code']);
+                        $chanel->whereType($chanelIds['type']);
+                        $chanel->whereId($chanelIds['id']);
+                    });
+                });
+            } else {
+                $customers->where(function ($q) use ($request) {
+                    $q->where('name', 'like', "%{$request->key}%");
+                    $q->orwhere('telephone', 'like', "%{$request->key}%");
+                    $q->orwhere('email', 'like', "%{$request->key}%");
+                    $q->orWhere('address', 'like', "%{$request->key}%");
+                });
+            }
         }
 
         return $customers->paginate($request->get('per_page') ?: 10);

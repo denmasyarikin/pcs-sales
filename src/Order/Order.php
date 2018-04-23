@@ -3,6 +3,7 @@
 namespace Denmasyarikin\Sales\Order;
 
 use App\Model;
+use Modules\Chanel\Chanel;
 use Illuminate\Support\Collection;
 use Denmasyarikin\Sales\Payment\Payment;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -224,5 +225,50 @@ class Order extends Model implements Taxable, Voucherable, Discountable
     public function scopeOverEstimated($query, $date)
     {
         return $query->whereDate('estimated_finish_date', '<', $date)->whereIn('status', ['draft', 'created', 'processing']);
+    }
+
+    /**
+     * Get Code.
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function getCodeAttribute($value)
+    {
+        $chanel = $this->chanel->code;
+        $cs = str_pad($this->cs_user_id, 2, '0', STR_PAD_LEFT);
+        $order = str_pad($this->id, 5, '0', STR_PAD_LEFT);
+
+        return $chanel . $cs . $order;
+    }
+    
+    /**
+     * check id given string code
+     *
+     * @param string $code
+     * @return bool
+     */
+    public static function isCode($code)
+    {
+        // better way use regex in next time
+        return strlen($code) === 10 AND
+            Chanel::isCode(substr($code, 0, 3)) AND
+            is_numeric(substr($code, 3, 2)) AND
+            is_numeric(substr($code, 5, 5)); // from getCodeAttribute
+    }
+
+    /**
+     * get id from code.
+     *
+     * @param string $code
+     * @return array
+     */
+    public static function getIdFromCode($code)
+    {
+        return [
+            'chanel_code' => substr($code, 0, 3),
+            'cs_user_id' => intval(substr($code, 3, 2)),
+            'id' => intval(substr($code, 5, 5))
+        ];
     }
 }

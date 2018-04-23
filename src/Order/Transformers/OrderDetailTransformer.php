@@ -20,6 +20,7 @@ class OrderDetailTransformer extends Detail
     {
         return [
             'id' => $model->id,
+            'code' => $model->code,
             'chanel' => (new ChanelDetailTransformer($model->chanel, ['id', 'name', 'type', 'markup', 'required_down_payment', 'due_date_day_count']))->toArray(),
             'customer' => $model->customer ? (new OrderCustomerTransformer($model->customer))->toArray() : null,
             'item_total' => $model->item_total,

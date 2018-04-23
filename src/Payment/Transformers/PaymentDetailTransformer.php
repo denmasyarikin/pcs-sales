@@ -21,6 +21,7 @@ class PaymentDetailTransformer extends Detail
         return [
             'id' => $model->id,
             'order_id' => (int) $model->order_id,
+            'order_code' => $model->order->code,
             'customer' => (new OrderCustomerTransformer($model->customer))->toArray(),
             'type' => $model->type,
             'payment_method' => $model->payment_method,

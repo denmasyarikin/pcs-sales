@@ -19,6 +19,7 @@ class CustomerDetailTransformer extends Detail
     {
         return [
             'id' => $model->id,
+            'code' => $model->code,
             'chanel' => (new ChanelDetailTransformer($model->chanel))->toArray(),
             'name' => $model->name,
             'address' => $model->address,

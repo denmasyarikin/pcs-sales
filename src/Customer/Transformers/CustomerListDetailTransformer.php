@@ -18,6 +18,7 @@ class CustomerListDetailTransformer extends Detail
     {
         return [
             'id' => $model->id,
+            'code' => $model->code,
             'chanel_id' => $model->chanel->id,
             'chanel_type' => $model->chanel->type,
             'name' => $model->name,

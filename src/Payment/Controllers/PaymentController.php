@@ -2,6 +2,8 @@
 
 namespace Denmasyarikin\Sales\Payment\Controllers;
 
+use Modules\User\User;
+use Modules\Chanel\Chanel;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
@@ -98,12 +100,28 @@ class PaymentController extends Controller
             $payments->where('cs_user_id', Auth::user()->id);
         }
 
+        if ($request->has('cs_user_id')) {
+            $payments->where('cs_user_id', $request->cs_user_id);
+        }
+
         if ($request->has('key')) {
-            $payments->whereHas('customer', function ($query) use ($request) {
-                return $query->where('name', 'like', "%{$request->key}%");
-            });
-            $payments->orWhere('id', $request->key);
-            $payments->orWhere('pay', $request->key);
+            if (Order::isCode($request->key)) {
+                $payments->whereHas('order', function($q) use ($request) {
+                    $ids = Order::getIdFromCode($request->key);
+                    $q->where('id', $ids['id']);
+                    $q->where('cs_user_id', $ids['cs_user_id']);
+                    $q->whereHas('chanel', function($chanel) use ($ids) {
+                        $chanelIds = Chanel::getIdFromCode($ids['chanel_code']);
+                        $chanel->whereType($chanelIds['type']);
+                        $chanel->whereId($chanelIds['id']);
+                    });
+                });
+            } else {
+                $payments->whereHas('customer', function ($query) use ($request) {
+                    return $query->where('name', 'like', "%{$request->key}%");
+                });
+                $payments->orWhere('pay', $request->key);
+            }
         }
 
         return $payments->paginate($request->get('per_page') ?: 10);
@@ -237,5 +255,26 @@ class PaymentController extends Controller
         $factory->resetAllPayment();
 
         return new JsonResponse(['message' => 'Payment has been deleted']);
+    }
+
+    /**
+     * get customer services.
+     *
+     * @param Request $request
+     * @return json
+     */
+    public function getCustomerServices(Request $request)
+    {
+        $usersIds = Payment::select('cs_user_id')
+                        ->distinct('cs_user_id')
+                        ->get()
+                        ->pluck('cs_user_id')
+                        ->toArray();
+
+        $users = User::whereIn('id', $usersIds)->whereStatus('active')->get();
+
+        return new JsonResponse([
+            'data' => $users->toArray()
+        ]);
     }
 }
