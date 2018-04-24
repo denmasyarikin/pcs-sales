@@ -164,11 +164,11 @@ class ItemController extends Controller
      */
     protected function restrictAdjustment(Request $request)
     {
-        if ($request->has('discount')) {
+        if ($request->has('discount') AND intval($request->discount) > 0) {
             $this->orderAdjustmentRestriction('discount');
         }
 
-        if ($request->has('voucher')) {
+        if ($request->has('voucher') AND !empty($request->voucher)) {
             $this->orderAdjustmentRestriction('voucher');
         }
     }
