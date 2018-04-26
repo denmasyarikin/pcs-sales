@@ -13,7 +13,7 @@ class ProductMedia extends Migration
     {
         Schema::create('sales_product_medias', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('product_id')->unsigned()->nullable()->default(null);
+            $table->integer('product_id')->unsigned();
             $table->enum('type', ['image', 'youtube'])->default('image');
             $table->text('content');
             $table->integer('sequence')->default(0);

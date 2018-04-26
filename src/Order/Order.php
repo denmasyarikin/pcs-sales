@@ -52,6 +52,14 @@ class Order extends Model implements Taxable, Voucherable, Discountable
     }
 
     /**
+     * Get the workspace record associated with the Order.
+     */
+    public function workspace()
+    {
+        return $this->belongsTo('Modules\Workspace\Workspace')->withTrashed();
+    }
+
+    /**
      * Get the customer record associated with the Order.
      */
     public function customer()

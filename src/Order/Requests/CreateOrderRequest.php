@@ -14,6 +14,7 @@ class CreateOrderRequest extends FormRequest
     public function rules()
     {
         return [
+            'workspace_id' => 'required|exists:core_workspaces,id',
             'chanel_id' => 'required|exists:core_chanels,id',
         ];
     }

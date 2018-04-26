@@ -13,6 +13,7 @@ class Order extends Migration
     {
         Schema::create('sales_orders', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('workspace_id')->unsigned();
             $table->integer('chanel_id')->unsigned();
             $table->bigInteger('item_total')->default(0);
             $table->bigInteger('adjustment_total')->default(0);
@@ -33,8 +34,9 @@ class Order extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('cs_user_id')->references('id')->on('core_users');
+            $table->foreign('workspace_id')->references('id')->on('core_workspaces');
             $table->foreign('chanel_id')->references('id')->on('core_chanels');
+            $table->foreign('cs_user_id')->references('id')->on('core_users');
         });
     }
 

@@ -387,6 +387,7 @@ class OrderController extends Controller
         $user = $request->user();
 
         $order = Order::create([
+            'workspace_id' => $request->workspace_id,
             'chanel_id' => $request->chanel_id,
             'cs_user_id' => $user->id,
             'cs_name' => $user->name,
