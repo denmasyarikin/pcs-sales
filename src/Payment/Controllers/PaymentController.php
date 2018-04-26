@@ -34,6 +34,18 @@ class PaymentController extends Controller
 
         $this->dateRange($query, $request);
 
+        if ($request->has('chanel_id')) {
+            $query->whereHas('order', function($q) use ($request) {
+                $q->where('chanel_id', $request->chanel_id);
+            });
+        }
+
+        if ($request->has('workspace_id')) {
+            $query->whereHas('order', function($q) use ($request) {
+                $q->where('workspace_id', $request->workspace_id);
+            });
+        }
+
         $payments = $query->get();
 
         return new JsonResponse([
@@ -102,6 +114,18 @@ class PaymentController extends Controller
 
         if ($request->has('cs_user_id')) {
             $payments->where('cs_user_id', $request->cs_user_id);
+        }
+
+        if ($request->has('chanel_id')) {
+            $payments->whereHas('order', function($q) use ($request) {
+                $q->where('chanel_id', $request->chanel_id);
+            });
+        }
+
+        if ($request->has('workspace_id')) {
+            $payments->whereHas('order', function($q) use ($request) {
+                $q->where('workspace_id', $request->workspace_id);
+            });
         }
 
         if ($request->has('key')) {

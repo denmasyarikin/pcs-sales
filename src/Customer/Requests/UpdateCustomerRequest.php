@@ -31,7 +31,7 @@ class UpdateCustomerRequest extends DetailCustomerRequest
             'chanel_id' => 'required|exists:core_chanels,id',
             'name' => 'required|max:50',
             'address' => 'nullable',
-            'telephone' => 'nullable|digits_between:4,20|numeric',
+            'telephone' => 'nullable|numeric',
             'email' => 'nullable|email',
             'contact_person' => 'nullable|min:3|max:50',
             'user_id' => 'nullable|numeric|exists:core_users,id',

@@ -46,7 +46,11 @@ class OrderController extends Controller
         if ($request->has('date')) {
             $date = $request->date;
         }
-        
+
+        if ($request->has('workspace_id')) {
+            $query->whereWorkspaceId($request->workspace_id);
+        }
+
         $data = $query->whereDate('created_at', $date)->get();
         
         return new JsonResponse(['data' => $this->generateCounter($data)]);
@@ -69,10 +73,15 @@ class OrderController extends Controller
 
         foreach ($period as $dt) {
             $formated = $dt->format("Y-m-d");
-            $data = Order::whereDate('created_at', $formated)->get();
+            $query = Order::whereDate('created_at', $formated);
+
+            if ($request->has('workspace_id')) {
+                $query->whereWorkspaceId($request->workspace_id);
+            }
+
             $dates[] = [
                 'date' => $formated,
-                'data' => $this->generateCounter($data)
+                'data' => $this->generateCounter($query->get())
             ];
         }
         
@@ -110,11 +119,16 @@ class OrderController extends Controller
      */
     public function getOvers(Request $request)
     {
-        $queryDueDate = Order::overDueDate($request->date)->get();
-        $queryEstimate = Order::overEstimated($request->date)->get();
-        
-        $transformDueDate = new OrderListAllTransformer($queryDueDate);
-        $transformEstimate = new OrderListAllTransformer($queryEstimate);
+        $queryDueDate = Order::overDueDate($request->date);
+        $queryEstimate = Order::overEstimated($request->date);
+
+        if ($request->has('workspace_id')) {
+            $queryDueDate->whereWorkspaceId($request->workspace_id);
+            $queryEstimate->whereWorkspaceId($request->workspace_id);
+        }
+
+        $transformDueDate = new OrderListAllTransformer($queryDueDate->get());
+        $transformEstimate = new OrderListAllTransformer($queryEstimate->get());
         
         return new JsonResponse([
             'data' => [
@@ -135,8 +149,13 @@ class OrderController extends Controller
      */
     public function getDebt(Request $request)
     {
-        $query = Order::whereStatus('taken')->where('paid', 0)->get();
-        $transform = new OrderListAllTransformer($query);
+        $query = Order::whereStatus('taken')->where('paid', 0);
+
+        if ($request->has('workspace_id')) {
+            $query->whereWorkspaceId($request->workspace_id);
+        }
+
+        $transform = new OrderListAllTransformer($query->get());
         
         return new JsonResponse([
             'data' => [
@@ -316,6 +335,10 @@ class OrderController extends Controller
 
         if ($request->has('chanel_id')) {
             $orders->whereChanelId($request->chanel_id);
+        }
+
+        if ($request->has('workspace_id')) {
+            $orders->whereWorkspaceId($request->workspace_id);
         }
 
         if ($request->has('created_at')) {
