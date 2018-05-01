@@ -41,7 +41,7 @@ class HistoryController extends Controller
         $order = $request->getOrder();
         $history = $order->histories()->create(
             $request->only(['type', 'label']) + [
-                'data' => !is_null($data) ? json_encode($request->data) : null,
+                'data' => !is_null($request->data) ? json_encode($request->data) : null,
             ]
         );
 
@@ -61,7 +61,12 @@ class HistoryController extends Controller
     public function updateHistory(UpdateOrderHistoryRequest $request)
     {
         $history = $request->getOrderHistory();
-        $history->update($request->only(['type', 'label']));
+
+        $history->update(
+            $request->only(['type', 'label']) + [
+                'data' => !is_null($request->data) ? json_encode($request->data) : null,
+            ]
+        );
 
         return new JsonResponse([
             'messaage' => 'Order history has been updated',

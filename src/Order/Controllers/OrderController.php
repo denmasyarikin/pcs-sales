@@ -49,6 +49,8 @@ class OrderController extends Controller
 
         if ($request->has('workspace_id')) {
             $query->whereWorkspaceId($request->workspace_id);
+        } else {
+            $query->whereIn('workspace_id', Auth::user()->workspaces->pluck('id'));
         }
 
         $data = $query->whereDate('created_at', $date)->get();
@@ -77,6 +79,8 @@ class OrderController extends Controller
 
             if ($request->has('workspace_id')) {
                 $query->whereWorkspaceId($request->workspace_id);
+            } else {
+                $query->whereIn('workspace_id', Auth::user()->workspaces->pluck('id'));
             }
 
             $dates[] = [
@@ -125,6 +129,9 @@ class OrderController extends Controller
         if ($request->has('workspace_id')) {
             $queryDueDate->whereWorkspaceId($request->workspace_id);
             $queryEstimate->whereWorkspaceId($request->workspace_id);
+        } else {
+            $queryDueDate->whereIn('workspace_id', Auth::user()->workspaces->pluck('id'));
+            $queryEstimate->whereIn('workspace_id', Auth::user()->workspaces->pluck('id'));
         }
 
         $transformDueDate = new OrderListAllTransformer($queryDueDate->get());
@@ -153,6 +160,8 @@ class OrderController extends Controller
 
         if ($request->has('workspace_id')) {
             $query->whereWorkspaceId($request->workspace_id);
+        } else {
+            $query->whereIn('workspace_id', Auth::user()->workspaces->pluck('id'));
         }
 
         $transform = new OrderListAllTransformer($query->get());
@@ -339,6 +348,8 @@ class OrderController extends Controller
 
         if ($request->has('workspace_id')) {
             $orders->whereWorkspaceId($request->workspace_id);
+        } else {
+            $orders->whereIn('workspace_id', Auth::user()->workspaces->pluck('id'));
         }
 
         if ($request->has('created_at')) {

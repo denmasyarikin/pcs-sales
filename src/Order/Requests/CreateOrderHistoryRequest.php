@@ -14,6 +14,7 @@ class CreateOrderHistoryRequest extends DetailOrderRequest
         return [
             'type' => 'required|in:order,process,payment,delivery',
             'label' => 'required',
+            'data' => 'nullable',
         ];
     }
 }

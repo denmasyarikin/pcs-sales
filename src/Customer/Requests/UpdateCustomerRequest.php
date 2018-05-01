@@ -15,7 +15,7 @@ class UpdateCustomerRequest extends DetailCustomerRequest
     {
         $customer = parent::getCustomer();
 
-        $this->checkFreshData($customer);
+        $this->checkFreshData($customer, 'customer_last_updated');
 
         return $customer;
     }

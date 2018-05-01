@@ -41,7 +41,7 @@ class UpdateOrderHistoryRequest extends DetailOrderRequest
         }
 
         $order = $this->getOrder();
-        $id = $this->route('history_id');
+        $id = (int) $this->route('history_id');
 
         if ($this->orderHistory = $order->histories()->find($id)) {
             return $this->orderHistory;
@@ -60,6 +60,7 @@ class UpdateOrderHistoryRequest extends DetailOrderRequest
         return [
             'type' => 'required|in:order,process,payment,delivery',
             'label' => 'required',
+            'data' => 'nullable',
         ];
     }
 }

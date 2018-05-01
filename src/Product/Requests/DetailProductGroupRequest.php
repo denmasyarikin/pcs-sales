@@ -26,7 +26,7 @@ class DetailProductGroupRequest extends FormRequest
             return $this->productGroup;
         }
 
-        $id = $this->route('id');
+        $id = (int) $this->route('id');
 
         if ($this->productGroup = ProductGroup::find($id)) {
             return $this->productGroup;

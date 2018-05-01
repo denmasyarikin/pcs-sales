@@ -40,11 +40,13 @@ class PaymentController extends Controller
             });
         }
 
-        if ($request->has('workspace_id')) {
-            $query->whereHas('order', function($q) use ($request) {
+        $query->whereHas('order', function($q) use ($request) {
+            if ($request->has('workspace_id')) {
                 $q->where('workspace_id', $request->workspace_id);
-            });
-        }
+            } else {
+                $q->whereIn('workspace_id', Auth::user()->workspaces->pluck('id'));
+            }
+        });
 
         $payments = $query->get();
 
@@ -122,11 +124,13 @@ class PaymentController extends Controller
             });
         }
 
-        if ($request->has('workspace_id')) {
-            $payments->whereHas('order', function($q) use ($request) {
+        $payments->whereHas('order', function($q) use ($request) {
+            if ($request->has('workspace_id')) {
                 $q->where('workspace_id', $request->workspace_id);
-            });
-        }
+            } else {
+                $q->whereIn('workspace_id', Auth::user()->workspaces->pluck('id'));
+            }
+        });
 
         if ($request->has('key')) {
             if (Order::isCode($request->key)) {

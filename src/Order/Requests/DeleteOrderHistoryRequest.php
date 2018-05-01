@@ -26,7 +26,7 @@ class DeleteOrderHistoryRequest extends DetailOrderRequest
         }
 
         $order = $this->getOrder();
-        $id = $this->route('history_id');
+        $id = (int) $this->route('history_id');
 
         if ($this->orderHistory = $order->histories()->find($id)) {
             return $this->orderHistory;

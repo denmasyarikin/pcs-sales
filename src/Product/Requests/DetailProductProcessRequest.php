@@ -26,7 +26,7 @@ class DetailProductProcessRequest extends DetailProductRequest
         }
 
         $product = $this->getProduct();
-        $id = $this->route('process_id');
+        $id = (int) $this->route('process_id');
 
         if ($this->productProcess = $product->processes()->find($id)) {
             return $this->productProcess;

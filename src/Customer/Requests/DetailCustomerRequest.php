@@ -28,7 +28,7 @@ class DetailCustomerRequest extends FormRequest
         }
 
         $customer = null;
-        $id = $this->route('id');
+        $id = (int) $this->route('id');
 
         if (Customer::isCode($id)) {
             $ids = Customer::getIdFromCode($id);

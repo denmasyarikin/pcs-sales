@@ -63,7 +63,7 @@ class DetailProductRequest extends FormRequest
             return $this->product;
         }
 
-        $id = $this->route('id');
+        $id = (int) $this->route('id');
 
         if ($this->product = Product::find($id)) {
             return $this->product;

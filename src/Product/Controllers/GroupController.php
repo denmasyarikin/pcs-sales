@@ -24,9 +24,9 @@ class GroupController extends Controller
      */
     public function getList(Request $request)
     {
-        $banks = $this->getProductGroupList($request);
+        $groups = $this->getProductGroupList($request);
 
-        $transform = new ProductGroupListTransformer($banks);
+        $transform = new ProductGroupListTransformer($groups);
 
         return new JsonResponse(['data' => $transform->toArray()]);
     }
@@ -40,14 +40,14 @@ class GroupController extends Controller
      */
     protected function getProductGroupList(Request $request)
     {
-        $banks = ProductGroup::orderBy('created_at', 'DESC');
+        $groups = ProductGroup::orderBy('created_at', 'DESC');
 
         if ($request->has('key')) {
-            $banks->where('id', $request->key);
-            $banks->orwhere('name', 'like', "%{$request->key}%");
+            $groups->where('id', $request->key);
+            $groups->orwhere('name', 'like', "%{$request->key}%");
         }
 
-        return $banks->get();
+        return $groups->get();
     }
 
     /**

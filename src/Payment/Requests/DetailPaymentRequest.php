@@ -28,7 +28,7 @@ class DetailPaymentRequest extends FormRequest
             return $this->payment;
         }
 
-        $id = $this->route('id');
+        $id = (int) $this->route('id');
 
         if ($this->payment = Payment::find($id)) {
             return $this->payment;

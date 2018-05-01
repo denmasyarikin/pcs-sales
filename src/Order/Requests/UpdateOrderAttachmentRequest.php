@@ -41,7 +41,7 @@ class UpdateOrderAttachmentRequest extends DetailOrderRequest
         }
 
         $order = $this->getOrder();
-        $id = $this->route('attachment_id');
+        $id = (int) $this->route('attachment_id');
 
         if ($this->orderAttachment = $order->attachments()->find($id)) {
             return $this->orderAttachment;

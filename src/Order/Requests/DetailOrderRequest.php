@@ -71,7 +71,7 @@ class DetailOrderRequest extends FormRequest
         }
 
         $order = null;
-        $id = $this->route('id');
+        $id = (int) $this->route('id');
 
         if (Order::isCode($id)) {
             $ids = Order::getIdFromCode($id);
