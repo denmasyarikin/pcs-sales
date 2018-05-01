@@ -2,24 +2,8 @@
 
 namespace Denmasyarikin\Sales\Customer\Requests;
 
-use Denmasyarikin\Sales\Customer\Customer;
-
 class UpdateCustomerRequest extends DetailCustomerRequest
 {
-    /**
-     * get customer.
-     *
-     * @return Customer
-     */
-    public function getCustomer(): ?Customer
-    {
-        $customer = parent::getCustomer();
-
-        $this->checkFreshData($customer, 'customer_last_updated');
-
-        return $customer;
-    }
-
     /**
      * Get the validation rules that apply to the request.
      *

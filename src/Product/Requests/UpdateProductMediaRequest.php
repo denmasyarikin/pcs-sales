@@ -3,7 +3,6 @@
 namespace Denmasyarikin\Sales\Product\Requests;
 
 use Denmasyarikin\Sales\Product\ProductMedia;
-use Denmasyarikin\Sales\Product\Product;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class UpdateProductMediaRequest extends DetailProductRequest
@@ -14,20 +13,6 @@ class UpdateProductMediaRequest extends DetailProductRequest
      * @var ProductMedia
      */
     public $productMedia;
-
-    /**
-     * get product.
-     *
-     * @return Product
-     */
-    public function getProduct(): ?Product
-    {
-        $product = parent::getProduct();
-
-        $this->checkFreshData($product);
-
-        return $product;
-    }
 
     /**
      * get productMedia.

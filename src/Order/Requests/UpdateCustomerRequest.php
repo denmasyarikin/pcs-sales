@@ -2,7 +2,6 @@
 
 namespace Denmasyarikin\Sales\Order\Requests;
 
-use Denmasyarikin\Sales\Order\Order;
 use Denmasyarikin\Sales\Customer\Customer;
 
 class UpdateCustomerRequest extends DetailOrderRequest
@@ -27,23 +26,9 @@ class UpdateCustomerRequest extends DetailOrderRequest
             return $this->customer;
         }
 
-        if ($this->customer = Customer::whereChanelId($order->chanel_id)->find($this->customer_id)) {
+        if ($this->customer = Customer::whereChanelId($order->chanel_id)->find((int) $this->customer_id)) {
             return $this->customer;
         }
-    }
-
-    /**
-     * get order.
-     *
-     * @return Order
-     */
-    public function getOrder(): ?Order
-    {
-        $order = parent::getOrder();
-
-        $this->checkFreshData($order);
-
-        return $order;
     }
 
     /**

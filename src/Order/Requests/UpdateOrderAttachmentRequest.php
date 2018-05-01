@@ -2,7 +2,6 @@
 
 namespace Denmasyarikin\Sales\Order\Requests;
 
-use Denmasyarikin\Sales\Order\Order;
 use Denmasyarikin\Sales\Order\OrderAttachment;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -14,20 +13,6 @@ class UpdateOrderAttachmentRequest extends DetailOrderRequest
      * @var OrderAttachment
      */
     public $orderAttachment;
-
-    /**
-     * get order.
-     *
-     * @return Order
-     */
-    public function getOrder(): ?Order
-    {
-        $order = parent::getOrder();
-
-        $this->checkFreshData($order);
-
-        return $order;
-    }
 
     /**
      * get orderAttachment.
