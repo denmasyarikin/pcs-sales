@@ -51,7 +51,6 @@ class MediaController extends Controller
         ]));
 
         return new JsonResponse([
-            'updated_at' => $product->updated_at->format('Y-m-d H:i:s'), 
             'message' => 'Product Media has been created',
             'data' => (new ProductMediaDetailTransformer($media))->toArray(),
         ], 201);
@@ -78,7 +77,6 @@ class MediaController extends Controller
         ]));
 
         return new JsonResponse([
-            'updated_at' => $product->updated_at->format('Y-m-d H:i:s'), 
             'message' => 'Product Media has been updated',
             'data' => (new ProductMediaDetailTransformer($media))->toArray(),
         ]);
@@ -102,10 +100,7 @@ class MediaController extends Controller
 
         $media->update(['primary' => true]);
 
-        return new JsonResponse([
-            'updated_at' => $product->updated_at->format('Y-m-d H:i:s'),
-            'message' => 'Product Media Primary has been updated',
-        ]);
+        return new JsonResponse(['message' => 'Product Media Primary has been updated']);
     }
 
     /**

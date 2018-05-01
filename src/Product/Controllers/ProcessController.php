@@ -67,7 +67,6 @@ class ProcessController extends Controller
         $process = $product->createProcess($this->getDataFromRequest($request));
 
         return new JsonResponse([
-            'updated_at' => $product->updated_at->format('Y-m-d H:i:s'), 
             'message' => 'Product Process has been created',
             'data' => (new ProductProcessDetailTransformer($process))->toArray(),
         ], 201);
@@ -88,7 +87,6 @@ class ProcessController extends Controller
         $process->update($this->getDataFromRequest($request));
 
         return new JsonResponse([
-            'updated_at' => $product->updated_at->format('Y-m-d H:i:s'), 
             'message' => 'Product Process has been updated',
             'data' => (new ProductProcessDetailTransformer($process))->toArray(),
         ]);
@@ -130,9 +128,6 @@ class ProcessController extends Controller
             $product->update(['status' => 'draft']);
         }
 
-        return new JsonResponse([
-            'updated_at' => $product->updated_at->format('Y-m-d H:i:s'), 
-            'message' => 'Product process has been deleted'
-        ]);
+        return new JsonResponse(['message' => 'Product process has been deleted']);
     }
 }

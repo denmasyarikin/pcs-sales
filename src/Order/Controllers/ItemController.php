@@ -151,10 +151,7 @@ class ItemController extends Controller
 
         $factory->deleteOrderItem($orderItem);
 
-        return new JsonResponse([
-            'message' => 'Order Item has been deleted',
-            'updated_at' => $order->updated_at,
-        ]);
+        return new JsonResponse(['message' => 'Order Item has been deleted']);
     }
 
     /**

@@ -520,7 +520,6 @@ class OrderController extends Controller
         }
 
         return new JsonResponse([
-            'updated_at' => $order->updated_at->format('Y-m-d H:i:s'),
             'message' => 'Order status has been updated to '.$request->status,
         ]);
     }

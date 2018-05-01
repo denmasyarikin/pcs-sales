@@ -63,10 +63,7 @@ class CustomerController extends Controller
 
         $order->touch();
 
-        return new JsonResponse([
-            'message' => 'Order Customer has been updated',
-            'data' => ['updated_at' => $order->updated_at->format('Y-m-d H:i:s')],
-        ]);
+        return new JsonResponse(['message' => 'Order Customer has been updated']);
     }
 
     /**
