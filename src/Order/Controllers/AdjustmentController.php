@@ -29,11 +29,11 @@ class AdjustmentController extends Controller
         $this->orderAdjustmentRestriction('discount');
 
         $order = $request->getOrder();
-        $this->updateableOrder($order, false);
+        $this->updateableOrder($order);
         $this->hasItems($order);
 
         $factory = new DiscountFactory($order);
-        $factory->apply($request->value, $request->type);
+        $factory->apply($request->value, $request->rule);
 
         return new JsonResponse(['message' => 'Discount has been applyed']);
     }
@@ -50,7 +50,7 @@ class AdjustmentController extends Controller
         $this->orderAdjustmentRestriction('tax');
 
         $order = $request->getOrder();
-        $this->updateableOrder($order, false);
+        $this->updateableOrder($order);
         $this->hasItems($order);
 
         $taxRate = Setting::get('system.sales.order.tax.tax_rate', 10);

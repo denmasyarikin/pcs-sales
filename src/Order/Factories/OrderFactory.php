@@ -3,6 +3,7 @@
 namespace Denmasyarikin\Sales\Order\Factories;
 
 use App\Manager\Facades\Setting;
+use Illuminate\Support\Facades\DB;
 use Denmasyarikin\Sales\Order\Order;
 use Denmasyarikin\Sales\Order\OrderItem;
 use Denmasyarikin\Sales\Payment\Factory as PaymentFactory;
@@ -39,31 +40,40 @@ class OrderFactory
      *
      * @param array  $item
      * @param string $markup
-     * @param string $markupType
+     * @param string $markupRule
      * @param string $discount
-     * @param string $discountType
+     * @param string $discountRule
      * @param string $voucher
      *
      * @return OrderItem
      */
-    public function createOrderItem(array $item, $markup = null, $markupType = null, $discount = null, $discountType = null, $voucher = null)
+    public function createOrderItem(array $item, $markup = null, $markupRule = null, $discount = null, $discountRule = null, $voucher = null)
     {
-        $item['total'] = $item['unit_total'];
+        try {
+            DB::beginTransaction();
 
-        $orderItem = $this->order->items()->create($item);
+            $item['total'] = $item['unit_total'];
 
-        // if product process just store to db, they are not effected to the order
-        if ('product' === $item['type'] and 'product' !== $item['type_as']) {
+            $orderItem = $this->order->items()->create($item);
+
+            // if product process just store to db, they are not effected to the order
+            if ('product' === $item['type'] and 'product' !== $item['type_as']) {
+                return $orderItem;
+            }
+
+            $orderItem = $this->applyAdjustment($orderItem, $markup, $markupRule, $discount, $discountRule, $voucher);
+
+            $this->updateOrderItemTotal();
+            $this->resetOrderAdjustment();
+            $this->resetOrderPayment();
+
+            DB::commit();
+
             return $orderItem;
+        } catch (\Exception $e) {
+            DB::rollback();
+            throw $e;            
         }
-
-        $orderItem = $this->applyAdjustment($orderItem, $markup, $markupType, $discount, $discountType, $voucher);
-
-        $this->updateOrderItemTotal();
-        $this->resetOrderAdjustment();
-        $this->resetOrderPayment();
-
-        return $orderItem;
     }
 
     /**
@@ -72,31 +82,40 @@ class OrderFactory
      * @param OrderItem $orderItem
      * @param array     $item
      * @param string    $markup
-     * @param string    $markupType
+     * @param string    $markupRule
      * @param string    $discount
-     * @param string    $discountType
+     * @param string    $discountRule
      * @param string    $voucher
      *
      * @return OrderItem
      */
-    public function updateOrderItem(OrderItem $orderItem, array $item, $markup = null, $markupType = null, $discount = null, $discountType = null, $voucher = null)
+    public function updateOrderItem(OrderItem $orderItem, array $item, $markup = null, $markupRule = null, $discount = null, $discountRule = null, $voucher = null)
     {
-        $item['total'] = $item['unit_total'];
+        try {
+            DB::beginTransaction();
 
-        $orderItem->update($item);
+            $item['total'] = $item['unit_total'];
 
-        // if product process just store to db, they are not effected to the order
-        if ('product' === $item['type'] and 'product' !== $item['type_as']) {
+            $orderItem->update($item);
+
+            // if product process just store to db, they are not effected to the order
+            if ('product' === $item['type'] and 'product' !== $item['type_as']) {
+                return $orderItem;
+            }
+
+            $orderItem = $this->applyAdjustment($orderItem, $markup, $markupRule, $discount, $discountRule, $voucher);
+
+            $this->updateOrderItemTotal();
+            $this->resetOrderAdjustment();
+            $this->resetOrderPayment();
+
+            DB::commit();
+
             return $orderItem;
+        } catch (\Exception $e) {
+            DB::rollback();
+            throw $e;            
         }
-
-        $orderItem = $this->applyAdjustment($orderItem, $markup, $markupType, $discount, $discountType, $voucher);
-
-        $this->updateOrderItemTotal();
-        $this->resetOrderAdjustment();
-        $this->resetOrderPayment();
-
-        return $orderItem;
     }
 
     /**
@@ -104,37 +123,28 @@ class OrderFactory
      *
      * @param OrderItem $orderItem
      * @param string    $markup
-     * @param string    $markupType
+     * @param string    $markupRule
      * @param string    $discount
-     * @param string    $discountType
+     * @param string    $discountRule
      * @param string    $voucher
      *
      * @return OrderItem
      */
-    protected function applyAdjustment(OrderItem $orderItem, $markup = null, $markupType = null, $discount = null, $discountType = null, $voucher = null)
+    protected function applyAdjustment(OrderItem $orderItem, $markup = null, $markupRule = null, $discount = null, $discountRule = null, $voucher = null)
     {
-        if (!is_null($markup) and $markup > 0) {
+        if (!is_null($markup) and !is_null($markupRule)) {
             $factory = new MarkupFactory($orderItem);
-            $orderItem = $factory->apply($markup, $markupType);
-        } else {
-            // remove markup
-            $orderItem->adjustments()->whereType('markup')->delete();
+            $orderItem = $factory->apply($markup, $markupRule);
         }
 
-        if (!is_null($discount) and $discount > 0) {
+        if (!is_null($discount) and !is_null($discountRule)) {
             $factory = new DiscountFactory($orderItem);
-            $orderItem = $factory->apply($discount, $discountType);
-        } else {
-            // remove discount
-            $orderItem->adjustments()->whereType('discount')->delete();
+            $orderItem = $factory->apply($discount, $discountRule);
         }
 
         if (!is_null($voucher) and '' !== $voucher) {
             $factory = new VoucherFactory($orderItem);
             $orderItem = $factory->apply($voucher);
-        } else {
-            // remove voucher
-            $orderItem->adjustments()->whereType('voucher')->delete();
         }
 
         return $orderItem;
@@ -165,8 +175,7 @@ class OrderFactory
             return;
         }
 
-        $reseter = new AdjustmentReseter($this->order);
-        $reseter->reset();
+        AdjustmentFactory::resetAdjustments($this->order);
     }
 
     /**
@@ -190,26 +199,23 @@ class OrderFactory
      */
     public function deleteOrderItem(OrderItem $orderItem)
     {
-        $orderItem->delete();
+        try {
+            DB::beginTransaction();
 
-        // special case for product
-        if ('product' === $orderItem->type) {
-            if ('product' === $orderItem->type_as) {
-                // also delete its process
-                $this->order->items()
-                    ->whereType('product')
-                    ->where('type_as', '<>', 'product')
-                    ->whereReferenceId($orderItem->id)
-                    ->whereReferenceType('product')
-                    ->delete();
-            } else {
-                // if product process they are not effected to the order
-                return;
+            $orderItem->delete();
+
+            // special action for product
+            if ('product' === $orderItem->type) {
+                $orderItem->children()->delete();
             }
-        }
 
-        $this->updateOrderItemTotal();
-        $this->resetOrderAdjustment();
-        $this->resetOrderPayment();
+            $this->updateOrderItemTotal();
+            $this->resetOrderAdjustment();
+            $this->resetOrderPayment();
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+            throw $e;            
+        }
     }
 }

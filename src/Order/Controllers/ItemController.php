@@ -70,9 +70,9 @@ class ItemController extends Controller
         $orderItem = $factory->createOrderItem(
             $this->getDataFromRequest($request),
             $request->input('markup'),
-            $request->input('markup_type'),
+            $request->input('markup_rule'),
             $request->input('discount'),
-            $request->input('discount_type'),
+            $request->input('discount_rule'),
             $request->input('voucher')
         );
 
@@ -104,9 +104,9 @@ class ItemController extends Controller
             $orderItem,
             $this->getDataFromRequest($request),
             $request->input('markup'),
-            $request->input('markup_type'),
+            $request->input('markup_rule'),
             $request->input('discount'),
-            $request->input('discount_type'),
+            $request->input('discount_rule'),
             $request->input('voucher')
         );
 

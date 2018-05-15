@@ -44,38 +44,11 @@ class VoucherFactory extends AdjustmentFactory
      *
      * @param Adjustmentable $adjustmentable
      * @param mixed          $value
-     * @param mixed          $option
      *
      * @return string
      */
-    protected function getAdjustmentTotal(Adjustmentable $adjustmentable, $option = null)
+    protected function getAdjustmentTotal(Adjustmentable $adjustmentable)
     {
         dd('TODO Apply voucher');
-    }
-
-    /**
-     * get Adjustment value.
-     *
-     * @param mixed $value
-     * @param mixed $option
-     *
-     * @return string
-     */
-    protected function getAdjustmentValue($value, $option = null)
-    {
-        return $value;
-    }
-
-    /**
-     * should be deleted.
-     *
-     * @param Adjustment $adjustment
-     * @param mixed      $option
-     *
-     * @return bool
-     */
-    protected function shouldDelete(Adjustment $adjustment, $option = null)
-    {
-        return '' == $adjustment->adjustment_value;
     }
 }

@@ -36,9 +36,9 @@ class DetailOrderRequest extends FormRequest
         'unit_total' => 'required|numeric',
         'unit_id' => 'required|exists:core_units,id',
         'markup' => 'nullable|numeric',
-        'markup_type' => 'nullable|in:percentage,amount',
+        'markup_rule' => 'nullable|in:fixed,percentage',
         'discount' => 'nullable|numeric',
-        'discount_type' => 'nullable|in:percentage,amount',
+        'discount_rule' => 'nullable|in:fixed,percentage',
         'voucher' => 'nullable|size:8|voucher',
     ];
 

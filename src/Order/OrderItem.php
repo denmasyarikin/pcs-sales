@@ -154,15 +154,15 @@ class OrderItem extends Model implements Markupable, Discountable, Voucherable
     }
 
     /**
-     * Get MarkupType.
+     * Get MarkupRule.
      *
      * @return string
      */
-    public function getMarkupTypeAttribute()
+    public function getMarkupRuleAttribute()
     {
-        return ($markup = $this->getMarkup())
-            ? (null === $markup->adjustment_value ? 'amount' : 'percentage')
-            : 'percentage';
+        if ($markup = $this->getMarkup()) {
+            return $markup->adjustment_rule;
+        }
     }
 
     /**
@@ -178,15 +178,16 @@ class OrderItem extends Model implements Markupable, Discountable, Voucherable
     }
 
     /**
-     * Get DiscountType.
+     * Get DiscountRule.
      *
      * @return string
      */
-    public function getDiscountTypeAttribute()
+    public function getDiscountRuleAttribute()
     {
-        return ($discount = $this->getDiscount())
-            ? (null === $discount->adjustment_value ? 'amount' : 'percentage')
-            : 'percentage';
+        if ($discount = $this->getDiscount()) {
+            return $discount->adjustment_rule;
+        }
+
     }
 
     /**

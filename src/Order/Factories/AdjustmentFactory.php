@@ -4,6 +4,7 @@ namespace Denmasyarikin\Sales\Order\Factories;
 
 use Denmasyarikin\Sales\Order\Contracts\Adjustment;
 use Denmasyarikin\Sales\Order\Contracts\Adjustmentable;
+use Symfony\Component\Process\Exception\InvalidArgumentException;
 
 abstract class AdjustmentFactory
 {
@@ -20,6 +21,13 @@ abstract class AdjustmentFactory
      * @var string
      */
     protected $adjustmentType;
+
+    /**
+     * adjustment rule.
+     *
+     * @var string
+     */
+    protected $adjustmentRule;
 
     /**
      * adjustmentable.
@@ -42,29 +50,31 @@ abstract class AdjustmentFactory
      * apply.
      *
      * @param mixed $value
-     * @param mxied $option
+     * @param mxied $rule
+     * @param boolean $resetting
      *
      * @return Adjustmentable
      */
-    public function apply($value, $option = null)
+    public function apply($value, $rule = null, $resetting = false)
     {
+        $this->setAdjustmentRule($rule);
         $adjustment = $this->getAdjustment($this->adjustmentable);
 
         if (is_null($adjustment)) {
-            $adjustment = $this->createAdjustment($value, $option);
+            $adjustment = $this->createAdjustment($value);
         } else {
-            $this->substractAdjustmentable($adjustment);
-            $adjustment = $this->updateAdjustment($adjustment, $value, $option);
+            if (!$resetting) $this->reverseAdjustmentable($adjustment);
+            $adjustment = $this->updateAdjustment($adjustment, $value);
         }
 
         $this->updateAdjustmentable($adjustment);
 
-        if ($this->isNeedResetAdjustment()) {
-            $this->resetAllAdjustments();
+        if (!$resetting AND $this->isNeedResetAdjustments()) {
+            static::resetAdjustments($this->adjustmentable);
         }
 
-        // if value has been applyed and value not effected just delete
-        if ($this->shouldDelete($adjustment, $option)) {
+        // if value has been applyed and value not effected
+        if ($this->shouldDelete($adjustment)) {
             $adjustment->delete();
         }
 
@@ -72,24 +82,46 @@ abstract class AdjustmentFactory
     }
 
     /**
-     * check is need reset adjustment.
+     * set adjusment rule
+     *
+     * @param string $rule
+     * @return void
+     */
+    protected function setAdjustmentRule($rule)
+    {
+        if (!is_null($rule)) {
+            $this->adjustmentRule = $rule;
+        }
+
+        // if tax rule already define in factory
+        // if voucher rule will be in voucher TODO
+        // then just make a sure that rule is defined
+
+        if (is_null($this->adjustmentRule)) {
+            throw new InvalidArgumentException('Adjustment rule is not define');
+        }
+    }
+
+    /**
+     * check is need reset all adjustments.
      *
      * @return bool
      */
-    protected function isNeedResetAdjustment()
+    protected function isNeedResetAdjustments()
     {
         return $this->adjustmentable->adjustments()->count() > 1;
     }
 
     /**
-     * substract adjustmentable.
+     * reverse adjustmentable to before apply.
      *
      * @param Adjustment $adjustment
      */
-    protected function substractAdjustmentable(Adjustment $adjustment)
+    protected function reverseAdjustmentable(Adjustment $adjustment)
     {
         $this->adjustmentable->adjustment_total -= $adjustment->adjustment_total;
         $this->adjustmentable->total -= $adjustment->adjustment_total;
+        $this->adjustmentable->save();
     }
 
     /**
@@ -109,73 +141,31 @@ abstract class AdjustmentFactory
 
     /**
      * reset all adjustments by changed adjustment.
+     *
+     * @param Adjustmentable $adjustmentable
+     *
+     * @return void
      */
-    protected function resetAllAdjustments()
+    public static function resetAdjustments(Adjustmentable $adjustmentable)
     {
-        $this->resetAdjustmentable();
-        $adjustments = $this->adjustmentable->getAdjustments();
+        // first we need to reset adjusmentable
+        $itemTotal = $adjustmentable->total - $adjustmentable->adjustment_total;
+        $adjustmentable->update(['adjustment_total' => 0, 'total' => $itemTotal]);
 
+        // then get all adjustment that has been ordering by priority asc
+        $adjustments = $adjustmentable->getAdjustments();
+
+        // lets apply one by one
         foreach ($adjustments as $adjustment) {
-            $option = null;
-            $adjustmentValue = $adjustment->adjustment_value;
-            $factory = $this->createFactory($adjustment);
+            $factoryClass = 'Denmasyarikin\Sales\Order\Factories\\' . ucwords($adjustment->type) . 'Factory';
 
-            switch ($adjustment->type) {
-                case 'discount':
-                    $option = null === $adjustment->adjustment_value ? 'amount' : 'percentage';
-                    if ('amount' === $option) {
-                        $adjustmentValue = $adjustment->adjustment_total * -1;
-                    }
-                    break;
-                case 'markup':
-                    $option = null === $adjustment->adjustment_value ? 'amount' : 'percentage';
-                    if ('amount' === $option) {
-                        $adjustmentValue = $adjustment->adjustment_total;
-                    }
-                    break;
+            if (!class_exists($factoryClass)) {
+                // TODO resarch for this exception what should be
+                throw new \Exception('Factory class not exists');
             }
 
-            $adjustment = $factory->updateAdjustment($adjustment, $adjustmentValue, $option);
-
-            $this->updateAdjustmentable($adjustment);
-        }
-    }
-
-    /**
-     * reset adjustment.
-     */
-    protected function resetAdjustmentable()
-    {
-        $itemTotal = $this->adjustmentable->total - $this->adjustmentable->adjustment_total;
-
-        $this->adjustmentable->update([
-            'adjustment_total' => 0,
-            'total' => $itemTotal,
-        ]);
-    }
-
-    /**
-     * create factory.
-     *
-     * @param Adjustment $adjustment
-     *
-     * @return Factory
-     */
-    protected function createFactory(Adjustment $adjustment)
-    {
-        switch ($adjustment->type) {
-            case 'markup':
-                return new MarkupFactory($this->adjustmentable);
-                break;
-            case 'discount':
-                return new DiscountFactory($this->adjustmentable);
-                break;
-            case 'voucher':
-                return new VoucherFactory($this->adjustmentable);
-                break;
-            case 'tax':
-                return new TaxFactory($this->adjustmentable);
-                break;
+            $factory = new $factoryClass($adjustmentable);
+            $factory->apply($adjustment->adjustment_value, $adjustment->adjustment_rule, true);
         }
     }
 
@@ -183,14 +173,13 @@ abstract class AdjustmentFactory
      * create adjustment.
      *
      * @param mixed $value
-     * @param mixed $option
      *
      * @return OrderAdjustment
      */
-    public function createAdjustment($value, $option = null)
+    protected function createAdjustment($value)
     {
         return $this->adjustmentable->adjustments()->create(
-            $this->generateAdjustment($value, $option)
+            $this->generateAdjustment($value)
         );
     }
 
@@ -199,14 +188,13 @@ abstract class AdjustmentFactory
      *
      * @param Adjustment $adjustment
      * @param mixed      $value
-     * @param mixed      $option
      *
      * @return Adjustment
      */
-    public function updateAdjustment(Adjustment $adjustment, $value, $option = null)
+    protected function updateAdjustment(Adjustment $adjustment, $value)
     {
         $adjustment->update(
-            $this->generateAdjustment($value, $option)
+            $this->generateAdjustment($value)
         );
 
         return $adjustment;
@@ -216,22 +204,21 @@ abstract class AdjustmentFactory
      * generate adjustment.
      *
      * @param mixed $value
-     * @param mixed $option
      *
      * @return array
      */
-    protected function generateAdjustment($value, $option = null)
+    protected function generateAdjustment($value)
     {
-        $adjustmentTotal = $this->getAdjustmentTotal($this->adjustmentable, $value, $option);
-        $adjustmentValue = $this->getAdjustmentValue($value, $option);
+        $adjustmentTotal = $this->getAdjustmentTotal($this->adjustmentable, $value);
 
         return [
-            'type' => $this->adjustmentType,
             'priority' => $this->priority,
-            'adjustment_origin' => $this->adjustmentable->total,
+            'type' => $this->adjustmentType,
+            'adjustment_rule' => $this->adjustmentRule,
+            'adjustment_value' => $value,
+            'before_adjustment' => $this->adjustmentable->total,
             'adjustment_total' => $adjustmentTotal,
-            'adjustment_value' => $adjustmentValue,
-            'total' => $this->adjustmentable->total + $adjustmentTotal,
+            'after_adjustment' => $this->adjustmentable->total + $adjustmentTotal,
         ];
     }
 
@@ -239,13 +226,12 @@ abstract class AdjustmentFactory
      * should be deleted.
      *
      * @param Adjustment $adjustment
-     * @param mixed      $option
      *
      * @return bool
      */
-    protected function shouldDelete(Adjustment $adjustment, $option = null)
+    protected function shouldDelete(Adjustment $adjustment)
     {
-        return false;
+        return empty($adjustment->adjustment_value);
     }
 
     /**
@@ -262,19 +248,8 @@ abstract class AdjustmentFactory
      *
      * @param Adjustmentable $adjustmentable
      * @param mixed          $value
-     * @param mixed          $option
      *
      * @return int
      */
-    abstract protected function getAdjustmentTotal(Adjustmentable $adjustmentable, $value, $option);
-
-    /**
-     * get Adjustment value.
-     *
-     * @param mixed $value
-     * @param mixed $option
-     *
-     * @return int
-     */
-    abstract protected function getAdjustmentValue($value, $option);
+    abstract protected function getAdjustmentTotal(Adjustmentable $adjustmentable, $value);
 }

@@ -12,7 +12,7 @@ class AdjustmentDiscountRequest extends DetailOrderRequest
     public function rules()
     {
         return [
-            'type' => 'required|in:percentage,amount',
+            'rule' => 'required|in:fixed,percentage',
             'value' => 'required|numeric',
         ];
     }

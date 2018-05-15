@@ -45,50 +45,15 @@ class MarkupFactory extends AdjustmentFactory
      *
      * @param Adjustmentable $adjustmentable
      * @param mixed          $value
-     * @param mixed          $option
      *
      * @return string
      */
-    protected function getAdjustmentTotal(Adjustmentable $adjustmentable, $value, $option = null)
+    protected function getAdjustmentTotal(Adjustmentable $adjustmentable, $value)
     {
-        if ('percentage' === $option) {
+        if ('percentage' === $this->adjustmentRule) {
             return Money::round(($value * $adjustmentable->total) / 100);
         } else {
             return $value;
-        }
-    }
-
-    /**
-     * get Adjustment value.
-     *
-     * @param mixed $value
-     * @param mixed $option
-     *
-     * @return string
-     */
-    protected function getAdjustmentValue($value, $option = null)
-    {
-        if ('percentage' === $option) {
-            return $value;
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * should be deleted.
-     *
-     * @param Adjustment $adjustment
-     * @param mixed      $option
-     *
-     * @return bool
-     */
-    protected function shouldDelete(Adjustment $adjustment, $option = null)
-    {
-        if ('percentage' === $option) {
-            return 0 == $adjustment->adjustment_value;
-        } else { //amount
-            return 0 == $adjustment->adjustment_total;
         }
     }
 }

@@ -36,9 +36,10 @@ class ProductProcess extends Migration
             $table->float('height')->nullable()->default(null);
             $table->float('weight')->nullable()->default(null);
             // increasment
-            $table->enum('price_type', ['static', 'dynamic'])->default('static');
-            $table->float('price_increase_multiples')->nullable()->default(null);
-            $table->float('price_increase_percentage')->nullable()->default(null);
+            $table->boolean('increasement')->default(false);
+            $table->float('increasement_multiples')->nullable()->default(null);
+            $table->enum('increasement_rule', ['fixed', 'percentage'])->nullable()->default(null);
+            $table->float('increasement_value')->nullable()->default(null);
             // insheet
             $table->boolean('insheet_required')->default(false);
             $table->enum('insheet_type', ['static', 'dynamic'])->nullable()->default(null);
