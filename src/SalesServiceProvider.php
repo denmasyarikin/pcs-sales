@@ -11,14 +11,12 @@ class SalesServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap any application services.
-     *
-     * @return void
      */
     public function boot()
     {
         Relation::morphMap([
             'product' => 'Modules\Product\Product',
-            'product_process' => 'Modules\Product\ProductProcess'
+            'product_process' => 'Modules\Product\ProductProcess',
         ]);
     }
 

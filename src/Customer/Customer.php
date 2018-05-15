@@ -41,19 +41,20 @@ class Customer extends Model
      */
     public function getCodeAttribute()
     {
-        return $this->chanel->code . str_pad($this->id, 3, '0', STR_PAD_LEFT);
+        return $this->chanel->code.str_pad($this->id, 3, '0', STR_PAD_LEFT);
     }
 
     /**
-     * check id given string code
+     * check id given string code.
      *
      * @param string $code
+     *
      * @return bool
      */
     public static function isCode($code)
     {
-        return strlen($code) === 6 AND
-            Chanel::isCode(substr($code, 0, 3)) AND
+        return 6 === strlen($code) and
+            Chanel::isCode(substr($code, 0, 3)) and
             is_numeric(substr($code, 3, 3)); // from getCodeAttribute
     }
 
@@ -61,13 +62,14 @@ class Customer extends Model
      * get id from code.
      *
      * @param string $code
+     *
      * @return int
      */
     public static function getIdFromCode($code)
     {
         return [
             'chanel_code' => substr($code, 0, 3),
-            'id' => intval(substr($code, 3, 3))
+            'id' => intval(substr($code, 3, 3)),
         ];
     }
 }

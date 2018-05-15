@@ -77,10 +77,10 @@ class CustomerController extends Controller
 
         if ($request->has('key')) {
             if (Customer::isCode($request->key)) {
-                $customers->where(function($q) use ($request) {
+                $customers->where(function ($q) use ($request) {
                     $ids = Customer::getIdFromCode($request->key);
                     $q->where('id', $ids['id']);
-                    $q->whereHas('chanel', function($chanel) use ($ids) {
+                    $q->whereHas('chanel', function ($chanel) use ($ids) {
                         $chanelIds = Chanel::getIdFromCode($ids['chanel_code']);
                         $chanel->whereType($chanelIds['type']);
                         $chanel->whereId($chanelIds['id']);

@@ -76,7 +76,7 @@ trait OrderRestrictionTrait
                 break;
 
             case 'closed':
-                $allow = 'taken' === $order->status AND (bool) $order->paid === true;
+                $allow = 'taken' === $order->status and true === (bool) $order->paid;
                 break;
 
             default:

@@ -109,12 +109,13 @@ trait ItemCounterTrait
     /**
      * Get OverDueDate.
      *
-     * @param  string  $value
+     * @param string $value
+     *
      * @return string
      */
     public function getOverDueDateAttribute()
     {
-        return (bool) $this->paid === false && 
+        return false === (bool) $this->paid &&
                 in_array($this->status, ['created', 'processing', 'finished']) &&
                 strtotime($this->due_date) < time();
     }
@@ -122,7 +123,8 @@ trait ItemCounterTrait
     /**
      * Get OverEstimate.
      *
-     * @param  string  $value
+     * @param string $value
+     *
      * @return string
      */
     public function getOverEstimateAttribute()

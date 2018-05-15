@@ -2,9 +2,9 @@
 
 namespace Denmasyarikin\Sales\Order\Controllers;
 
-use \DateTime;
-use \DatePeriod;
-use \DateInterval;
+use DateTime;
+use DatePeriod;
+use DateInterval;
 use Modules\User\User;
 use Modules\Chanel\Chanel;
 use Illuminate\Http\Request;
@@ -42,7 +42,7 @@ class OrderController extends Controller
     {
         $date = date('Y-m-d');
         $query = Order::orderBy('created_at', 'ASC');
-        
+
         if ($request->has('date')) {
             $date = $request->date;
         }
@@ -54,7 +54,7 @@ class OrderController extends Controller
         }
 
         $data = $query->whereDate('created_at', $date)->get();
-        
+
         return new JsonResponse(['data' => $this->generateCounter($data)]);
     }
 
@@ -74,7 +74,7 @@ class OrderController extends Controller
         $period = new DatePeriod($start, $interval, $end);
 
         foreach ($period as $dt) {
-            $formated = $dt->format("Y-m-d");
+            $formated = $dt->format('Y-m-d');
             $query = Order::whereDate('created_at', $formated);
 
             if ($request->has('workspace_id')) {
@@ -85,17 +85,18 @@ class OrderController extends Controller
 
             $dates[] = [
                 'date' => $formated,
-                'data' => $this->generateCounter($query->get())
+                'data' => $this->generateCounter($query->get()),
             ];
         }
-        
-        return new JsonResponse(['data' => (array)$dates]);
+
+        return new JsonResponse(['data' => (array) $dates]);
     }
 
     /**
-     * generate counter
+     * generate counter.
      *
      * @param Collection $data
+     *
      * @return array
      */
     protected function generateCounter(Collection $data)
@@ -103,14 +104,14 @@ class OrderController extends Controller
         return [
             'total' => $data->count(),
             'draft' => $data->where('status', 'draft')->count(),
-            'created' =>  $data->where('status', 'created')->count(),
+            'created' => $data->where('status', 'created')->count(),
             'new' => $data->whereIn('status', ['draft', 'created'])->count(),
-            'processing' =>  $data->where('status', 'processing')->count(),
-            'finished' =>  $data->where('status', 'finished')->count(),
-            'taken' =>  $data->where('status', 'taken')->count(),
-            'closed' =>  $data->where('status', 'closed')->count(),
-            'canceled' =>  $data->where('status', 'canceled')->count(),
-            'paid' =>  $data->whereStrict('paid', 1)->count(),
+            'processing' => $data->where('status', 'processing')->count(),
+            'finished' => $data->where('status', 'finished')->count(),
+            'taken' => $data->where('status', 'taken')->count(),
+            'closed' => $data->where('status', 'closed')->count(),
+            'canceled' => $data->where('status', 'canceled')->count(),
+            'paid' => $data->whereStrict('paid', 1)->count(),
         ];
     }
 
@@ -136,14 +137,14 @@ class OrderController extends Controller
 
         $transformDueDate = new OrderListAllTransformer($queryDueDate->get());
         $transformEstimate = new OrderListAllTransformer($queryEstimate->get());
-        
+
         return new JsonResponse([
             'data' => [
                 'due_date_count' => $queryDueDate->count(),
                 'due_date_data' => $transformDueDate->toArray(),
                 'estimated_count' => $queryEstimate->count(),
-                'estimated_data' => $transformEstimate->toArray()
-            ]
+                'estimated_data' => $transformEstimate->toArray(),
+            ],
         ]);
     }
 
@@ -165,13 +166,13 @@ class OrderController extends Controller
         }
 
         $transform = new OrderListAllTransformer($query->get());
-        
+
         return new JsonResponse([
             'data' => [
                 'count' => $query->count(),
                 'total' => $query->sum('remaining'),
-                'data' => $transform->toArray()
-            ]
+                'data' => $transform->toArray(),
+            ],
         ]);
     }
 
@@ -356,7 +357,7 @@ class OrderController extends Controller
             $orders->whereDate('created_at', $request->created_at);
         }
 
-        if ($request->input('me') === 'true') {
+        if ('true' === $request->input('me')) {
             $orders->where('cs_user_id', Auth::user()->id);
         }
 
@@ -366,11 +367,11 @@ class OrderController extends Controller
 
         if ($request->has('key')) {
             if (Order::isCode($request->key)) {
-                $orders->where(function($q) use ($request) {
+                $orders->where(function ($q) use ($request) {
                     $ids = Order::getIdFromCode($request->key);
                     $q->where('id', $ids['id']);
                     $q->where('cs_user_id', $ids['cs_user_id']);
-                    $q->whereHas('chanel', function($chanel) use ($ids) {
+                    $q->whereHas('chanel', function ($chanel) use ($ids) {
                         $chanelIds = Chanel::getIdFromCode($ids['chanel_code']);
                         $chanel->whereType($chanelIds['type']);
                         $chanel->whereId($chanelIds['id']);
@@ -571,6 +572,7 @@ class OrderController extends Controller
      * get customer services.
      *
      * @param Request $request
+     *
      * @return json
      */
     public function getCustomerServices(Request $request)
@@ -584,14 +586,15 @@ class OrderController extends Controller
         $users = User::whereIn('id', $usersIds)->whereStatus('active')->get();
 
         return new JsonResponse([
-            'data' => $users->toArray()
+            'data' => $users->toArray(),
         ]);
     }
 
     /**
-     * change due date
+     * change due date.
      *
      * @param ChangeDueDateRequest $request
+     *
      * @return Json
      */
     public function changeDueDate(ChangeDueDateRequest $request)
@@ -600,7 +603,7 @@ class OrderController extends Controller
         $from = $order->due_date;
 
         $order->update([
-            'due_date' => $request->to
+            'due_date' => $request->to,
         ]);
 
         $order->histories()->create([
@@ -608,19 +611,20 @@ class OrderController extends Controller
             'label' => 'change_due_date',
             'data' => json_encode([
                 'from' => $from,
-                'to' => $order->due_date
-            ])
+                'to' => $order->due_date,
+            ]),
         ]);
 
         return new JsonResponse([
-            'message' => 'Order due date has been change'
+            'message' => 'Order due date has been change',
         ]);
     }
 
     /**
-     * change estimated finish date
+     * change estimated finish date.
      *
      * @param ChangeEstimatedFinishDateRequest $request
+     *
      * @return Json
      */
     public function changeEstimatedFinishDate(ChangeEstimatedFinishDateRequest $request)
@@ -629,7 +633,7 @@ class OrderController extends Controller
         $from = $order->estimated_finish_date;
 
         $order->update([
-            'estimated_finish_date' => $request->to
+            'estimated_finish_date' => $request->to,
         ]);
 
         $order->histories()->create([
@@ -637,12 +641,12 @@ class OrderController extends Controller
             'label' => 'change_estimated_finish_date',
             'data' => json_encode([
                 'from' => $from,
-                'to' => $order->estimated_finish_date
-            ])
+                'to' => $order->estimated_finish_date,
+            ]),
         ]);
 
         return new JsonResponse([
-            'message' => 'Order estimated finish date has been change'
+            'message' => 'Order estimated finish date has been change',
         ]);
     }
 }

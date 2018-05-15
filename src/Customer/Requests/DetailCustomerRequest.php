@@ -32,7 +32,7 @@ class DetailCustomerRequest extends FormRequest
 
         if (Customer::isCode($id)) {
             $ids = Customer::getIdFromCode($id);
-            $customer = Customer::whereHas('chanel', function($chanel) use ($ids) {
+            $customer = Customer::whereHas('chanel', function ($chanel) use ($ids) {
                 $chanelIds = Chanel::getIdFromCode($ids['chanel_code']);
                 $chanel->whereType($chanelIds['type']);
                 $chanel->whereId($chanelIds['id']);

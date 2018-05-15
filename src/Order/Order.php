@@ -211,7 +211,7 @@ class Order extends Model implements Taxable, Voucherable, Discountable
     }
 
     /**
-     * over due date
+     * over due date.
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
@@ -223,7 +223,7 @@ class Order extends Model implements Taxable, Voucherable, Discountable
     }
 
     /**
-     * over estimated
+     * over estimated.
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
@@ -235,7 +235,8 @@ class Order extends Model implements Taxable, Voucherable, Discountable
     /**
      * Get Code.
      *
-     * @param  string  $value
+     * @param string $value
+     *
      * @return string
      */
     public function getCodeAttribute($value)
@@ -244,21 +245,22 @@ class Order extends Model implements Taxable, Voucherable, Discountable
         $cs = str_pad($this->cs_user_id, 2, '0', STR_PAD_LEFT);
         $order = str_pad($this->id, 5, '0', STR_PAD_LEFT);
 
-        return $chanel . $cs . $order;
+        return $chanel.$cs.$order;
     }
-    
+
     /**
-     * check id given string code
+     * check id given string code.
      *
      * @param string $code
+     *
      * @return bool
      */
     public static function isCode($code)
     {
         // better way use regex in next time
-        return strlen($code) === 10 AND
-            Chanel::isCode(substr($code, 0, 3)) AND
-            is_numeric(substr($code, 3, 2)) AND
+        return 10 === strlen($code) and
+            Chanel::isCode(substr($code, 0, 3)) and
+            is_numeric(substr($code, 3, 2)) and
             is_numeric(substr($code, 5, 5)); // from getCodeAttribute
     }
 
@@ -266,6 +268,7 @@ class Order extends Model implements Taxable, Voucherable, Discountable
      * get id from code.
      *
      * @param string $code
+     *
      * @return array
      */
     public static function getIdFromCode($code)
@@ -273,7 +276,7 @@ class Order extends Model implements Taxable, Voucherable, Discountable
         return [
             'chanel_code' => substr($code, 0, 3),
             'cs_user_id' => intval(substr($code, 3, 2)),
-            'id' => intval(substr($code, 5, 5))
+            'id' => intval(substr($code, 5, 5)),
         ];
     }
 }

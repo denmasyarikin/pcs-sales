@@ -163,6 +163,8 @@ class OrderItem extends Model implements Markupable, Discountable, Voucherable
         if ($markup = $this->getMarkup()) {
             return $markup->adjustment_rule;
         }
+
+        return 'fixed';
     }
 
     /**
@@ -188,6 +190,7 @@ class OrderItem extends Model implements Markupable, Discountable, Voucherable
             return $discount->adjustment_rule;
         }
 
+        return 'percentage';
     }
 
     /**
@@ -210,8 +213,9 @@ class OrderItem extends Model implements Markupable, Discountable, Voucherable
     public function isGood()
     {
         return 'good' === $this->type
-            AND 'good' === $this->type_as;
+            and 'good' === $this->type_as;
     }
+
     /**
      * check is service.
      *
@@ -220,7 +224,7 @@ class OrderItem extends Model implements Markupable, Discountable, Voucherable
     public function isService()
     {
         return 'service' === $this->type
-            AND 'service' === $this->type_as;
+            and 'service' === $this->type_as;
     }
 
     /**
@@ -254,12 +258,13 @@ class OrderItem extends Model implements Markupable, Discountable, Voucherable
     /**
      * Set ReferenceConfiguration.
      *
-     * @param  string  $value
+     * @param string $value
+     *
      * @return string
      */
     public function setReferenceConfigurationAttribute($value)
     {
-        if ($value !== null) {
+        if (null !== $value) {
             $this->attributes['reference_configuration'] = json_encode($value);
         }
     }
@@ -267,12 +272,13 @@ class OrderItem extends Model implements Markupable, Discountable, Voucherable
     /**
      * Get ReferenceConfiguration.
      *
-     * @param  string  $value
+     * @param string $value
+     *
      * @return string
      */
     public function getReferenceConfigurationAttribute($value)
     {
-        if ($value !== null) {
+        if (null !== $value) {
             return json_decode($value);
         }
     }

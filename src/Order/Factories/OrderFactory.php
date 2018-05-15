@@ -72,7 +72,7 @@ class OrderFactory
             return $orderItem;
         } catch (\Exception $e) {
             DB::rollback();
-            throw $e;            
+            throw $e;
         }
     }
 
@@ -114,7 +114,7 @@ class OrderFactory
             return $orderItem;
         } catch (\Exception $e) {
             DB::rollback();
-            throw $e;            
+            throw $e;
         }
     }
 
@@ -215,7 +215,7 @@ class OrderFactory
             DB::commit();
         } catch (\Exception $e) {
             DB::rollback();
-            throw $e;            
+            throw $e;
         }
     }
 }

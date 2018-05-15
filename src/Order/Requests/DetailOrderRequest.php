@@ -58,7 +58,7 @@ class DetailOrderRequest extends FormRequest
 
         if (Order::isCode($id)) {
             $ids = Order::getIdFromCode($id);
-            $order = Order::whereHas('chanel', function($chanel) use ($ids) {
+            $order = Order::whereHas('chanel', function ($chanel) use ($ids) {
                 $chanelIds = Chanel::getIdFromCode($ids['chanel_code']);
                 $chanel->whereType($chanelIds['type']);
                 $chanel->whereId($chanelIds['id']);

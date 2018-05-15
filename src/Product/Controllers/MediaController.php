@@ -117,8 +117,8 @@ class MediaController extends Controller
         $media->delete();
 
         return new JsonResponse([
-            'updated_at' => $product->updated_at->format('Y-m-d H:i:s'), 
-            'message' => 'Product media has been deleted'
+            'updated_at' => $product->updated_at->format('Y-m-d H:i:s'),
+            'message' => 'Product media has been deleted',
         ]);
     }
 }

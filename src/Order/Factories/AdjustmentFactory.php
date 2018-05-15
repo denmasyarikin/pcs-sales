@@ -51,7 +51,7 @@ abstract class AdjustmentFactory
      *
      * @param mixed $value
      * @param mxied $rule
-     * @param boolean $resetting
+     * @param bool  $resetting
      *
      * @return Adjustmentable
      */
@@ -63,13 +63,15 @@ abstract class AdjustmentFactory
         if (is_null($adjustment)) {
             $adjustment = $this->createAdjustment($value);
         } else {
-            if (!$resetting) $this->reverseAdjustmentable($adjustment);
+            if (!$resetting) {
+                $this->reverseAdjustmentable($adjustment);
+            }
             $adjustment = $this->updateAdjustment($adjustment, $value);
         }
 
         $this->updateAdjustmentable($adjustment);
 
-        if (!$resetting AND $this->isNeedResetAdjustments()) {
+        if (!$resetting and $this->isNeedResetAdjustments()) {
             static::resetAdjustments($this->adjustmentable);
         }
 
@@ -82,10 +84,9 @@ abstract class AdjustmentFactory
     }
 
     /**
-     * set adjusment rule
+     * set adjusment rule.
      *
      * @param string $rule
-     * @return void
      */
     protected function setAdjustmentRule($rule)
     {
@@ -143,8 +144,6 @@ abstract class AdjustmentFactory
      * reset all adjustments by changed adjustment.
      *
      * @param Adjustmentable $adjustmentable
-     *
-     * @return void
      */
     public static function resetAdjustments(Adjustmentable $adjustmentable)
     {
@@ -157,7 +156,7 @@ abstract class AdjustmentFactory
 
         // lets apply one by one
         foreach ($adjustments as $adjustment) {
-            $factoryClass = 'Denmasyarikin\Sales\Order\Factories\\' . ucwords($adjustment->type) . 'Factory';
+            $factoryClass = 'Denmasyarikin\Sales\Order\Factories\\'.ucwords($adjustment->type).'Factory';
 
             if (!class_exists($factoryClass)) {
                 // TODO resarch for this exception what should be

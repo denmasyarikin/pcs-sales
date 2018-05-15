@@ -16,7 +16,7 @@ class Setting implements SettingContract
         return [
             'enabled_direct_email' => true,
             'enabled_direct_call' => true,
-            'enabled_direct_whatsapp' => true
+            'enabled_direct_whatsapp' => true,
         ];
     }
 }

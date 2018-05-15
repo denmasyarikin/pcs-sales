@@ -35,12 +35,12 @@ class PaymentController extends Controller
         $this->dateRange($query, $request);
 
         if ($request->has('chanel_id')) {
-            $query->whereHas('order', function($q) use ($request) {
+            $query->whereHas('order', function ($q) use ($request) {
                 $q->where('chanel_id', $request->chanel_id);
             });
         }
 
-        $query->whereHas('order', function($q) use ($request) {
+        $query->whereHas('order', function ($q) use ($request) {
             if ($request->has('workspace_id')) {
                 $q->where('workspace_id', $request->workspace_id);
             } else {
@@ -110,7 +110,7 @@ class PaymentController extends Controller
             $payments->whereDate('created_at', $request->created_at);
         }
 
-        if ($request->input('me') === 'true') {
+        if ('true' === $request->input('me')) {
             $payments->where('cs_user_id', Auth::user()->id);
         }
 
@@ -119,12 +119,12 @@ class PaymentController extends Controller
         }
 
         if ($request->has('chanel_id')) {
-            $payments->whereHas('order', function($q) use ($request) {
+            $payments->whereHas('order', function ($q) use ($request) {
                 $q->where('chanel_id', $request->chanel_id);
             });
         }
 
-        $payments->whereHas('order', function($q) use ($request) {
+        $payments->whereHas('order', function ($q) use ($request) {
             if ($request->has('workspace_id')) {
                 $q->where('workspace_id', $request->workspace_id);
             } else {
@@ -134,11 +134,11 @@ class PaymentController extends Controller
 
         if ($request->has('key')) {
             if (Order::isCode($request->key)) {
-                $payments->whereHas('order', function($q) use ($request) {
+                $payments->whereHas('order', function ($q) use ($request) {
                     $ids = Order::getIdFromCode($request->key);
                     $q->where('id', $ids['id']);
                     $q->where('cs_user_id', $ids['cs_user_id']);
-                    $q->whereHas('chanel', function($chanel) use ($ids) {
+                    $q->whereHas('chanel', function ($chanel) use ($ids) {
                         $chanelIds = Chanel::getIdFromCode($ids['chanel_code']);
                         $chanel->whereType($chanelIds['type']);
                         $chanel->whereId($chanelIds['id']);
@@ -289,6 +289,7 @@ class PaymentController extends Controller
      * get customer services.
      *
      * @param Request $request
+     *
      * @return json
      */
     public function getCustomerServices(Request $request)
@@ -302,7 +303,7 @@ class PaymentController extends Controller
         $users = User::whereIn('id', $usersIds)->whereStatus('active')->get();
 
         return new JsonResponse([
-            'data' => $users->toArray()
+            'data' => $users->toArray(),
         ]);
     }
 }

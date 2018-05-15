@@ -128,7 +128,7 @@ class ItemController extends Controller
         return $request->only([
             'type', 'type_as', 'reference_id', 'reference_type',
             'reference_configuration', 'name', 'specific', 'quantity',
-            'unit_price', 'unit_total', 'note', 'unit_id'
+            'unit_price', 'unit_total', 'note', 'unit_id',
         ]);
     }
 
@@ -159,11 +159,11 @@ class ItemController extends Controller
      */
     protected function restrictAdjustment(Request $request)
     {
-        if ($request->has('discount') AND intval($request->discount) > 0) {
+        if ($request->has('discount') and intval($request->discount) > 0) {
             $this->orderAdjustmentRestriction('discount');
         }
 
-        if ($request->has('voucher') AND !empty($request->voucher)) {
+        if ($request->has('voucher') and !empty($request->voucher)) {
             $this->orderAdjustmentRestriction('voucher');
         }
     }
