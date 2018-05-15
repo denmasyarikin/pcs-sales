@@ -24,9 +24,10 @@ class DetailOrderRequest extends FormRequest
     protected $itemRules = [
         'type' => 'required|in:product,service,good,manual',
         'type_as' => 'required|in:product,service,good,manual',
+        'parent_id' => 'nullable|numeric|exists:sales_order_items,id',
         'reference_id' => 'nullable|numeric',
         'reference_type' => 'nullable|required_with:reference_id',
-        'reference_second_id' => 'nullable|numeric',
+        'reference_configuration' => 'nullable',
         'name' => 'required|max:50',
         'specific' => 'nullable|max:50',
         'note' => 'nullable',
@@ -39,24 +40,6 @@ class DetailOrderRequest extends FormRequest
         'discount' => 'nullable|numeric',
         'discount_type' => 'nullable|in:percentage,amount',
         'voucher' => 'nullable|size:8|voucher',
-        // dimension
-        'depending_to_dimension' => 'nullable|boolean',
-        'dimension' => 'nullable|required_if:depending_to_dimension,true|in:length,area,volume,wight',
-        'dimension_unit_id' => 'nullable|required_if:depending_to_dimension,true|exists:core_units,id',
-        'length' => 'nullable|required_if:dimension,length,area,volume|numeric',
-        'width' => 'nullable|required_if:dimension,area,volume|numeric',
-        'height' => 'nullable|required_if:dimension,volume|numeric',
-        'weight' => 'nullable|required_if:dimension,wight|numeric',
-        // increasement
-        'price_type' => 'nullable|in:static,dynamic',
-        'price_increase_multiples' => 'nullable|required_if:price_type,dynamic|numeric',
-        'price_increase_percentage' => 'nullable|required_if:price_type,dynamic|numeric|min:1|max:100',
-        // insheet
-        'insheet_required' => 'nullable|boolean',
-        'insheet_type' => 'nullable|required_if:insheet_required,true|in:static,dynamic',
-        'insheet_multiples' => 'nullable|required_if:insheet_type,dynamic|numeric',
-        'insheet_quantity' => 'nullable|required_if:insheet_required,true|numeric',
-        'insheet_added' => 'nullable|required_if:insheet_required,true|numeric',
     ];
 
     /**

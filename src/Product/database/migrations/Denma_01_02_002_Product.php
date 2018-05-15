@@ -17,8 +17,8 @@ class Product extends Migration
             $table->text('description')->nullable()->default(null);
             $table->integer('unit_id')->unsigned();
             $table->integer('product_group_id')->unsigned()->nullable()->default(null);
-            $table->float('min_order');
-            $table->float('order_multiples');
+            $table->float('min_order')->default(1);
+            $table->float('order_multiples')->default(1);
             $table->bigInteger('base_price')->default(0);
             $table->bigInteger('per_unit_price')->default(0);
             $table->enum('status', ['draft', 'active', 'inactive'])->default('draft');

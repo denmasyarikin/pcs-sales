@@ -5,9 +5,23 @@ namespace Denmasyarikin\Sales;
 use App\Manager\Facades\Package;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Database\Eloquent\Relations\Relation;
 
 class SalesServiceProvider extends ServiceProvider
 {
+    /**
+     * Bootstrap any application services.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        Relation::morphMap([
+            'product' => 'Modules\Product\Product',
+            'product_process' => 'Modules\Product\ProductProcess'
+        ]);
+    }
+
     /**
      * Register any application services.
      */

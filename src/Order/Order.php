@@ -177,10 +177,7 @@ class Order extends Model implements Taxable, Voucherable, Discountable
      */
     public function getPrimaryItems()
     {
-        return $this->itemProduct
-            ->concat($this->itemGood)
-            ->concat($this->itemService)
-            ->concat($this->itemManual);
+        return $this->getItems()->whereStrict('parent_id', null);
     }
 
     /**

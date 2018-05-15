@@ -40,6 +40,18 @@ class ProductProcess extends Model
     }
 
     /**
+     * Get all of the owning commentable models.
+     */
+    public function reference()
+    {
+        //there are only 2 possibilities
+        // - Good
+        // - Service
+
+        return $this->morphTo('reference');
+    }
+
+    /**
      * Get the children record associated with the ProductProcess.
      */
     public function children()

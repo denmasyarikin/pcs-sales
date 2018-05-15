@@ -19,6 +19,7 @@ class ProductProcess extends Migration
             $table->enum('type_as', ['good', 'service']);
             $table->integer('reference_id')->nullable()->default(null);
             $table->string('reference_type')->nullable()->default(null);
+            $table->longText('reference_configuration')->nullable()->default(null);
             $table->string('name', 50);
             $table->string('specific', 50)->nullable()->default(null);
             $table->float('quantity');

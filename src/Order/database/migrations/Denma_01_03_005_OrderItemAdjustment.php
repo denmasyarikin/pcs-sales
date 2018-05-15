@@ -16,7 +16,7 @@ class OrderItemAdjustment extends Migration
             $table->integer('order_item_id')->unsigned();
             $table->integer('priority');
             $table->enum('type', ['markup', 'discount', 'voucher']);
-            $table->string('adjustment_value')->nullable()->default(null);
+            $table->string('adjustment_value')->nullable()->default(null)->comment('if null mean amount else percentage');
             $table->bigInteger('adjustment_origin')->default(0);
             $table->bigInteger('adjustment_total')->default(0);
             $table->bigInteger('total')->default(0);

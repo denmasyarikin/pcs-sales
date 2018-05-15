@@ -40,7 +40,8 @@ trait ItemCounterTrait
     {
         return $this->getItems()
                     ->where('type', 'product')
-                    ->where('type_as', '<>', 'product');
+                    ->where('type_as', '<>', 'product')
+                    ->whereParentId($this->id);
     }
 
     /**

@@ -50,19 +50,41 @@ class OrderItem extends Model implements Markupable, Discountable, Voucherable
     }
 
     /**
-     * Get the dimensionUnit record associated with the OrderItem.
-     */
-    public function dimensionUnit()
-    {
-        return $this->belongsTo('Modules\Unit\Unit', 'dimension_unit_id')->withTrashed();
-    }
-
-    /**
      * Get the adjustments record associated with the OrderItem.
      */
     public function adjustments()
     {
         return $this->hasMany(OrderItemAdjustment::class);
+    }
+
+    /**
+     * Get all of the owning commentable models.
+     */
+    public function reference()
+    {
+        //there are only 4 possibilities
+        // - Product
+        // - ProductProcess
+        // - Good
+        // - Service
+
+        return $this->morphTo('reference');
+    }
+
+    /**
+     * Get the parent record associated with the OrderItem.
+     */
+    public function parent()
+    {
+        return $this->belongsTo(static::class, 'parent_id');
+    }
+
+    /**
+     * Get the children record associated with the OrderItem.
+     */
+    public function children()
+    {
+        return $this->hasMany(static::class, 'parent_id');
     }
 
     /**
@@ -180,6 +202,27 @@ class OrderItem extends Model implements Markupable, Discountable, Voucherable
     }
 
     /**
+     * check is good.
+     *
+     * @return bool
+     */
+    public function isGood()
+    {
+        return 'good' === $this->type
+            AND 'good' === $this->type_as;
+    }
+    /**
+     * check is service.
+     *
+     * @return bool
+     */
+    public function isService()
+    {
+        return 'service' === $this->type
+            AND 'service' === $this->type_as;
+    }
+
+    /**
      * check is product.
      *
      * @return bool
@@ -205,5 +248,31 @@ class OrderItem extends Model implements Markupable, Discountable, Voucherable
         }
 
         return false;
+    }
+
+    /**
+     * Set ReferenceConfiguration.
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function setReferenceConfigurationAttribute($value)
+    {
+        if ($value !== null) {
+            $this->attributes['reference_configuration'] = json_encode($value);
+        }
+    }
+
+    /**
+     * Get ReferenceConfiguration.
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function getReferenceConfigurationAttribute($value)
+    {
+        if ($value !== null) {
+            return json_decode($value);
+        }
     }
 }
