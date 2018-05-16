@@ -11,11 +11,11 @@ use Symfony\Component\Process\Exception\InvalidArgumentException;
 class MarkupFactory extends AdjustmentFactory
 {
     /**
-     * priority.
+     * sequence.
      *
      * @var int
      */
-    protected $priority = 1;
+    protected $sequence = 1;
 
     /**
      * adjustment type.

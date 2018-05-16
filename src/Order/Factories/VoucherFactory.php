@@ -10,11 +10,11 @@ use Symfony\Component\Process\Exception\InvalidArgumentException;
 class VoucherFactory extends AdjustmentFactory
 {
     /**
-     * priority.
+     * sequence.
      *
      * @var int
      */
-    protected $priority = 3;
+    protected $sequence = 3;
 
     /**
      * adjustment type.

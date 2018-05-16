@@ -11,11 +11,11 @@ use Symfony\Component\Process\Exception\InvalidArgumentException;
 class DiscountFactory extends AdjustmentFactory
 {
     /**
-     * priority.
+     * sequence.
      *
      * @var int
      */
-    protected $priority = 2;
+    protected $sequence = 2;
 
     /**
      * adjustment type.

@@ -14,7 +14,7 @@ class OrderAdjustment extends Migration
         Schema::create('sales_order_adjustments', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('order_id')->unsigned();
-            $table->integer('priority');
+            $table->integer('sequence');
             $table->enum('type', ['discount', 'voucher', 'tax']);
             $table->enum('adjustment_rule', ['fixed', 'percentage'])->default('percentage');
             $table->text('adjustment_value')->nullable()->default(null);

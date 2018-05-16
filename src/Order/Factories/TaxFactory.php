@@ -11,11 +11,11 @@ use Symfony\Component\Process\Exception\InvalidArgumentException;
 class TaxFactory extends AdjustmentFactory
 {
     /**
-     * priority.
+     * sequence.
      *
      * @var int
      */
-    protected $priority = 4;
+    protected $sequence = 4;
 
     /**
      * adjustment type.

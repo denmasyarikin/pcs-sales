@@ -19,7 +19,7 @@ class OrderAdjustmentDetailTransformer extends Detail
         return [
             'id' => $model->id,
             'type' => $model->type,
-            'priority' => $model->priority,
+            'sequence' => $model->sequence,
             'adjustment_rule' => $model->adjustment_rule,
             'adjustment_value' => $model->adjustment_value,
             'before_adjustment' => $model->before_adjustment,

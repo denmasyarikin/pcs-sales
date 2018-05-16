@@ -9,11 +9,11 @@ use Symfony\Component\Process\Exception\InvalidArgumentException;
 abstract class AdjustmentFactory
 {
     /**
-     * priority.
+     * sequence.
      *
      * @var int
      */
-    protected $priority;
+    protected $sequence;
 
     /**
      * adjustment type.
@@ -151,7 +151,7 @@ abstract class AdjustmentFactory
         $itemTotal = $adjustmentable->total - $adjustmentable->adjustment_total;
         $adjustmentable->update(['adjustment_total' => 0, 'total' => $itemTotal]);
 
-        // then get all adjustment that has been ordering by priority asc
+        // then get all adjustment that has been ordering by sequence asc
         $adjustments = $adjustmentable->getAdjustments();
 
         // lets apply one by one
@@ -211,7 +211,7 @@ abstract class AdjustmentFactory
         $adjustmentTotal = $this->getAdjustmentTotal($this->adjustmentable, $value);
 
         return [
-            'priority' => $this->priority,
+            'sequence' => $this->sequence,
             'type' => $this->adjustmentType,
             'adjustment_rule' => $this->adjustmentRule,
             'adjustment_value' => $value,

@@ -140,7 +140,7 @@ class Order extends Model implements Taxable, Voucherable, Discountable
             return $this->cacheAdjustments;
         }
 
-        return $this->cacheAdjustments = $this->adjustments()->orderBy('priority', 'ASC')->get();
+        return $this->cacheAdjustments = $this->adjustments()->orderBy('sequence', 'ASC')->get();
     }
 
     /**
