@@ -40,11 +40,12 @@ class UpdateCustomerRequest extends DetailOrderRequest
     {
         return [
             'customer_id' => 'nullable|exists:sales_customers,id',
-            'name' => 'required|min:2|max:20',
+            'name' => 'required|min:2|max:50',
             'address' => 'nullable',
             'telephone' => 'nullable|numeric',
             'email' => 'nullable|email',
-            'contact_person' => 'nullable|min:2|max:20',
+            'contact_person' => 'nullable|min:2|max:50',
+            'due_date_day_count' => 'nullable|numeric',
         ];
     }
 }

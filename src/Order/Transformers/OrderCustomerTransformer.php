@@ -18,13 +18,14 @@ class OrderCustomerTransformer extends Detail
     protected function getData(Model $model)
     {
         return [
-            'customer_id' => (int) $model->customer_id,
-            'customer' => (new CustomerListDetailTransformer($model->customer))->toArray(),
+            'customer_id' => $model->customer_id,
             'name' => $model->name,
             'address' => $model->address,
             'telephone' => $model->telephone,
             'email' => $model->email,
             'contact_person' => $model->contact_person,
+            'due_date_type' => $model->due_date_type,
+            'due_date_day_count' => $model->due_date_day_count,
             'created_at' => $model->created_at->format('Y-m-d H:i:s'),
             'updated_at' => $model->updated_at->format('Y-m-d H:i:s'),
         ];

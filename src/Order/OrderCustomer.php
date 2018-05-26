@@ -36,4 +36,14 @@ class OrderCustomer extends Model
     {
         return $this->belongsTo(Order::class);
     }
+
+    /**
+     * Get DueDateType.
+     *
+     * @return string
+     */
+    public function getDueDateTypeAttribute($value)
+    {
+        return is_null($this->due_date_day_count) ? 'COD' : 'Tempo';
+    }
 }

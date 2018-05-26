@@ -22,33 +22,6 @@ trait OrderRestrictionTrait
     }
 
     /**
-     * strict order item type.
-     *
-     * @param string $type
-     * @param string $typeAs
-     */
-    protected function orderItemTypeRestriction($type, $typeAs)
-    {
-        switch ($type) {
-            case 'good':
-                if ('good' !== $typeAs) {
-                    throw new BadRequestHttpException('Type As of type good only allowed good');
-                }
-                break;
-            case 'service':
-                if ('service' !== $typeAs) {
-                    throw new BadRequestHttpException('Type As of type service only allowed service');
-                }
-                break;
-            case 'manual':
-                if (!in_array($typeAs, ['good', 'service'])) {
-                    throw new BadRequestHttpException('Type As of type manual only allowed good or service');
-                }
-                break;
-        }
-    }
-
-    /**
      * update status order restriction.
      *
      * @param Order  $order

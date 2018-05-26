@@ -1,7 +1,7 @@
 <?php
 
 $router->get('/', ['as' => 'sales.customer.list', 'uses' => 'CustomerController@getList']);
-$router->get('/counter', ['as' => 'sales.customer.counter', 'uses' => 'CustomerController@getCounter']);
+$router->get('/'.(RE ? 'counter' : '0001'), ['as' => 'sales.customer.counter', 'uses' => 'CustomerController@getCounter']);
 $router->get('/{id}', ['as' => 'sales.customer.detail', 'uses' => 'CustomerController@getDetail']);
 $router->group(['middleware' => 'manage:sales,customer,write'], function ($router) {
     $router->post('/', ['as' => 'sales.customer.create', 'uses' => 'CustomerController@createCustomer']);

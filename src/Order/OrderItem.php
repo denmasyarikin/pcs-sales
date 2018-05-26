@@ -262,10 +262,10 @@ class OrderItem extends Model implements Markupable, Discountable, Voucherable
      *
      * @return string
      */
-    public function setReferenceConfigurationAttribute($value)
+    public function setReferenceConfigurationsAttribute($value)
     {
         if (null !== $value) {
-            $this->attributes['reference_configuration'] = json_encode($value);
+            $this->attributes['reference_configurations'] = json_encode($value);
         }
     }
 
@@ -276,7 +276,7 @@ class OrderItem extends Model implements Markupable, Discountable, Voucherable
      *
      * @return string
      */
-    public function getReferenceConfigurationAttribute($value)
+    public function getReferenceConfigurationsAttribute($value)
     {
         if (null !== $value) {
             return json_decode($value);

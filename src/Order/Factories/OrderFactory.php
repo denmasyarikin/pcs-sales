@@ -56,11 +56,6 @@ class OrderFactory
 
             $orderItem = $this->order->items()->create($item);
 
-            // if product process just store to db, they are not effected to the order
-            if ('product' === $item['type'] and 'product' !== $item['type_as']) {
-                return $orderItem;
-            }
-
             $orderItem = $this->applyAdjustment($orderItem, $markup, $markupRule, $discount, $discountRule, $voucher);
 
             $this->updateOrderItemTotal();
@@ -97,11 +92,6 @@ class OrderFactory
             $item['total'] = $item['unit_total'];
 
             $orderItem->update($item);
-
-            // if product process just store to db, they are not effected to the order
-            if ('product' === $item['type'] and 'product' !== $item['type_as']) {
-                return $orderItem;
-            }
 
             $orderItem = $this->applyAdjustment($orderItem, $markup, $markupRule, $discount, $discountRule, $voucher);
 
@@ -203,11 +193,6 @@ class OrderFactory
             DB::beginTransaction();
 
             $orderItem->delete();
-
-            // special action for product
-            if ('product' === $orderItem->type) {
-                $orderItem->children()->delete();
-            }
 
             $this->updateOrderItemTotal();
             $this->resetOrderAdjustment();

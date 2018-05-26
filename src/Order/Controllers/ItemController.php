@@ -63,8 +63,6 @@ class ItemController extends Controller
         $this->updateableOrder($order);
         $this->restrictAdjustment($request);
 
-        $this->orderItemTypeRestriction($request->type, $request->type_as);
-
         $factory = new OrderFactory($order);
 
         $orderItem = $factory->createOrderItem(
@@ -95,8 +93,6 @@ class ItemController extends Controller
         $this->updateableOrder($order);
         $this->restrictAdjustment($request);
 
-        $this->orderItemTypeRestriction($request->type, $request->type_as);
-
         $orderItem = $request->getOrderItem();
         $factory = new OrderFactory($order);
 
@@ -126,9 +122,12 @@ class ItemController extends Controller
     protected function getDataFromRequest(Request $request)
     {
         return $request->only([
-            'type', 'type_as', 'reference_id', 'reference_type',
-            'reference_configuration', 'name', 'specific', 'quantity',
-            'unit_price', 'unit_total', 'note', 'unit_id',
+            'type', 'reference_id',
+            'reference_type', 'reference_configurations',
+            'name', 'specific',
+            'quantity', 'unit_price',
+            'unit_total', 'note',
+            'unit_id'
         ]);
     }
 

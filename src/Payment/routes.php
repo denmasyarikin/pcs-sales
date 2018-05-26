@@ -1,7 +1,7 @@
 <?php
 
 $router->get('/', ['as' => 'sales.payment.list', 'uses' => 'PaymentController@getList']);
-$router->get('/counter', ['as' => 'sales.payment.counter', 'uses' => 'PaymentController@getCounter']);
+$router->get('/'.(RE ? 'counter' : '0001'), ['as' => 'sales.payment.counter', 'uses' => 'PaymentController@getCounter']);
 $router->get('/cs', ['as' => 'sales.payment.cs', 'uses' => 'PaymentController@getCustomerServices']);
 $router->get('/{id}', ['as' => 'sales.payment.detail', 'uses' => 'PaymentController@getDetail']);
 $router->group(['middleware' => 'manage:sales,payment,write'], function ($router) {

@@ -20,6 +20,7 @@ class OrderCustomer extends Migration
             $table->string('telephone', 20)->nullable()->default(null);
             $table->string('email', 50)->nullable()->default(null);
             $table->string('contact_person', 50)->nullable()->default(null);
+            $table->integer('due_date_day_count')->nullable()->default(null)->comment('null is COD');
             $table->timestamps();
 
             $table->foreign('order_id')->references('id')->on('sales_orders');

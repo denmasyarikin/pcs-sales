@@ -45,6 +45,16 @@ class Customer extends Model
     }
 
     /**
+     * Get DueDateType.
+     *
+     * @return string
+     */
+    public function getDueDateTypeAttribute($value)
+    {
+        return is_null($this->due_date_day_count) ? 'COD' : 'Tempo';
+    }
+
+    /**
      * check id given string code.
      *
      * @param string $code

@@ -51,7 +51,7 @@ class CustomerController extends Controller
 
         $customer = $request->only([
             'customer_id', 'type', 'name', 'address',
-            'telephone', 'email', 'contact_person',
+            'telephone', 'email', 'contact_person', 'due_date_day_count'
         ]);
 
         if (is_null($order->customer)) {
