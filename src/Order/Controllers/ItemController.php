@@ -127,7 +127,7 @@ class ItemController extends Controller
             'name', 'specific',
             'quantity', 'unit_price',
             'unit_total', 'note',
-            'unit_id'
+            'unit_id',
         ]);
     }
 

@@ -25,6 +25,7 @@ class ProductListDetailTransformer extends Detail
             'group_name' => $group ? $group->name : null,
             'description' => $model->description,
             'image' => $model->image,
+            'unit_id' => $model->unit_id,
             'unit' => (new UnitListDetailTransformer($model->unit))->toArray(),
             'min_order' => (int) $model->min_order,
             'order_multiples' => (int) $model->order_multiples,

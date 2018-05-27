@@ -21,7 +21,6 @@ class CustomerDetailTransformer extends Detail
             'id' => $model->id,
             'code' => $model->code,
             'chanel_id' => $model->chanel_id,
-            'chanel_type' => $model->chanel->type,
             'chanel' => (new ChanelDetailTransformer($model->chanel))->toArray(),
             'name' => $model->name,
             'address' => $model->address,

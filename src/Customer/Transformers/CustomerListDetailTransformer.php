@@ -16,11 +16,17 @@ class CustomerListDetailTransformer extends Detail
      */
     protected function getData(Model $model)
     {
+        $chanel = $model->chanel;
+
         return [
             'id' => $model->id,
             'code' => $model->code,
             'chanel_id' => $model->chanel->id,
-            'chanel_type' => $model->chanel->type,
+            'chanel' => [
+                'id' => $chanel->id,
+                'name' => $chanel->name,
+                'type' => $chanel->type,
+            ],
             'name' => $model->name,
             'address' => $model->address,
             'email' => $model->email,
