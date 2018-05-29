@@ -70,6 +70,27 @@ class OrderHistory extends Model
     }
 
     /**
+     * Get Data.
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function getDataAttribute($value)
+    {
+        return json_decode($value);
+    }
+
+    /**
+     * Set Data.
+     *
+     * @param  string  $value
+     */
+    public function setDataAttribute($value)
+    {
+        $this->attributes['data'] = json_encode($value);
+    }
+
+    /**
      * The "booting" method of the model.
      */
     protected static function boot()

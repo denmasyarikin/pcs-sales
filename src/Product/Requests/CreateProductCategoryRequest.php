@@ -4,7 +4,7 @@ namespace Denmasyarikin\Sales\Product\Requests;
 
 use App\Http\Requests\FormRequest;
 
-class CreateProductGroupRequest extends FormRequest
+class CreateProductCategoryRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -15,6 +15,10 @@ class CreateProductGroupRequest extends FormRequest
     {
         return [
             'name' => 'required|min:3|max:20',
+            'image' => 'nullable',
+            'parent_id' => 'nullable|numeric|exists:sales_product_categories,id',
+            'workspace_ids' => 'required|array|min:1',
+            'workspace_ids.*' => 'exists:core_workspaces,id'
         ];
     }
 }

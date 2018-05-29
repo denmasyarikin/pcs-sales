@@ -21,7 +21,7 @@ class OrderHistoryDetailTransformer extends Detail
             'type' => $model->type,
             'label' => $model->label,
             'actor' => $model->actor,
-            'data' => json_decode($model->data),
+            'data' => $model->data,
             'created_at' => $model->created_at->format('Y-m-d H:i:s'),
             'updated_at' => $model->updated_at->format('Y-m-d H:i:s'),
         ];

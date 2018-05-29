@@ -40,9 +40,7 @@ class HistoryController extends Controller
     {
         $order = $request->getOrder();
         $history = $order->histories()->create(
-            $request->only(['type', 'label']) + [
-                'data' => !is_null($request->data) ? json_encode($request->data) : null,
-            ]
+            $request->only(['type', 'label', 'data'])
         );
 
         return new JsonResponse([
@@ -63,9 +61,7 @@ class HistoryController extends Controller
         $history = $request->getOrderHistory();
 
         $history->update(
-            $request->only(['type', 'label']) + [
-                'data' => !is_null($request->data) ? json_encode($request->data) : null,
-            ]
+            $request->only(['type', 'label', 'data'])
         );
 
         return new JsonResponse([

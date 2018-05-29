@@ -191,12 +191,12 @@ class Factory
         $this->order->histories()->create([
             'type' => 'payment',
             'label' => $payment->type,
-            'data' => json_encode([
+            'data' => [
                 'method' => $payment->payment_method,
                 'payment_total' => Money::format($payment->payment_total),
                 'pay' => Money::format($payment->pay),
                 'remaining' => Money::format($payment->remaining),
-            ]),
+            ],
         ]);
     }
 }

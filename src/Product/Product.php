@@ -6,11 +6,12 @@ use App\Model;
 use App\Manager\Facades\Money;
 use App\Manager\Facades\Setting;
 use Illuminate\Support\Facades\URL;
+use Modules\Workspace\WorkspaceRelation;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Product extends Model
 {
-    use SoftDeletes, ProcessCounterTrait;
+    use SoftDeletes, WorkspaceRelation;
 
     /**
      * cache processes.
@@ -35,11 +36,11 @@ class Product extends Model
     }
 
     /**
-     * Get the group record associated with the ProductGroup.
+     * Get the productCategory record associated with the ProductGroup.
      */
-    public function group()
+    public function productCategory()
     {
-        return $this->belongsTo(ProductGroup::class, 'product_group_id')->withTrashed();
+        return $this->belongsTo(ProductCategory::class)->withTrashed();
     }
 
     /**
@@ -56,6 +57,14 @@ class Product extends Model
     public function medias()
     {
         return $this->hasMany(ProductMedia::class);
+    }
+
+    /**
+     * Get the workspaces record associated with the Good.
+     */
+    public function workspaces()
+    {
+        return $this->belongsToMany('Modules\Workspace\Workspace', 'sales_product_workspaces')->whereStatus('active')->withTimestamps();
     }
 
     /**

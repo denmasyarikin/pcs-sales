@@ -5,6 +5,7 @@ namespace Denmasyarikin\Sales\Product\Transformers;
 use App\Http\Transformers\Detail;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Unit\Transformers\UnitListDetailTransformer;
+use Modules\Workspace\Transformers\WorkspaceListTransformer;
 
 class ProductDetailTransformer extends Detail
 {

@@ -428,7 +428,14 @@ class OrderController extends Controller
             'cs_name' => $user->name,
         ]);
 
-        $order->histories()->create(['type' => 'order', 'label' => 'draft']);
+        $order->histories()->create([
+            'type' => 'order',
+            'label' => 'draft',
+            'data' => [
+                'chanel' => $order->chanel->name,
+                'workspace' => $order->workspace->name
+            ]
+        ]);
 
         return new JsonResponse([
             'message' => 'Order has been created',
@@ -481,10 +488,12 @@ class OrderController extends Controller
                 $order->histories()->create([
                     'type' => 'order',
                     'label' => 'created',
-                    'data' => json_encode([
+                    'data' => [
                         'item_count' => count($order->getPrimaryItems()),
                         'item_total' => Money::format($order->item_total),
-                    ]),
+                        'due_date' => $order->due_date,
+                        'estimated_date' => $order->estimated_finish_date
+                    ]
                 ]);
                 break;
             case 'processing':
@@ -559,10 +568,10 @@ class OrderController extends Controller
         $order->histories()->create([
             'type' => 'order',
             'label' => 'canceled',
-            'data' => json_encode([
+            'data' => [
                 'reason' => $request->reason,
                 'description' => $request->description,
-            ]),
+            ],
         ]);
 
         return new JsonResponse(['message' => 'Order has been canceled']);
@@ -609,10 +618,10 @@ class OrderController extends Controller
         $order->histories()->create([
             'type' => 'order',
             'label' => 'change_due_date',
-            'data' => json_encode([
+            'data' => [
                 'from' => $from,
                 'to' => $order->due_date,
-            ]),
+            ],
         ]);
 
         return new JsonResponse([
@@ -639,10 +648,10 @@ class OrderController extends Controller
         $order->histories()->create([
             'type' => 'order',
             'label' => 'change_estimated_finish_date',
-            'data' => json_encode([
+            'data' => [
                 'from' => $from,
                 'to' => $order->estimated_finish_date,
-            ]),
+            ],
         ]);
 
         return new JsonResponse([

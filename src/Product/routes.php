@@ -1,6 +1,8 @@
 <?php
 
-$router->get('/group', ['as' => 'sales.product.group.list', 'uses' => 'GroupController@getList']);
+$router->get('/'.(RE ? 'category' : '0001'), ['as' => 'sales.product.category.list', 'uses' => 'ProductCategoryController@getList']);
+$router->get('/'.(RE ? 'category' : '0001').'/{id}', ['as' => 'sales.product.category.detail', 'uses' => 'ProductCategoryController@getDetail']);
+
 $router->get('/', ['as' => 'sales.product.list', 'uses' => 'ProductController@getList']);
 $router->get('/counter', ['as' => 'sales.product.counter', 'uses' => 'ProductController@getCounter']);
 $router->get('/{id}', ['as' => 'sales.product.detail', 'uses' => 'ProductController@getDetail']);
@@ -8,6 +10,10 @@ $router->get('/{id}/process', ['as' => 'sales.product.process.list', 'uses' => '
 $router->get('/{id}/process/{process_id}', ['as' => 'sales.product.process.detail', 'uses' => 'ProcessController@getDetail']);
 $router->get('/{id}/media', ['as' => 'sales.product.media.list', 'uses' => 'MediaController@getList']);
 $router->group(['middleware' => 'manage:sales,product,write'], function ($router) {
+    $router->post((RE ? 'category' : '0001'), ['as' => 'sales.product.category.create', 'uses' => 'ProductCategoryController@createCategory']);
+    $router->put((RE ? 'category' : '0001').'/{id}', ['as' => 'sales.product.category.update', 'uses' => 'ProductCategoryController@updateCategory']);
+    $router->delete((RE ? 'category' : '0001').'/{id}', ['as' => 'sales.product.category.delete', 'uses' => 'ProductCategoryController@deleteCategory']);
+
     $router->post('group', ['as' => 'sales.product.group.create', 'uses' => 'GroupController@createGroup']);
     $router->put('group/{id}', ['as' => 'sales.product.group.update', 'uses' => 'GroupController@updateGroup']);
     $router->delete('group/{id}', ['as' => 'sales.product.group.delete', 'uses' => 'GroupController@deleteGroup']);
