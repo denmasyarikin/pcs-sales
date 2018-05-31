@@ -52,22 +52,6 @@ class ProductProcess extends Model
     }
 
     /**
-     * Get the children record associated with the ProductProcess.
-     */
-    public function children()
-    {
-        return $this->hasMany(static::class, 'parent_id');
-    }
-
-    /**
-     * Get the parent record associated with the ProductProcess.
-     */
-    public function parent()
-    {
-        return $this->belongsTo(static::class, 'parent_id');
-    }
-
-    /**
      * Get the dimensionUnit record associated with the OrderItem.
      */
     public function dimensionUnit()

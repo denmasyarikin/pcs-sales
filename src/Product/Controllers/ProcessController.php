@@ -102,11 +102,10 @@ class ProcessController extends Controller
     protected function getDataFromRequest(Request $request)
     {
         return $request->only([
-            'parent_id', 'type', 'type_as', 'reference_id', 'reference_type',
+            'parent_id', 'type', 'reference_id', 'reference_type', 'reference_configurations',
             'name', 'specific', 'quantity', 'unit_price', 'unit_id', 'required',
-            'depending_to_dimension', 'dimension', 'dimension_unit_id', 'length', 'width', 'height', 'weight',
-            'price_type', 'price_increase_multiples', 'price_increase_percentage',
-            'insheet_required', 'insheet_type', 'insheet_multiples', 'insheet_quantity', 'insheet_added',
+            'configurable', 'use_ratio', 'ratio_order_quantity', 'ratio_process_quantity',
+            'insheet_required', 'insheet_type', 'insheet_multiples', 'insheet_quantity', 'insheet_default',
         ]) + ['unit_total' => $request->unit_price * $request->quantity];
     }
 

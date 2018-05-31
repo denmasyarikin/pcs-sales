@@ -108,7 +108,7 @@ class Product extends Model
     {
         $this->base_price = 0;
 
-        foreach ($this->getProcesses()->whereStrict('parent_id', null) as $process) {
+        foreach ($this->getProcesses() as $process) {
             $this->base_price = $this->base_price + $process->unit_total;
             $this->per_unit_price = Money::round($this->base_price / $this->min_order, 10);
         }
@@ -127,6 +127,6 @@ class Product extends Model
             return $this->cacheProcesses;
         }
 
-        return $this->cacheProcesses = $this->processes()->whereNull('parent_id')->orderBy('created_at', 'ASC')->get();
+        return $this->cacheProcesses = $this->processes()->orderBy('created_at', 'ASC')->get();
     }
 }

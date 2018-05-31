@@ -19,7 +19,9 @@ class CreateProductRequest extends FormRequest
             'unit_id' => 'required|exists:core_units,id',
             'min_order' => 'required|numeric|min:1',
             'order_multiples' => 'required|numeric|min:1',
-            'product_group_id' => 'nullable|exists:sales_product_groups,id',
+            'product_category_id' => 'nullable|exists:sales_product_categories,id',
+            'workspace_ids' => 'required|array|min:1',
+            'workspace_ids.*' => 'exists:core_workspaces,id'
         ];
     }
 }

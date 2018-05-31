@@ -13,7 +13,7 @@ use Denmasyarikin\Sales\Product\Requests\DeleteProductMediaRequest;
 use Denmasyarikin\Sales\Product\Transformers\ProductMediaListTransformer;
 use Denmasyarikin\Sales\Product\Transformers\ProductMediaDetailTransformer;
 
-class MediaController extends Controller
+class ProductMediaController extends Controller
 {
     /**
      * get list.
@@ -42,8 +42,8 @@ class MediaController extends Controller
     {
         $product = $request->getProduct();
 
-        if ($request->primary) {
-            $product->medias()->update(['primary' => false]);
+        if (0 === $product->medias->count()) {
+            $request->merge(['primary' => true]);
         }
 
         $media = $product->medias()->create($request->only([
@@ -68,12 +68,8 @@ class MediaController extends Controller
         $product = $request->getProduct();
         $media = $request->getProductMedia();
 
-        if ($request->primary) {
-            $product->medias()->update(['primary' => false]);
-        }
-
         $media->update($request->only([
-            'type', 'content', 'sequence', 'primary',
+            'type', 'content', 'sequence',
         ]));
 
         return new JsonResponse([
@@ -115,10 +111,13 @@ class MediaController extends Controller
         $product = $request->getProduct();
         $media = $request->getProductMedia();
         $media->delete();
+        $medias = $product->medias;
 
-        return new JsonResponse([
-            'updated_at' => $product->updated_at->format('Y-m-d H:i:s'),
-            'message' => 'Product media has been deleted',
-        ]);
+        if ($medias->count() > 0 and 0 === $medias->whereStrict('primary', true)->count()) {
+            $media = $product->medias()->first();
+            $media->update(['primary' => true]);
+        }
+
+        return new JsonResponse(['message' => 'Product media has been deleted']);
     }
 }

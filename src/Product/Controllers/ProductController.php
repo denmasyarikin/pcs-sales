@@ -6,39 +6,18 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 use Denmasyarikin\Sales\Product\Product;
-use Denmasyarikin\Sales\Product\Requests\DetailProductRequest;
 use Denmasyarikin\Sales\Product\Requests\CreateProductRequest;
+use Denmasyarikin\Sales\Product\Requests\DetailProductRequest;
 use Denmasyarikin\Sales\Product\Requests\UpdateProductRequest;
 use Denmasyarikin\Sales\Product\Requests\DeleteProductRequest;
 use Denmasyarikin\Sales\Product\Transformers\ProductListTransformer;
 use Denmasyarikin\Sales\Product\Transformers\ProductDetailTransformer;
-use Denmasyarikin\Sales\Product\Transformers\ProductListDetailTransformer;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class ProductController extends Controller
 {
     /**
-     * get counter.
-     *
-     * @param Request $request
-     *
-     * @return Json
-     */
-    public function getCounter(Request $request)
-    {
-        $products = Product::orderBy('created_at', 'DESC')->get();
-
-        return new JsonResponse([
-            'data' => [
-                'draft' => $products->where('status', 'draft')->count(),
-                'active' => $products->where('status', 'active')->count(),
-                'inactive' => $products->where('status', 'inactive')->count(),
-            ],
-        ]);
-    }
-
-    /**
-     * get list.
+     * product list.
      *
      * @param Request $request
      *
@@ -46,14 +25,15 @@ class ProductController extends Controller
      */
     public function getList(Request $request)
     {
-        $products = $this->getProductList($request);
+        $products = $this->getProductList($request, $request->get('status'));
+        $draftProducts = $this->getProductList($request, 'draft');
 
         $transform = new ProductListTransformer($products);
+        $transformDraft = new ProductListTransformer($draftProducts);
 
         return new JsonResponse([
             'data' => $transform->toArray(),
-            'draft_count' => Product::whereStatus('draft')->count(),
-            'pagination' => $transform->pagination(),
+            'draft' => $transformDraft->toArray(),
         ]);
     }
 
@@ -61,14 +41,31 @@ class ProductController extends Controller
      * get product list.
      *
      * @param Request $request
+     * @param string  $status
      *
      * @return paginator
      */
-    protected function getProductList(Request $request)
+    protected function getProductList(Request $request, $status = null)
     {
-        $products = Product::orderBy('created_at', 'DESC');
+        $products = Product::with('processes')->orderBy('name', 'ASC');
 
-        switch ($request->get('status')) {
+        if ($request->has('key')) {
+            $products->where('name', 'like', "%{$request->key}%");
+        }
+
+        if ($request->has('category_id')) {
+            $products->whereProductCategoryId($request->category_id);
+        } elseif (!$request->has('key')) {
+            $products->whereNull('product_category_id');
+        }
+
+        if ($request->has('workspace_id')) {
+            $products->workspaceId($request->workspace_id);
+        } else {
+            $products->myWorkspace();
+        }
+
+        switch ($status) {
             case 'all':
                 // do nothing
                 break;
@@ -84,18 +81,6 @@ class ProductController extends Controller
             default:
                 $products->whereStatus('active');
                 break;
-        }
-
-        if ($request->has('group_id')) {
-            $products->whereProductGroupId($request->group_id);
-        }
-
-        if ($request->has('key')) {
-            $products->where(function ($query) use ($request) {
-                $query->where('id', $request->key);
-                $query->orwhere('name', 'like', "%{$request->key}%");
-                $query->orWhere('description', 'like', "%{$request->key}%");
-            });
         }
 
         return $products->paginate($request->get('per_page') ?: 10);
@@ -125,13 +110,16 @@ class ProductController extends Controller
     public function createProduct(CreateProductRequest $request)
     {
         $product = Product::create($request->only([
-            'name', 'description', 'unit_id', 'min_order',
-            'order_multiples', 'product_group_id',
+            'name', 'description', 'unit_id',
+            'product_category_id',
+            'min_order', 'order_multiples'
         ]));
+
+        $product->workspaces()->sync($request->workspace_ids);
 
         return new JsonResponse([
             'message' => 'Product has been created',
-            'data' => (new ProductListDetailTransformer($product))->toArray(),
+            'data' => (new ProductDetailTransformer($product))->toArray(),
         ], 201);
     }
 
@@ -146,35 +134,36 @@ class ProductController extends Controller
     {
         $product = $request->getProduct();
 
-        if ($request->has('status')
-            and 'draft' !== $request->status
-            and 0 === count($product->processes)) {
-            throw new BadRequestHttpException(
-                "Can not update status to {$request->status} while processes count is 0"
-            );
+        if ('draft' !== $request->status
+            and 0 === $product->processes()->count()) {
+            throw new BadRequestHttpException('Can not update status with no processes');
         }
 
         $product->update($request->only([
-            'name', 'description', 'unit_id', 'min_order',
-            'order_multiples', 'status', 'product_group_id',
+            'name', 'description', 'unit_id',
+            'product_category_id',
+            'min_order', 'order_multiples', 'status'
         ]));
+
+        $product->workspaces()->sync($request->workspace_ids);
 
         return new JsonResponse([
             'message' => 'Product has been updated',
-            'data' => (new ProductListDetailTransformer($product))->toArray(),
+            'data' => (new ProductDetailTransformer($product))->toArray(),
         ]);
     }
 
     /**
-     * delete product.
+     * update product.
      *
      * @param DeleteProductRequest $request
      *
      * @return json
      */
-    public function deleteProduct(DeleteProductRequest $request)
+    public function deleteProduct(DetailProductRequest $request)
     {
         $product = $request->getProduct();
+
         $product->delete();
 
         return new JsonResponse(['message' => 'Product has been deleted']);
