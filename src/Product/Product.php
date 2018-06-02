@@ -74,10 +74,8 @@ class Product extends Model
      */
     public function getImageAttribute()
     {
-        $default = URL::to(Setting::get('system.sales.product.default_image'));
-
         if (0 === count($medias = $this->medias)) {
-            return $default;
+            return null;
         }
 
         $primary = $medias->where('primary', true)->first();
@@ -86,7 +84,7 @@ class Product extends Model
             $primary = $medias->first();
         }
 
-        return URL::to($primary->content);
+        return $primary->content;
     }
 
     /**

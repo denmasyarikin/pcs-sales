@@ -4,8 +4,8 @@ $router->get('/'.(RE ? 'category' : '0001'), ['as' => 'sales.product.category.li
 $router->get('/'.(RE ? 'category' : '0001').'/{id}', ['as' => 'sales.product.category.detail', 'uses' => 'ProductCategoryController@getDetail']);
 
 $router->get('/', ['as' => 'sales.product.list', 'uses' => 'ProductController@getList']);
-$router->get('/'.(RE ? 'media' : '0002'), ['as' => 'sales.product.media.list', 'uses' => 'ProductMediaController@getList']);
 $router->get('/{id}', ['as' => 'sales.product.detail', 'uses' => 'ProductController@getDetail']);
+$router->get('/{id}/'.(RE ? 'media' : '0002'), ['as' => 'sales.product.media.list', 'uses' => 'ProductMediaController@getList']);
 $router->get('/{id}/process', ['as' => 'sales.product.process.list', 'uses' => 'ProcessController@getList']);
 $router->get('/{id}/process/{process_id}', ['as' => 'sales.product.process.detail', 'uses' => 'ProcessController@getDetail']);
 
@@ -24,9 +24,9 @@ $router->group(['middleware' => 'manage:sales,product,write'], function ($router
     });
 
     $router->group(['prefix' => '/{id}/'.(RE ? 'media' : '0002')], function ($router) {
-        $router->post('/', ['as' => 'sales.product.media.create', 'uses' => 'GoodMediaController@createMedia']);
-        $router->put('/{media_id}', ['as' => 'sales.product.media.update', 'uses' => 'GoodMediaController@updateMedia']);
-        $router->put('/{media_id}/'.(RE ? 'primary' : '0008'), ['as' => 'sales.product.media.update_primary', 'uses' => 'GoodMediaController@updateMediaPrimary']);
-        $router->delete('/{media_id}', ['as' => 'sales.product.media.delete', 'uses' => 'GoodMediaController@deleteMedia']);
+        $router->post('/', ['as' => 'sales.product.media.create', 'uses' => 'ProductMediaController@createMedia']);
+        $router->put('/{media_id}', ['as' => 'sales.product.media.update', 'uses' => 'ProductMediaController@updateMedia']);
+        $router->put('/{media_id}/'.(RE ? 'primary' : '0008'), ['as' => 'sales.product.media.update_primary', 'uses' => 'ProductMediaController@updateMediaPrimary']);
+        $router->delete('/{media_id}', ['as' => 'sales.product.media.delete', 'uses' => 'ProductMediaController@deleteMedia']);
     });
 });

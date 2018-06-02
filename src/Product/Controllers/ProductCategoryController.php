@@ -143,7 +143,7 @@ class ProductCategoryController extends Controller
         }
 
         foreach ($productCategory->products as $product) {
-            $product->update(['category_id' => $productCategory->parent_id]);
+            $product->update(['product_category_id' => $productCategory->parent_id]);
         }
 
         $productCategory->delete();
