@@ -72,22 +72,6 @@ class OrderItem extends Model implements Markupable, Discountable, Voucherable
     }
 
     /**
-     * Get the parent record associated with the OrderItem.
-     */
-    public function parent()
-    {
-        return $this->belongsTo(static::class, 'parent_id');
-    }
-
-    /**
-     * Get the children record associated with the OrderItem.
-     */
-    public function children()
-    {
-        return $this->hasMany(static::class, 'parent_id');
-    }
-
-    /**
      * get adjustments.
      *
      * @return Collection
@@ -203,56 +187,6 @@ class OrderItem extends Model implements Markupable, Discountable, Voucherable
     public function getVoucherAttribute($value)
     {
         return ($voucher = $this->getVoucher()) ? $voucher->adjustment_value : '';
-    }
-
-    /**
-     * check is good.
-     *
-     * @return bool
-     */
-    public function isGood()
-    {
-        return 'good' === $this->type
-            and 'good' === $this->type_as;
-    }
-
-    /**
-     * check is service.
-     *
-     * @return bool
-     */
-    public function isService()
-    {
-        return 'service' === $this->type
-            and 'service' === $this->type_as;
-    }
-
-    /**
-     * check is product.
-     *
-     * @return bool
-     */
-    public function isProduct()
-    {
-        if ('product' === $this->type) {
-            return 'product' === $this->type_as;
-        }
-
-        return false;
-    }
-
-    /**
-     * check is product process.
-     *
-     * @return bool
-     */
-    public function isProductProcess()
-    {
-        if ('product' === $this->type) {
-            return 'product' !== $this->type_as;
-        }
-
-        return false;
     }
 
     /**

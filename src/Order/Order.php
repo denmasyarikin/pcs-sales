@@ -13,7 +13,7 @@ use Denmasyarikin\Sales\Order\Contracts\Discountable;
 
 class Order extends Model implements Taxable, Voucherable, Discountable
 {
-    use SoftDeletes, ItemCounterTrait;
+    use SoftDeletes;
 
     /**
      * cacheItems.
@@ -171,16 +171,6 @@ class Order extends Model implements Taxable, Voucherable, Discountable
     }
 
     /**
-     * get primary item.
-     *
-     * @return Collection
-     */
-    public function getPrimaryItems()
-    {
-        return $this->getItems()->whereStrict('parent_id', null);
-    }
-
-    /**
      * get discount.
      *
      * @return OrderAdjustment
@@ -278,5 +268,31 @@ class Order extends Model implements Taxable, Voucherable, Discountable
             'cs_user_id' => intval(substr($code, 3, 2)),
             'id' => intval(substr($code, 5, 5)),
         ];
+    }
+    
+    /**
+     * Get OverDueDate.
+     *
+     * @param string $value
+     *
+     * @return string
+     */
+    public function getOverDueDateAttribute()
+    {
+        return false === (bool) $this->paid &&
+                in_array($this->status, ['created', 'processing', 'finished']) &&
+                strtotime($this->due_date) < time();
+    }
+
+    /**
+     * Get OverEstimate.
+     *
+     * @param string $value
+     *
+     * @return string
+     */
+    public function getOverEstimateAttribute()
+    {
+        return strtotime($this->estimated_finish_date) < time() && in_array($this->status, ['draft', 'created', 'processing']);
     }
 }

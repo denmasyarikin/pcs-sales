@@ -25,7 +25,7 @@ class OrderDetailTransformer extends Detail
             'chanel' => (new ChanelDetailTransformer($model->chanel))->toArray(),
             'customer' => $model->customer ? (new OrderCustomerTransformer($model->customer))->toArray() : null,
             'item_total' => $model->item_total,
-            'items' => (new OrderItemListTransformer($model->getPrimaryItems()))->toArray(),
+            'items' => (new OrderItemListTransformer($model->getItems()))->toArray(),
             'adjustment_total' => $model->adjustment_total,
             'total' => $model->total,
             'paid_off' => $model->paid_off,

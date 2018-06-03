@@ -489,7 +489,7 @@ class OrderController extends Controller
                     'type' => 'order',
                     'label' => 'created',
                     'data' => [
-                        'item_count' => count($order->getPrimaryItems()),
+                        'item_count' => count($order->getItems()),
                         'item_total' => Money::format($order->item_total),
                         'due_date' => $order->due_date,
                         'estimated_date' => $order->estimated_finish_date

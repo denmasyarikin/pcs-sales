@@ -147,7 +147,7 @@ class OrderFactory
     {
         $this->order->item_total = 0;
 
-        foreach ($this->order->getPrimaryItems() as $item) {
+        foreach ($this->order->getItems() as $item) {
             $this->order->item_total += $item->total;
         }
 
