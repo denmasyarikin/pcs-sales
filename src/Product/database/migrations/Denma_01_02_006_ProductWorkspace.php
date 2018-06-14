@@ -19,7 +19,7 @@ class ProductWorkspace extends Migration
             $table->softDeletes();
 
             $table->foreign('workspace_id')->references('id')->on('core_workspaces');
-            $table->foreign('product_id')->references('id')->on('sales_product_categories');
+            $table->foreign('product_id')->references('id')->on('sales_products');
         });
     }
 
