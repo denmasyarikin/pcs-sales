@@ -44,19 +44,35 @@ class ProductProcess extends Model
      */
     public function reference()
     {
-        //there are only 2 possibilities
+        //there are only 4 possibilities
         // - Good
+        // - GoodVariant
         // - Service
+        // - ServiceOption
 
         return $this->morphTo('reference');
     }
 
     /**
-     * Get the dimensionUnit record associated with the OrderItem.
+     * Get ReferenceConfigurations.
+     *
+     * @param  string  $value
+     * @return string
      */
-    public function dimensionUnit()
+    public function getReferenceConfigurationsAttribute($value)
     {
-        return $this->belongsTo('Modules\Unit\Unit', 'dimension_unit_id')->withTrashed();
+        return json_decode($value);
+    }
+
+    /**
+     * Set ReferenceConfigurations.
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function setReferenceConfigurationsAttribute($value)
+    {
+        $this->attributes['reference_configurations'] = json_encode($value);
     }
 
     /**

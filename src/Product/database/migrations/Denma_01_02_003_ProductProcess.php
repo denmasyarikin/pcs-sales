@@ -26,19 +26,18 @@ class ProductProcess extends Migration
             $table->bigInteger('unit_total');
             $table->integer('unit_id')->unsigned();
 
-            $table->boolean('required')->default(true);
-            $table->boolean('configurable')->default(true);
-            $table->boolean('use_ratio')->default(false);
-            $table->integer('ratio_order_quantity')->nullable()->default(null);
-            $table->integer('ratio_process_quantity')->nullable()->default(null);
+            // ratio
+            $table->integer('ratio_order_quantity')->nullable()->default(1)->comment('0 is no matter how much');
+            $table->integer('ratio_process_quantity')->default(1);
 
             // insheet
-            $table->boolean('insheet_required')->default(false)->comment('except service');
-            $table->enum('insheet_type', ['static', 'dynamic'])->nullable()->default(null);
-            $table->float('insheet_multiples')->nullable()->default(null);
-            $table->float('insheet_quantity')->nullable()->default(null);
-            $table->float('insheet_default')->nullable()->default(null);
+            $table->boolean('good_insheet')->default(false)->comment('except service');
+            $table->float('good_insheet_multiples')->nullable()->default(null);
+            $table->float('good_insheet_quantity')->nullable()->default(null);
+            $table->float('good_insheet_default')->nullable()->default(null);
             
+            $table->boolean('service_configurable')->default(false);
+            $table->boolean('required')->default(true);
             $table->timestamps();
             $table->softDeletes();
 

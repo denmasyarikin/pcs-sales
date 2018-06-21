@@ -57,13 +57,6 @@ class ProcessController extends Controller
     public function createProcess(CreateProductProcessRequest $request)
     {
         $product = $request->getProduct();
-
-        if (null !== $request->input('parent_id')) {
-            if (!$product->processes()->whereNull('parent_id')->whereId($request->parent_id)->exists()) {
-                throw new BadRequestHttpException('Parent ID is not belong to this product or that is children');
-            }
-        }
-
         $process = $product->createProcess($this->getDataFromRequest($request));
 
         return new JsonResponse([
@@ -101,12 +94,23 @@ class ProcessController extends Controller
      */
     protected function getDataFromRequest(Request $request)
     {
-        return $request->only([
-            'parent_id', 'type', 'reference_id', 'reference_type', 'reference_configurations',
-            'name', 'specific', 'quantity', 'unit_price', 'unit_id', 'required',
-            'configurable', 'use_ratio', 'ratio_order_quantity', 'ratio_process_quantity',
-            'insheet_required', 'insheet_type', 'insheet_multiples', 'insheet_quantity', 'insheet_default',
-        ]) + ['unit_total' => $request->unit_price * $request->quantity];
+        $data = $request->only([
+            'type', 'reference_id', 'reference_type', 'reference_configurations',
+            'name', 'specific', 'quantity', 'unit_price', 'unit_total', 'unit_id', 'required',
+            'ratio_order_quantity', 'ratio_process_quantity'
+        ]);
+
+        switch ($request->type) {
+            case 'good':
+                $data += $request->only(['good_insheet', 'good_insheet_multiples', 'good_insheet_quantity', 'good_insheet_default']);
+                break;
+
+            case 'service':
+                $data += $request->only(['service_configurable']);
+                break;            
+        }
+
+        return $data;
     }
 
     /**
