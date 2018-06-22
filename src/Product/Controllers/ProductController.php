@@ -26,15 +26,10 @@ class ProductController extends Controller
     public function getList(Request $request)
     {
         $products = $this->getProductList($request, $request->get('status'));
-        $draftProducts = $this->getProductList($request, 'draft');
 
         $transform = new ProductListTransformer($products);
-        $transformDraft = new ProductListTransformer($draftProducts);
 
-        return new JsonResponse([
-            'data' => $transform->toArray(),
-            'draft' => $transformDraft->toArray(),
-        ]);
+        return new JsonResponse(['data' => $transform->toArray()]);
     }
 
     /**

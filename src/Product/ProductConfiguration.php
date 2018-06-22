@@ -5,7 +5,7 @@ namespace Denmasyarikin\Sales\Product;
 use App\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class ProductMedia extends Model
+class ProductConfiguration extends Model
 {
     use SoftDeletes;
 
@@ -21,7 +21,7 @@ class ProductMedia extends Model
      *
      * @var string
      */
-    protected $table = 'sales_product_medias';
+    protected $table = 'sales_product_configurations';
 
     /**
      * Get the product record associated with the Product.
@@ -29,5 +29,27 @@ class ProductMedia extends Model
     public function product()
     {
         return $this->belongsTo(Product::class)->withTrashed();
+    }
+
+    /**
+     * Get Configuration.
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function getConfigurationAttribute($value)
+    {
+        return json_decode($value);
+    }
+
+    /**
+     * Set Configuration.
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function setConfigurationAttribute($value)
+    {
+        $this->attributes['configuration'] = json_encode($value);
     }
 }

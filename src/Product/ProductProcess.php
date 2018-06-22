@@ -28,7 +28,7 @@ class ProductProcess extends Model
      */
     public function product()
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(Product::class)->withTrashed();
     }
 
     /**
@@ -36,7 +36,7 @@ class ProductProcess extends Model
      */
     public function unit()
     {
-        return $this->belongsTo('Modules\Unit\Unit');
+        return $this->belongsTo('Modules\Unit\Unit')->withTrashed();
     }
 
     /**

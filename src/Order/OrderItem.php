@@ -38,7 +38,7 @@ class OrderItem extends Model implements Markupable, Discountable, Voucherable
      */
     public function order()
     {
-        return $this->belongsTo(Order::class);
+        return $this->belongsTo(Order::class)->withTrashed();
     }
 
     /**

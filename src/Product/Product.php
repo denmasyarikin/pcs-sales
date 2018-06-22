@@ -21,6 +21,13 @@ class Product extends Model
     protected $cacheProcesses;
 
     /**
+     * cache configurations.
+     *
+     * @var Collection
+     */
+    protected $cacheConfigurations;
+
+    /**
      * The table associated with the model.
      *
      * @var string
@@ -49,6 +56,14 @@ class Product extends Model
     public function processes()
     {
         return $this->hasMany(ProductProcess::class);
+    }
+
+    /**
+     * Get the configurations record associated with the Product.
+     */
+    public function configurations()
+    {
+        return $this->hasMany(ProductConfiguration::class);
     }
 
     /**
@@ -126,5 +141,19 @@ class Product extends Model
         }
 
         return $this->cacheProcesses = $this->processes()->orderBy('created_at', 'ASC')->get();
+    }
+
+    /**
+     * get configurations.
+     *
+     * @return Collection
+     */
+    public function getConfigurations()
+    {
+        if ($this->cacheConfigurations) {
+            return $this->cacheConfigurations;
+        }
+
+        return $this->cacheConfigurations = $this->configurations()->orderBy('created_at', 'ASC')->get();
     }
 }

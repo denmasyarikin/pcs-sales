@@ -26,7 +26,7 @@ class OrderItemAdjustment extends Model implements Adjustment
      */
     public function orderItem()
     {
-        return $this->belongsTo(OrderItem::class);
+        return $this->belongsTo(OrderItem::class)->withTrashed();
     }
 
     /**

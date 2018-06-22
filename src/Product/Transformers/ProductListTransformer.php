@@ -16,6 +16,6 @@ class ProductListTransformer extends Pagination
      */
     protected function getData(Model $model)
     {
-        return (new ProductListDetailTransformer($model))->toArray();
+        return (new ProductDetailTransformer($model))->toArray();
     }
 }
