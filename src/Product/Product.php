@@ -3,9 +3,6 @@
 namespace Denmasyarikin\Sales\Product;
 
 use App\Model;
-use App\Manager\Facades\Money;
-use App\Manager\Facades\Setting;
-use Illuminate\Support\Facades\URL;
 use Modules\Workspace\WorkspaceRelation;
 use Illuminate\Database\Eloquent\SoftDeletes;
 

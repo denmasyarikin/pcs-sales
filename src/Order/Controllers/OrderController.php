@@ -433,8 +433,8 @@ class OrderController extends Controller
             'label' => 'draft',
             'data' => [
                 'chanel' => $order->chanel->name,
-                'workspace' => $order->workspace->name
-            ]
+                'workspace' => $order->workspace->name,
+            ],
         ]);
 
         return new JsonResponse([
@@ -492,8 +492,8 @@ class OrderController extends Controller
                         'item_count' => count($order->getItems()),
                         'item_total' => Money::format($order->item_total),
                         'due_date' => $order->due_date,
-                        'estimated_date' => $order->estimated_finish_date
-                    ]
+                        'estimated_date' => $order->estimated_finish_date,
+                    ],
                 ]);
                 break;
             case 'processing':

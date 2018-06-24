@@ -35,7 +35,7 @@ class ProductProcess extends Migration
             $table->float('good_insheet_multiples')->nullable()->default(null);
             $table->float('good_insheet_quantity')->nullable()->default(null);
             $table->float('good_insheet_default')->nullable()->default(null);
-            
+
             $table->boolean('service_configurable')->default(false);
             $table->boolean('required')->default(true);
             $table->timestamps();

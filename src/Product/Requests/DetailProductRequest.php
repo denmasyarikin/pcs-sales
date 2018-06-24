@@ -40,7 +40,7 @@ class DetailProductRequest extends FormRequest
         'good_insheet_multiples' => 'nullable|numeric',
         'good_insheet_quantity' => 'nullable|required_if:good_insheet,true|numeric',
         'good_insheet_default' => 'nullable|required_if:good_insheet,true|numeric',
-        'service_configurable' => 'nullable|boolean'
+        'service_configurable' => 'nullable|boolean',
     ];
 
     /**

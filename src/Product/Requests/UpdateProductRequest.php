@@ -20,7 +20,7 @@ class UpdateProductRequest extends DetailProductRequest
             'status' => 'nullable|in:active,inactive,draft',
             'product_category_id' => 'nullable|exists:sales_product_categories,id',
             'workspace_ids' => 'required|array|min:1',
-            'workspace_ids.*' => 'exists:core_workspaces,id'
+            'workspace_ids.*' => 'exists:core_workspaces,id',
         ];
     }
 }

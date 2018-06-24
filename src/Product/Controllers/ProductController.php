@@ -107,7 +107,7 @@ class ProductController extends Controller
         $product = Product::create($request->only([
             'name', 'description', 'unit_id',
             'product_category_id',
-            'min_order', 'order_multiples'
+            'min_order', 'order_multiples',
         ]));
 
         $product->workspaces()->sync($request->workspace_ids);
@@ -137,7 +137,7 @@ class ProductController extends Controller
         $product->update($request->only([
             'name', 'description', 'unit_id',
             'product_category_id',
-            'min_order', 'order_multiples', 'status'
+            'min_order', 'order_multiples', 'status',
         ]));
 
         $product->workspaces()->sync($request->workspace_ids);

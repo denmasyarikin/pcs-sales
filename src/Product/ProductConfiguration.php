@@ -34,7 +34,8 @@ class ProductConfiguration extends Model
     /**
      * Get Configuration.
      *
-     * @param  string  $value
+     * @param string $value
+     *
      * @return string
      */
     public function getConfigurationAttribute($value)
@@ -45,7 +46,8 @@ class ProductConfiguration extends Model
     /**
      * Set Configuration.
      *
-     * @param  string  $value
+     * @param string $value
+     *
      * @return string
      */
     public function setConfigurationAttribute($value)

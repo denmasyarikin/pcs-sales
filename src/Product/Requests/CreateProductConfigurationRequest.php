@@ -15,17 +15,16 @@ class CreateProductConfigurationRequest extends DetailProductRequest
             'name' => 'required|max:30',
             'type' => 'required|in:input,selection',
             'configuration' => 'required|array',
-            'required' => 'required|boolean'
+            'required' => 'required|boolean',
         ];
 
-
-        if ($this->type === 'input') {
+        if ('input' === $this->type) {
             $rules['configuration.min'] = 'required';
             $rules['configuration.max'] = 'required';
             $rules['configuration.default'] = 'nullable';
         }
 
-        if ($this->type === 'selection') {
+        if ('selection' === $this->type) {
             $rules['configuration.values'] = 'required|array';
             $rules['configuration.default'] = 'nullable';
             $rules['configuration.multiple'] = 'required|boolean';

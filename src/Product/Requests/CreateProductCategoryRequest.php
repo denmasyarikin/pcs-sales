@@ -18,7 +18,7 @@ class CreateProductCategoryRequest extends FormRequest
             'image' => 'nullable',
             'parent_id' => 'nullable|numeric|exists:sales_product_categories,id',
             'workspace_ids' => 'required|array|min:1',
-            'workspace_ids.*' => 'exists:core_workspaces,id'
+            'workspace_ids.*' => 'exists:core_workspaces,id',
         ];
     }
 }

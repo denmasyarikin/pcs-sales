@@ -56,7 +56,8 @@ class ProductProcess extends Model
     /**
      * Get ReferenceConfigurations.
      *
-     * @param  string  $value
+     * @param string $value
+     *
      * @return string
      */
     public function getReferenceConfigurationsAttribute($value)
@@ -67,7 +68,8 @@ class ProductProcess extends Model
     /**
      * Set ReferenceConfigurations.
      *
-     * @param  string  $value
+     * @param string $value
+     *
      * @return string
      */
     public function setReferenceConfigurationsAttribute($value)

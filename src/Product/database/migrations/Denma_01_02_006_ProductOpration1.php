@@ -13,17 +13,7 @@ class ProductOpration1 extends Migration
     {
         Schema::table('sales_product_oprations', function (Blueprint $table) {
             $table->renameColumn('value', 'condition_value');
-            $table->dropColumn('opration');
-        });
-
-        Schema::table('sales_product_oprations', function (Blueprint $table) {
-            $table->enum('opration', [
-                'visibility',
-                'ratio',
-                'service_configuration',
-                'order_counter'
-            ])->after('condition_value');
-
+            $table->string('opration')->change();
             $table->longText('opration_value')->after('opration');
         });
     }
