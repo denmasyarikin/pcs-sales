@@ -115,21 +115,6 @@ class Product extends Model
     }
 
     /**
-     * update product price.
-     */
-    public function updateProductPrice()
-    {
-        $this->base_price = 0;
-
-        foreach ($this->getProcesses() as $process) {
-            $this->base_price = $this->base_price + $process->unit_total;
-            $this->per_unit_price = Money::round($this->base_price / $this->min_order, 10);
-        }
-
-        $this->save();
-    }
-
-    /**
      * get processes.
      *
      * @return Collection

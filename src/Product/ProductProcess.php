@@ -74,22 +74,4 @@ class ProductProcess extends Model
     {
         $this->attributes['reference_configurations'] = json_encode($value);
     }
-
-    /**
-     * The "booting" method of the model.
-     */
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::saved(function ($process) {
-            $product = $process->product;
-            $product->updateProductPrice();
-        });
-
-        static::deleted(function ($process) {
-            $product = $process->product;
-            $product->updateProductPrice();
-        });
-    }
 }

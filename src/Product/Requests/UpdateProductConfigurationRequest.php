@@ -22,10 +22,12 @@ class UpdateProductConfigurationRequest extends DetailProductConfigurationReques
         if ($this->type === 'input') {
             $rules['configuration.min'] = 'required';
             $rules['configuration.max'] = 'required';
+            $rules['configuration.default'] = 'nullable';
         }
 
         if ($this->type === 'selection') {
             $rules['configuration.values'] = 'required|array';
+            $rules['configuration.default'] = 'nullable';
             $rules['configuration.multiple'] = 'required|boolean';
         }
 
