@@ -1,0 +1,26 @@
+- customer
+(x) order history in detail
+
+- bank
+( ) transfer history
+
+- product
+(x) take out customizable
+(x) add filed order multiples
+(x) copy parent data in create option
+(x) make sure option required is use parent required
+(x) implement dimension
+
+- order
+(x) order item insheet should be same with product process
+(x) edit order product
+(x) implement dimension
+
+(v) discount jadi amount and percentage
+(v) error upload gambar tampilkan indikasi
+(v) error ppn terus disccount
+(v) pembulatan jadi 1 (setting)
+(v) default estimated date is today
+(v) tampikan order id di list pembayaran
+- update status sementar
+- print Invoice
