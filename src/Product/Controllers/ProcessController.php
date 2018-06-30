@@ -99,14 +99,8 @@ class ProcessController extends Controller
             'ratio_order_quantity', 'ratio_process_quantity',
         ]);
 
-        switch ($request->type) {
-            case 'good':
-                $data += $request->only(['good_insheet', 'good_insheet_multiples', 'good_insheet_quantity', 'good_insheet_default']);
-                break;
-
-            case 'service':
-                $data += $request->only(['service_configurable']);
-                break;
+        if ('good' === $request->type) {
+            $data += $request->only(['good_insheet', 'good_insheet_multiples', 'good_insheet_quantity', 'good_insheet_default']);
         }
 
         return $data;

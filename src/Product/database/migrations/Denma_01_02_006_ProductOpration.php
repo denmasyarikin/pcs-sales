@@ -16,8 +16,16 @@ class ProductOpration extends Migration
             $table->integer('product_process_id')->unsigned();
             $table->integer('product_configuration_id')->unsigned();
             $table->enum('condition', ['<', '<=', '=', '!=', '>', '>=', 'in', 'not_in']);
-            $table->text('value');
-            $table->longText('opration');
+            $table->text('condition_value');
+            $table->enum('opration', [
+                'visibility',
+                'requiration',
+                'insheet',
+                'ratio',
+                'service_configuration',
+                'order_counter'
+            ]);
+            $table->longText('opration_value');
             $table->timestamps();
             $table->softDeletes();
 

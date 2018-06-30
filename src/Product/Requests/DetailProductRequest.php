@@ -37,10 +37,9 @@ class DetailProductRequest extends FormRequest
         'ratio_process_quantity' => 'required|integer|min:1',
         // insheet
         'good_insheet' => 'nullable|boolean',
-        'good_insheet_multiples' => 'nullable|numeric',
+        'good_insheet_multiples' => 'nullable|required_if:good_insheet,true|numeric',
         'good_insheet_quantity' => 'nullable|required_if:good_insheet,true|numeric',
         'good_insheet_default' => 'nullable|required_if:good_insheet,true|numeric',
-        'service_configurable' => 'nullable|boolean',
     ];
 
     /**

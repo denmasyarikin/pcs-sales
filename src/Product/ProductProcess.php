@@ -32,6 +32,24 @@ class ProductProcess extends Model
     }
 
     /**
+     * Get the productOprations record associated with the ProductOpration.
+     */
+    public function productOprations()
+    {
+        return $this->hasMany(ProductOpration::class);
+    }
+
+    /**
+     * Get the productConfigurations record associated with the ProductConfiguration.
+     */
+    public function productConfigurations()
+    {
+        return $this->belongsToMany(ProductConfiguration::class, 'sales_product_oprations')
+            ->withPivot('condition', 'condition_value', 'opration', 'opration_value')
+            ->withTimestamps();
+    }
+
+    /**
      * Get the unit record associated with the Product.
      */
     public function unit()

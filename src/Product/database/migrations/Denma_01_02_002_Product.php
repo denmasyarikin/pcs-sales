@@ -19,8 +19,6 @@ class Product extends Migration
             $table->integer('product_category_id')->unsigned()->nullable()->default(null);
             $table->float('min_order')->default(1);
             $table->float('order_multiples')->default(1);
-            $table->bigInteger('base_price')->default(0);
-            $table->bigInteger('per_unit_price')->default(0);
             $table->enum('status', ['draft', 'active', 'inactive'])->default('draft');
             $table->timestamps();
             $table->softDeletes();
