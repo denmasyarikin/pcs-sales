@@ -32,9 +32,28 @@ class ProductConfiguration extends Model
     }
 
     /**
+     * Get the productOprations record associated with the ProductOpration.
+     */
+    public function productOprations()
+    {
+        return $this->hasMany(ProductOpration::class);
+    }
+
+    /**
+     * Get the productProcesses record associated with the ProductProcess.
+     */
+    public function productProcesses()
+    {
+        return $this->belongsToMany(ProductProcess::class, 'sales_product_oprations')
+            ->withPivot('condition', 'condition_value', 'opration', 'opration_value')
+            ->withTimestamps();
+    }
+
+    /**
      * Get Configuration.
      *
-     * @param  string  $value
+     * @param string $value
+     *
      * @return string
      */
     public function getConfigurationAttribute($value)
@@ -45,7 +64,8 @@ class ProductConfiguration extends Model
     /**
      * Set Configuration.
      *
-     * @param  string  $value
+     * @param string $value
+     *
      * @return string
      */
     public function setConfigurationAttribute($value)

@@ -269,7 +269,7 @@ class Order extends Model implements Taxable, Voucherable, Discountable
             'id' => intval(substr($code, 5, 5)),
         ];
     }
-    
+
     /**
      * Get OverDueDate.
      *

@@ -2,7 +2,6 @@
 
 namespace Denmasyarikin\Sales\Product\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 use Denmasyarikin\Sales\Product\Product;
@@ -12,7 +11,6 @@ use Denmasyarikin\Sales\Product\Requests\UpdateProductConfigurationRequest;
 use Denmasyarikin\Sales\Product\Requests\DeleteProductConfigurationRequest;
 use Denmasyarikin\Sales\Product\Transformers\ProductConfigurationListTransformer;
 use Denmasyarikin\Sales\Product\Transformers\ProductConfigurationDetailTransformer;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class ConfigurationController extends Controller
 {

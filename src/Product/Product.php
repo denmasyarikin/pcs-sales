@@ -3,9 +3,6 @@
 namespace Denmasyarikin\Sales\Product;
 
 use App\Model;
-use App\Manager\Facades\Money;
-use App\Manager\Facades\Setting;
-use Illuminate\Support\Facades\URL;
 use Modules\Workspace\WorkspaceRelation;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -112,21 +109,6 @@ class Product extends Model
     public function createProcess(array $process)
     {
         return $productProcess = $this->processes()->create($process);
-    }
-
-    /**
-     * update product price.
-     */
-    public function updateProductPrice()
-    {
-        $this->base_price = 0;
-
-        foreach ($this->getProcesses() as $process) {
-            $this->base_price = $this->base_price + $process->unit_total;
-            $this->per_unit_price = Money::round($this->base_price / $this->min_order, 10);
-        }
-
-        $this->save();
     }
 
     /**

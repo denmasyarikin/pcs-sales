@@ -13,7 +13,6 @@ use Denmasyarikin\Sales\Product\Requests\UpdateProductProcessRequest;
 use Denmasyarikin\Sales\Product\Requests\DeleteProductProcessRequest;
 use Denmasyarikin\Sales\Product\Transformers\ProductProcessListTransformer;
 use Denmasyarikin\Sales\Product\Transformers\ProductProcessDetailTransformer;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class ProcessController extends Controller
 {
@@ -97,17 +96,11 @@ class ProcessController extends Controller
         $data = $request->only([
             'type', 'reference_id', 'reference_type', 'reference_configurations',
             'name', 'specific', 'quantity', 'unit_price', 'unit_total', 'unit_id', 'required',
-            'ratio_order_quantity', 'ratio_process_quantity'
+            'ratio_order_quantity', 'ratio_process_quantity',
         ]);
 
-        switch ($request->type) {
-            case 'good':
-                $data += $request->only(['good_insheet', 'good_insheet_multiples', 'good_insheet_quantity', 'good_insheet_default']);
-                break;
-
-            case 'service':
-                $data += $request->only(['service_configurable']);
-                break;            
+        if ('good' === $request->type) {
+            $data += $request->only(['good_insheet', 'good_insheet_multiples', 'good_insheet_quantity', 'good_insheet_default']);
         }
 
         return $data;

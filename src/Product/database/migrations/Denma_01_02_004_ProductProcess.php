@@ -22,8 +22,6 @@ class ProductProcess extends Migration
             $table->string('name', 50);
             $table->string('specific', 50)->nullable()->default(null);
             $table->float('quantity');
-            $table->bigInteger('unit_price');
-            $table->bigInteger('unit_total');
             $table->integer('unit_id')->unsigned();
 
             // ratio
@@ -35,8 +33,7 @@ class ProductProcess extends Migration
             $table->float('good_insheet_multiples')->nullable()->default(null);
             $table->float('good_insheet_quantity')->nullable()->default(null);
             $table->float('good_insheet_default')->nullable()->default(null);
-            
-            $table->boolean('service_configurable')->default(false);
+
             $table->boolean('required')->default(true);
             $table->timestamps();
             $table->softDeletes();

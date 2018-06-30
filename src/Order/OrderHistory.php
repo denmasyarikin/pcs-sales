@@ -72,7 +72,8 @@ class OrderHistory extends Model
     /**
      * Get Data.
      *
-     * @param  string  $value
+     * @param string $value
+     *
      * @return string
      */
     public function getDataAttribute($value)
@@ -83,7 +84,7 @@ class OrderHistory extends Model
     /**
      * Set Data.
      *
-     * @param  string  $value
+     * @param string $value
      */
     public function setDataAttribute($value)
     {
