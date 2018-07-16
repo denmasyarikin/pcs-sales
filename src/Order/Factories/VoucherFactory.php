@@ -47,7 +47,7 @@ class VoucherFactory extends AdjustmentFactory
      *
      * @return string
      */
-    protected function getAdjustmentTotal(Adjustmentable $adjustmentable)
+    protected function getAdjustmentTotal(Adjustmentable $adjustmentable, $value)
     {
         dd('TODO Apply voucher');
     }
