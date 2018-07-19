@@ -22,6 +22,8 @@ class ProductProcess extends Migration
             $table->string('name', 50);
             $table->string('specific', 50)->nullable()->default(null);
             $table->float('quantity');
+            $table->bigInteger('unit_price')->default(0);
+            $table->bigInteger('unit_total')->default(0);
             $table->integer('unit_id')->unsigned();
 
             // ratio

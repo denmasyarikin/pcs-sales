@@ -94,8 +94,8 @@ class ProcessController extends Controller
     protected function getDataFromRequest(Request $request)
     {
         $data = $request->only([
-            'type', 'reference_id', 'reference_type', 'reference_configurations',
-            'name', 'specific', 'quantity', 'unit_price', 'unit_total', 'unit_id', 'required',
+            'type', 'reference_type', 'reference_id', 'reference_default_id', 'reference_configurations',
+            'name', 'specific', 'quantity', 'unit_id', 'unit_price', 'unit_total', 'required',
             'ratio_order_quantity', 'ratio_process_quantity',
         ]);
 
