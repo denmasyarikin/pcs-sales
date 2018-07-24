@@ -216,4 +216,18 @@ class OrderItem extends Model implements Markupable, Discountable, Voucherable
             return json_decode($value);
         }
     }
+
+    /**
+     * Get HasConfigurations.
+     *
+     * @return bool
+     */
+    public function getHasConfigurationsAttribute()
+    {
+        $refConfig = $this->reference_configurations;
+
+        return isset($refConfig->calculation) and
+                is_array($refConfig->calculation->configurations) and
+                count($refConfig->calculation->configurations);
+    }
 }
