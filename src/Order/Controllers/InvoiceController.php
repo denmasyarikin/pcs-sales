@@ -75,7 +75,29 @@ class InvoiceController extends Controller
             return View::make('sales.order::receipt')->withType('html')->withOrder($order);
         }
 
-        return $this->showAsPDF($order);
+        return $this->showReciptPDF($order);
+    }
+
+    /**
+     * show as pdf
+     *
+     * @param Order $order
+     * @return pdf
+     */
+    protected function showReciptPDF(Order $order)
+    {
+        $pdfOptions = [
+            'isHtml5ParserEnabled' => true,
+            'isRemoteEnabled' => true
+        ];
+
+        $pdf = PDF::setOptions($pdfOptions)
+            ->loadView('sales.order::receipt', ['order' => $order, 'type' => 'pdf'])
+            ->setPaper('a4');
+        
+        return (new Response($pdf->output(), 200))
+                  ->header('Content-Type', 'application/pdf')
+                  ->header('Content-Disposition', 'inline; filename="' . $order->code . '.pdf"');
     }
 
     /**
