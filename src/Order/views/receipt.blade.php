@@ -22,10 +22,10 @@
 		<table class="customer" width="100%">
 			<tr>
 				<td width="10%">Nama</td>
-				<td width="50%">: {{$order->customer->name}}</td>
-				<td>Est :</td>
+				<td width="45%">: {{$order->customer->name}}</td>
+				<td width="15%">Est :</td>
 				@if ($order->estimated_finish_date) 
-				<td align="right">{{date('d m y', strtotime($order->estimated_finish_date))}}</td>
+				<td align="right">{{date('d-m-y', strtotime($order->estimated_finish_date))}}</td>
 				@else
 				<td align="right">-</td>
 				@endif
@@ -35,7 +35,7 @@
 				<td>: {{$order->customer->telephone}}</td>
 				<td>Due :</td>
 				@if ($order->due_date)
-				<td align="right">{{date('d m y', strtotime($order->due_date))}}</td>
+				<td align="right">{{date('d-m-y', strtotime($order->due_date))}}</td>
 				@else
 				<td align="right">-</td>
 				@endif
@@ -45,7 +45,7 @@
 				@if ($order->customer->address)
 				<td style="vertical-align:top;" colspan="3">: {{$order->customer->address}}</td>
 				@else
-				<td>-</td>
+				<td colspan="3">-</td>
 				@endif
 			</tr>
 		</table>
@@ -137,17 +137,13 @@
 	}
 
 	.sales-order-print-receipt {
+		font-family: 'Roboto', sans-serif;
+	    line-height: 1.5;
 		font-size: 12px;
-		margin: 0 auto;
+		margin: 0;
 		min-width: 200px;
-		max-width: 240px;
+		max-width: 270px;
 		padding: 0;
-	}
-
-	@media print {
-		.sales-order-print-receipt {
-			margin: 0;
-		}
 	}
 
 	.sales-order-print-receipt .header,

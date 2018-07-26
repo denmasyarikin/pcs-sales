@@ -15,11 +15,13 @@
 	}
 
 	.sales-order-print-invoice {
-	  margin: 0 auto;
-	  padding: 15px 30px;
-	  min-width: 610px;
-	  max-width: 794px;
-	  background: #ffffff;
+		font-family: 'Roboto', sans-serif;
+		line-height: 1.5;
+		margin: 0 auto;
+		padding: 15px 30px;
+		min-width: 610px;
+		max-width: 794px;
+		background: #ffffff;
 	}
 
 	.sales-order-print-invoice .print-content {
