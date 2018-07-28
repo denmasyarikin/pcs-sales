@@ -34,7 +34,7 @@ class ProductProcessDetailTransformer extends Detail
             'unit_id' => $model->unit_id,
             'unit' => (new UnitListDetailTransformer($model->unit))->toArray(),
             'required' => (bool) $model->required,
-            'ration_order_quantity' => $model->ration_order_quantity,
+            'ratio_order_quantity' => $model->ratio_order_quantity,
             'ratio_process_quantity' => $model->ratio_process_quantity,
             'service_configurable' => (bool) $model->configurable,
             'good_insheet' => (bool) $model->good_insheet,

@@ -53,7 +53,7 @@ class DetailOrderRequest extends FormRequest
         }
 
         $order = null;
-        $id = (int) $this->route('id');
+        $id = $this->route('id');
 
         if (Order::isCode($id)) {
             $ids = Order::getIdFromCode($id);
@@ -63,7 +63,7 @@ class DetailOrderRequest extends FormRequest
                 $chanel->whereId($chanelIds['id']);
             })->whereCsUserId($ids['cs_user_id'])->find($ids['id']);
         } else {
-            $order = Order::find($id);
+            $order = Order::find((int) $id);
         }
 
         if ($this->order = $order) {

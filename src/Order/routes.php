@@ -51,3 +51,6 @@ $router->group(['middleware' => 'manage:sales,order,write'], function ($router) 
         $router->delete('/{item_id}', ['as' => 'sales.order.item.delete', 'uses' => 'ItemController@deleteOrderItem']);
     });
 });
+
+$router->get('/{id}/invoice/{type}', ['as' => 'sales.order.invoice', 'uses' => 'InvoiceController@showInvoice']);
+$router->get('/{id}/receipt/{type}', ['as' => 'sales.order.receipt', 'uses' => 'InvoiceController@showReceipt']);

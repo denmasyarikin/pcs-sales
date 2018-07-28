@@ -9,11 +9,17 @@ use Modules\User\User;
 use Modules\Chanel\Chanel;
 use Illuminate\Http\Request;
 use App\Manager\Facades\Money;
+use App\Manager\Facades\Setting;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Denmasyarikin\Sales\Order\Order;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Collection;
+use Denmasyarikin\Sales\Order\Factories\TaxFactory;
+use Denmasyarikin\Sales\Order\Factories\OrderFactory;
+use Denmasyarikin\Sales\Order\Factories\VoucherFactory;
+use Denmasyarikin\Sales\Order\Factories\DiscountFactory;
 use Denmasyarikin\Sales\Order\Requests\DetailOrderRequest;
 use Denmasyarikin\Sales\Order\Requests\CreateOrderRequest;
 use Denmasyarikin\Sales\Order\Requests\UpdateOrderRequest;
@@ -419,28 +425,154 @@ class OrderController extends Controller
      */
     public function createOrder(CreateOrderRequest $request)
     {
-        $user = $request->user();
+        try {
+            DB::beginTransaction();
 
-        $order = Order::create([
-            'workspace_id' => $request->workspace_id,
-            'chanel_id' => $request->chanel_id,
-            'cs_user_id' => $user->id,
-            'cs_name' => $user->name,
-        ]);
+            $user = $request->user();
+            $order = Order::create([
+                'workspace_id' => $request->workspace_id,
+                'chanel_id' => $request->chanel_id,
+                'cs_user_id' => $user->id,
+                'cs_name' => $user->name,
+            ]);
 
-        $order->histories()->create([
-            'type' => 'order',
-            'label' => 'draft',
-            'data' => [
-                'chanel' => $order->chanel->name,
-                'workspace' => $order->workspace->name,
-            ],
-        ]);
+            if ($request->has('items')) {
+                $order = $this->createOrderItems($order, $request->items);
+            }
 
-        return new JsonResponse([
-            'message' => 'Order has been created',
-            'data' => ['id' => $order->id],
-        ], 201);
+            if ($request->has('voucher') && !empty($request->voucher)) {
+                $order = $this->applyVoucher($order, $request->voucher);
+            }
+
+            if ($request->has('voucher') && !empty($request->discount)) {
+                dd(empty($request->discount), $request->discount);
+                $discount = $request->discount;
+                $order = $this->applyDiscount($order, intval($discount['value']), $discount['rule']);
+            }
+
+            if ($request->has('voucher') && !empty($request->ppn)) {
+                $order = $this->applyTax($order, (bool) $request->ppn);
+            }
+
+            $order->histories()->create([
+                'type' => 'order',
+                'label' => 'draft',
+                'data' => [
+                    'chanel' => $order->chanel->name,
+                    'workspace' => $order->workspace->name,
+                ],
+            ]);
+
+            DB::commit();
+
+            return new JsonResponse([
+                'message' => 'Order has been created',
+                'data' => (new OrderDetailTransformer($order))->toArray(),
+            ], 201);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return new JsonResponse(['message' => 'error create order or items', 'data' => $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * create order items
+     *
+     * @param Order $order
+     * @param array $items
+     * @return Order
+     */
+    protected function createOrderItems(Order $order, array $items)
+    {
+        foreach ($items as $item) {
+            if (isset($item['discount']) and intval($item['discount']) > 0) {
+                $this->orderAdjustmentRestriction('discount');
+            }
+
+            if (isset($item['voucher']) and !empty($item['voucher'])) {
+                $this->orderAdjustmentRestriction('voucher');
+            }
+
+            $factory = new OrderFactory($order);
+
+            $item = $factory->createOrderItem(
+                $this->getDataFromRequest($item),
+                isset($item['markup']) ? $item['markup'] : null,
+                isset($item['markup_rule']) ? $item['markup_rule'] : null,
+                isset($item['discount']) ? $item['discount'] : null,
+                isset($item['discount_rule']) ? $item['discount_rule'] : null,
+                isset($item['voucher']) ? $item['voucher'] : null
+            );
+
+            $order = $item->order()->first();
+        }
+
+        return $order;
+    }
+
+    /**
+     * get data from request
+     *
+     * @param array $item
+     * @return array
+     */
+    protected function getDataFromRequest(array $item)
+    {
+        $pick = [
+            'type', 'reference_id',
+            'reference_type', 'reference_configurations',
+            'name', 'specific',
+            'quantity', 'unit_price',
+            'unit_total', 'note',
+            'unit_id',
+        ];
+
+        return array_intersect_key($item, array_flip($pick));
+    }
+
+    /**
+     * apply tax
+     *
+     * @param Order $order
+     * @param bool $apply
+     * @return Order
+     */
+    protected function applyTax(Order $order, $apply)
+    {
+        $taxRate = Setting::get('system.sales.order.tax.tax_rate', 10);
+
+        $factory = new TaxFactory($order);
+
+        return $factory->apply($apply ? $taxRate : 0);
+    }
+
+    /**
+     * apply discount
+     *
+     * @param Order $order
+     * @param int $value
+     * @param string $rule
+     * @return Order
+     */
+    protected function applyDiscount(Order $order, int $value, $rule)
+    {
+        $factory = new DiscountFactory($order);
+
+        return $factory->apply($value, $rule);
+    }
+
+    /**
+     * apply voucher
+     *
+     * @param Order $order
+     * @param string $code
+     * @return Order
+     */
+    protected function applyVoucher(Order $order, $code)
+    {
+        $factory = new VoucherFactory($order);
+
+        return $factory->apply($code);
     }
 
     /**
