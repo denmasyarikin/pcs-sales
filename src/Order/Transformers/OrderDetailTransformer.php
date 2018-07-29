@@ -35,6 +35,7 @@ class OrderDetailTransformer extends Detail
             'note' => $model->note,
             'cs_user_id' => $model->cs_user_id,
             'cs_name' => $model->cs_name,
+            'cs_telephone' => $model->cs_telephone,
             'due_date' => $model->due_date,
             'over_due_date' => (bool) $model->over_due_date,
             'estimated_finish_date' => $model->estimated_finish_date,

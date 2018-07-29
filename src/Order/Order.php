@@ -116,6 +116,14 @@ class Order extends Model implements Taxable, Voucherable, Discountable
     }
 
     /**
+     * Get the cs record associated with the Order.
+     */
+    public function cs()
+    {
+        return $this->belongsTo('Modules\User\User', 'cs_user_id');
+    }
+
+    /**
      * get items.
      *
      * @return Collection
@@ -294,5 +302,16 @@ class Order extends Model implements Taxable, Voucherable, Discountable
     public function getOverEstimateAttribute()
     {
         return strtotime($this->estimated_finish_date) < time() && in_array($this->status, ['draft', 'created', 'processing']);
+    }
+
+    /**
+     * Get CsTelephone.
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function getCsTelephoneAttribute($value)
+    {
+        return $this->cs->telephone;
     }
 }
