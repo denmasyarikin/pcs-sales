@@ -163,7 +163,7 @@ class OrderController extends Controller
      */
     public function getDebt(Request $request)
     {
-        $query = Order::whereStatus('taken')->where('paid', 0);
+        $query = Order::where('paid', 0);
 
         if ($request->has('workspace_id')) {
             $query->whereWorkspaceId($request->workspace_id);
@@ -372,28 +372,37 @@ class OrderController extends Controller
         }
 
         if ($request->has('key')) {
-            if (Order::isCode($request->key)) {
-                $orders->where(function ($q) use ($request) {
-                    $ids = Order::getIdFromCode($request->key);
-                    $q->where('id', $ids['id']);
-                    $q->where('cs_user_id', $ids['cs_user_id']);
-                    $q->whereHas('chanel', function ($chanel) use ($ids) {
-                        $chanelIds = Chanel::getIdFromCode($ids['chanel_code']);
-                        $chanel->whereType($chanelIds['type']);
-                        $chanel->whereId($chanelIds['id']);
+            $orders->where(function($ordQuery) use ($request) {
+                $ordQuery->where('note', 'like', '%'.$request->key.'%');
+
+                if (Order::isCode($request->key)) {
+                    $ordQuery->orWhere(function ($q) use ($request) {
+                        $ids = Order::getIdFromCode($request->key);
+                        $q->where('id', $ids['id']);
+                        $q->where('cs_user_id', $ids['cs_user_id']);
+                        $q->whereHas('chanel', function ($chanel) use ($ids) {
+                            $chanelIds = Chanel::getIdFromCode($ids['chanel_code']);
+                            $chanel->whereType($chanelIds['type']);
+                            $chanel->whereId($chanelIds['id']);
+                        });
                     });
-                });
-            } else {
-                $orders->where(function ($query) use ($request) {
-                    $query->where('id', $request->key);
-                    $query->orWhereHas('customer', function ($query2) use ($request) {
-                        $query2->where('name', 'like', "%{$request->key}%");
-                        $query2->orWhere('email', 'like', "%{$request->key}%");
-                        $query2->orWhere('telephone', 'like', "%{$request->key}%");
-                        $query2->orWhere('address', 'like', "%{$request->key}%");
+                } else {
+                    $ordQuery->orWhere(function ($query) use ($request) {
+                        $query->where('id', $request->key);
+                        $query->orWhereHas('customer', function ($query2) use ($request) {
+                            $query2->where('name', 'like', "%{$request->key}%");
+                            $query2->orWhere('email', 'like', "%{$request->key}%");
+                            $query2->orWhere('telephone', 'like', "%{$request->key}%");
+                            $query2->orWhere('address', 'like', "%{$request->key}%");
+                        });
                     });
-                });
-            }
+                }
+            });
+        }
+
+        if ($request->has('paid')) {
+            $orders->wherePaid((bool)$request->paid);
+            $orders->whereNotIn('status', ['draft', 'closed', 'canceled']);
         }
 
         $this->dateRange($orders, $request);
