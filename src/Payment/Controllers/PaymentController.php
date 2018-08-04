@@ -119,8 +119,18 @@ class PaymentController extends Controller
         }
 
         if ($request->has('chanel_id')) {
-            $payments->whereHas('order', function ($q) use ($request) {
+            $payments->with('order', function ($q) use ($request) {
                 $q->where('chanel_id', $request->chanel_id);
+            });
+        }
+
+        if ($request->has('pay_debt')) {
+            $payments->whereHas('order', function ($q) use ($request) {
+                if ($request->pay_debt === 'true') {
+                    $q->whereRaw('CAST(sales_orders.created_at AS DATE) <> CAST(sales_payments.created_at AS DATE)');
+                } else if ($request->pay_debt === 'false') {
+                    $q->whereRaw('CAST(sales_orders.created_at AS DATE) = CAST(sales_payments.created_at AS DATE)');
+                }
             });
         }
 
